@@ -4,3 +4,5 @@ node_modules/
 
 # Local secrets live outside this repo in ~/.codex/.env and ~/.flyai/config.json.
 .env
+.claude/settings.json
+.claude/settings.local.json
