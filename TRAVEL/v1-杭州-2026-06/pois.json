@@ -1,0 +1,255 @@
+{
+  "destination": "杭州",
+  "city": "杭州",
+  "locations": [
+    "苏堤",
+    "断桥残雪",
+    "雷峰塔",
+    "宋城景区",
+    "灵隐寺",
+    "飞来峰",
+    "龙井村",
+    "西溪国家湿地公园"
+  ],
+  "pois": [
+    {
+      "name": "苏堤",
+      "original_name": "苏堤",
+      "type": "地名地址信息;交通地名;道路名",
+      "address": "西湖区",
+      "location": [
+        120.135764,
+        30.251448
+      ],
+      "tel": "",
+      "rating": "",
+      "source": "amap_place_text",
+      "confidence": "verified",
+      "order": 1
+    },
+    {
+      "name": "杭州西湖风景名胜区-断桥残雪",
+      "original_name": "断桥残雪",
+      "type": "风景名胜;风景名胜;国家级景点",
+      "address": "龙井路1号杭州西湖风景名胜区内(东北角)",
+      "location": [
+        120.152264,
+        30.259343
+      ],
+      "tel": "0571-87179539",
+      "rating": "4.9",
+      "source": "amap_place_text",
+      "confidence": "verified",
+      "order": 2
+    },
+    {
+      "name": "雷峰塔景区",
+      "original_name": "雷峰塔",
+      "type": "风景名胜;风景名胜;国家级景点",
+      "address": "南山路15号",
+      "location": [
+        120.150573,
+        30.229977
+      ],
+      "tel": "0571-87982111",
+      "rating": "4.8",
+      "source": "amap_place_text",
+      "confidence": "verified",
+      "order": 3
+    },
+    {
+      "name": "杭州湘湖宋城景区",
+      "original_name": "宋城景区",
+      "type": "风景名胜;风景名胜;风景名胜",
+      "address": "博奥南路与湖畔南街交叉口南220米",
+      "location": [
+        120.242856,
+        30.163031
+      ],
+      "tel": "",
+      "rating": "3.9",
+      "source": "amap_place_text",
+      "confidence": "verified",
+      "order": 4
+    },
+    {
+      "name": "灵隐寺",
+      "original_name": "灵隐寺",
+      "type": "风景名胜;风景名胜;国家级景点",
+      "address": "法云弄1号",
+      "location": [
+        120.108203,
+        30.241031
+      ],
+      "tel": "0571-87969691",
+      "rating": "4.9",
+      "source": "amap_place_text",
+      "confidence": "verified",
+      "order": 5
+    },
+    {
+      "name": "飞来峰",
+      "original_name": "飞来峰",
+      "type": "风景名胜;风景名胜;风景名胜",
+      "address": "灵隐街道灵隐路法云弄1号",
+      "location": [
+        120.10878,
+        30.239667
+      ],
+      "tel": "0571-87969691",
+      "rating": "4.7",
+      "source": "amap_place_text",
+      "confidence": "verified",
+      "order": 6
+    },
+    {
+      "name": "龙井村牌坊",
+      "original_name": "龙井村",
+      "type": "风景名胜;风景名胜;风景名胜",
+      "address": "龙井西路与满觉陇路交叉口西南40米",
+      "location": [
+        120.109945,
+        30.219985
+      ],
+      "tel": "",
+      "rating": "4.0",
+      "source": "amap_place_text",
+      "confidence": "verified",
+      "order": 7
+    },
+    {
+      "name": "西溪国家湿地公园",
+      "original_name": "西溪国家湿地公园",
+      "type": "风景名胜;风景名胜;国家级景点",
+      "address": "天目山路518号",
+      "location": [
+        120.061052,
+        30.254109
+      ],
+      "tel": "0571-88106696;0571-88106688",
+      "rating": "4.8",
+      "source": "amap_place_text",
+      "confidence": "verified",
+      "order": 8
+    }
+  ],
+  "routes": [
+    {
+      "mode": "walking",
+      "distance_m": 1931,
+      "duration_min": 26,
+      "source": "amap_direction_walking",
+      "from": "苏堤",
+      "to": "杭州西湖风景名胜区-断桥残雪"
+    },
+    {
+      "mode": "walking",
+      "distance_m": 4862,
+      "duration_min": 65,
+      "source": "amap_direction_walking",
+      "from": "杭州西湖风景名胜区-断桥残雪",
+      "to": "雷峰塔景区"
+    },
+    {
+      "mode": "walking",
+      "distance_m": 15035,
+      "duration_min": 200,
+      "source": "amap_direction_walking",
+      "from": "雷峰塔景区",
+      "to": "杭州湘湖宋城景区"
+    },
+    {
+      "mode": "walking",
+      "distance_m": 20075,
+      "duration_min": 268,
+      "source": "amap_direction_walking",
+      "from": "杭州湘湖宋城景区",
+      "to": "灵隐寺"
+    },
+    {
+      "mode": "walking",
+      "distance_m": 143,
+      "duration_min": 2,
+      "source": "amap_direction_walking",
+      "from": "灵隐寺",
+      "to": "飞来峰"
+    },
+    {
+      "mode": "walking",
+      "distance_m": 3600,
+      "duration_min": 48,
+      "source": "amap_direction_walking",
+      "from": "飞来峰",
+      "to": "龙井村牌坊"
+    },
+    {
+      "mode": "walking",
+      "distance_m": 8762,
+      "duration_min": 117,
+      "source": "amap_direction_walking",
+      "from": "龙井村牌坊",
+      "to": "西溪国家湿地公园"
+    }
+  ],
+  "hotels": [
+    {
+      "address": "浙江省杭州市上城区佑圣观路",
+      "brandName": null,
+      "decorationTime": null,
+      "detailUrl": "https://a.feizhu.com/0laLEK",
+      "interestsPoi": "近杭州湖滨银泰in77",
+      "latitude": "30.24531101510572",
+      "longitude": "120.17491336442907",
+      "mainPic": "https://img.alicdn.com/imgextra/i4/6000000006292/O1CN01f4A4ZW1wLmphwauRT_!!6000000006292-0-hotel.jpg",
+      "name": "杭州掌宿小悦观湖民宿(雷峰塔店)",
+      "price": "¥515",
+      "shId": "87053474",
+      "star": " "
+    },
+    {
+      "address": "浙江杭州上城十五奎巷井弄5号5-2",
+      "brandName": null,
+      "decorationTime": null,
+      "detailUrl": "https://a.feizhu.com/3FZ7tQ",
+      "interestsPoi": "近杭州湖滨银泰in77",
+      "latitude": "30.236519841611127",
+      "longitude": "120.16902848296867",
+      "mainPic": "https://img.alicdn.com/imgextra/i4/6000000007997/O1CN01NmZ5Ff28wgBZY7dYo_!!6000000007997-0-hotel.jpg",
+      "name": "杭州美君小新民宿(雷峰塔店)",
+      "price": "¥1797",
+      "shId": "81311168",
+      "star": "经济型"
+    },
+    {
+      "address": "浙江杭州上城庆春东路78号亚朵同楼层 617房间",
+      "brandName": null,
+      "decorationTime": null,
+      "detailUrl": "https://a.feizhu.com/1eTwyX",
+      "interestsPoi": "近杭州站",
+      "latitude": "30.258059991404185",
+      "longitude": "120.19232116538694",
+      "mainPic": "https://img.alicdn.com/imgextra/i1/6000000005904/O1CN01WRGuOo1tU5DDHUsf6_!!6000000005904-0-hotel.jpg",
+      "name": "杭州掌宿原木风公寓(清河坊街店)",
+      "price": "¥422",
+      "shId": "80989250",
+      "star": "经济型"
+    },
+    {
+      "address": "浙江杭州拱墅杭州拱墅区中天西城纪(余杭塘路417号中天西城纪小区)626",
+      "brandName": null,
+      "decorationTime": null,
+      "detailUrl": "https://a.feizhu.com/0CnvlH",
+      "interestsPoi": "近杭州城西银泰城",
+      "latitude": "30.293059138777185",
+      "longitude": "120.11169568938806",
+      "mainPic": "https://img.alicdn.com/imgextra/i3/6000000001453/O1CN011JiPgo1MbWZoTsoI2_!!6000000001453-0-hotel.jpg",
+      "name": "杭州乔乔的浪漫满屋民宿(文教区2号店)",
+      "price": "¥480",
+      "shId": "88246277",
+      "star": "经济型"
+    }
+  ],
+  "check_in_date": "2026-06-05",
+  "check_out_date": "2026-06-07",
+  "generated_at": "2026-05-03"
+}
