@@ -1,0 +1,17 @@
+{
+  "mcpServers": {
+    "amap_maps": {
+      "command": "npx",
+      "args": ["-y", "@amap/amap-maps-mcp-server"],
+      "env": {
+        "AMAP_MAPS_API_KEY": "c288d8650c111a2809f9af0eaeac4d21"
+      },
+      "startupTimeoutSec": 20
+    }
+  },
+  "env": {
+    "AMAP_MAPS_API_KEY": "c288d8650c111a2809f9af0eaeac4d21",
+    "AMAP_WEB_JS_API_KEY": "02aa8f0b547054d8687c08ae3ec875c7",
+    "FLYAI_API_KEY": "sk-Ug9hh97SZtukN_27vQzgHYx-51C4Eh4m"
+  }
+}
