@@ -10,7 +10,7 @@
     "generate:sources": "node .claude/skills/roammate-travel-concierge/scripts/generate-sources.mjs",
     "wr": "bash .claude/skills/roammate-travel-concierge/scripts/run-web-rooter.sh",
     "doctor:webrooter": "bash .claude/skills/roammate-travel-concierge/scripts/run-web-rooter.sh doctor",
-    "test": "node --check .claude/skills/roammate-travel-concierge/scripts/validate-ledger.mjs && node --check .claude/skills/roammate-travel-concierge/scripts/validate-trip-package.mjs && node --check .claude/skills/roammate-travel-concierge/scripts/generate-sources.mjs && node --check .claude/skills/map-route-builder/scripts/validate_map.mjs && node --check .claude/skills/guidebook-maker/scripts/build-guidebook.mjs && node --check .claude/skills/guidebook-maker/scripts/validate-guidebook.mjs && python3 -m py_compile .claude/skills/map-route-builder/scripts/build_real_map.py .claude/skills/map-route-builder/scripts/normalize_pois.py .claude/skills/itinerary-planner/scripts/validate_itinerary.py"
+    "test": "node --check .claude/skills/roammate-travel-concierge/scripts/validate-ledger.mjs && node --check .claude/skills/roammate-travel-concierge/scripts/validate-trip-package.mjs && node --check .claude/skills/roammate-travel-concierge/scripts/generate-sources.mjs && node --check .claude/skills/map-route-builder/scripts/validate_map.mjs && node --check .claude/skills/guidebook-maker/scripts/build-guidebook.mjs && node --check .claude/skills/guidebook-maker/scripts/validate-guidebook.mjs && python3 -S -m py_compile .claude/skills/map-route-builder/scripts/build_real_map.py .claude/skills/map-route-builder/scripts/normalize_pois.py .claude/skills/itinerary-planner/scripts/validate_itinerary.py"
   },
   "keywords": [],
   "author": "",

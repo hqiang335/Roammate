@@ -2,11 +2,11 @@
 import fs from "node:fs";
 
 function usage() {
-  console.error("Usage: node validate_map.mjs map-data.json map.html");
+  console.error("Usage: node validate_map.mjs map-data.json");
 }
 
-const [, , dataPath, htmlPath] = process.argv;
-if (!dataPath || !htmlPath) {
+const [, , dataPath] = process.argv;
+if (!dataPath) {
   usage();
   process.exit(1);
 }
@@ -22,15 +22,6 @@ function readJson(path) {
   }
 }
 
-function readText(path) {
-  try {
-    return fs.readFileSync(path, "utf8");
-  } catch (error) {
-    issues.push(`Cannot read HTML ${path}: ${error.message}`);
-    return "";
-  }
-}
-
 function nonEmpty(value) {
   return value !== undefined && value !== null && String(value).trim().length > 0;
 }
@@ -40,7 +31,6 @@ function hotelUrl(hotel) {
 }
 
 const data = readJson(dataPath);
-const html = readText(htmlPath);
 
 if (data) {
   if (data.artifact_type !== "map-data") {
@@ -73,27 +63,12 @@ if (data) {
   }
 }
 
-if (html) {
-  if (!html.includes("webapi.amap.com/maps")) {
-    issues.push("map.html must load the Amap Web JS API.");
-  }
-  if (!html.includes("new AMap.Map")) {
-    issues.push("map.html must initialize a real AMap.Map.");
-  }
-  if (html.includes("map-placeholder") || html.includes("需要高德 Web JS API Key")) {
-    issues.push("map.html looks like a handwritten placeholder, not a real generated map.");
-  }
-  if (!html.trim().toLowerCase().endsWith("</html>")) {
-    issues.push("map.html must end with </html>.");
-  }
-}
-
 if (issues.length) {
-  console.error("Map validation failed:");
+  console.error("Map data validation failed:");
   for (const issue of issues) {
     console.error(`- ${issue}`);
   }
   process.exit(1);
 }
 
-console.log("Map validation passed.");
+console.log("Map data validation passed.");

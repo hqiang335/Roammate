@@ -42,26 +42,22 @@ The V1 package includes `scripts/build_real_map.py`, which can use Amap REST API
 - `/v3/place/text` for POI lookup.
 - `/v3/geocode/geo` as fallback geocoder.
 - `/v3/direction/walking` for compact route segments.
-- Amap JavaScript API in generated `map.html`.
 
-For full-package map artifacts, run the script before writing any final `map.html`. It writes:
+For full-package map data, run the script before building the final guidebook. It writes:
 
 - `map-data.json`: authoritative POI, route, hotel, date, and source payload.
 - `pois.json`: legacy alias with the same payload for V1 compatibility.
-- `map.html`: generated Amap Web JS artifact.
 
-Run `scripts/validate_map.mjs map-data.json map.html` after generation. If validation fails, do not keep a handwritten placeholder as `map.html`.
+Run `scripts/validate_map.mjs map-data.json` after generation. If validation fails, fix the data or write `map-error.md`.
 
 ## Expected Configuration
 
-The common server is `@amap/amap-maps-mcp-server` with an `AMAP_MAPS_API_KEY` environment variable.
-
-For generated browser maps, also set `AMAP_WEB_JS_API_KEY`.
+The common server is `@amap/amap-maps-mcp-server` with an `AMAP_MAPS_API_KEY` environment variable. Browser map rendering is owned by `guidebook-maker` and uses `AMAP_WEB_JS_API_KEY` when building `guidebook.html`.
 
 ## Failure Handling
 
 - If MCP tools are absent, continue with FlyAI, official/Web-Rooter cited evidence, and estimates.
-- If MCP tools are absent but `AMAP_MAPS_API_KEY` and `AMAP_WEB_JS_API_KEY` are configured, prefer the direct REST script before declaring map generation unavailable.
+- If MCP tools are absent but `AMAP_MAPS_API_KEY` is configured, prefer the direct REST script before declaring map data generation unavailable.
 - If a POI has multiple matches, prefer exact city and official/scenic-area names.
 - If geocoding confidence is low, mark the POI for user verification.
 - If route planning fails, use approximate time and prefix with `约`.

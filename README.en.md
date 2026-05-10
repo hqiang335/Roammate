@@ -11,7 +11,6 @@ The project is designed for Claude Code, Codex, and StudyClawHub-style agent/ski
 After GitHub Pages is enabled for this repository, the demo can be opened directly in a desktop or mobile browser:
 
 - [Xinjiang 2026-05-27 Travel Atlas](https://hqiang335.github.io/Roammate/TRAVEL/%E6%96%B0%E7%96%86-2026-05-27/guidebook.html)
-- [Xinjiang 2026-05-27 Standalone Map](https://hqiang335.github.io/Roammate/TRAVEL/%E6%96%B0%E7%96%86-2026-05-27/map.html)
 
 If the links return 404, enable GitHub Pages for the repository and wait for the Pages deployment to finish.
 
@@ -28,7 +27,7 @@ Roammate turns a natural-language trip request into a complete travel package:
 1. `destination-brief` creates a destination overview, best-season notes, transport gateways, traveler fit, cautions, and source-backed assumptions.
 2. `local-reputation-research` studies attraction, restaurant, hotel-area, and tourist-trap reputation using public web evidence and structured travel data.
 3. `itinerary-planner` builds a detailed multi-day itinerary with timeline, transport, meals, budget, booking reminders, backup plans, and feasibility checks.
-4. `map-route-builder` normalizes POIs, geocodes places, builds routes, collects hotel references, and generates `map.html`.
+4. `map-route-builder` normalizes POIs, geocodes places, builds routes, collects hotel references, and generates reusable `map-data.json` for the guidebook map.
 5. `guidebook-maker` merges all trip artifacts into a dashboard-style `guidebook.html` with map, daily plan, POI dossiers, hotels, food, budget, checklist, and source notes.
 
 ## Project Structure
@@ -55,7 +54,6 @@ Roammate/
 │       ├── itinerary-data.json
 │       ├── map-data.json
 │       ├── pois.json
-│       ├── map.html
 │       ├── guidebook-data.json
 │       ├── guidebook.html
 │       └── sources.md
@@ -86,7 +84,7 @@ Text-only planning can still run without all external tools, but maps, route qua
 npm install
 ```
 
-If you want to export `guidebook.html` to PDF, install Playwright's Chromium browser:
+If you want to run browser-rendering QA for `guidebook.html`, install Playwright's Chromium browser:
 
 ```bash
 npx playwright install chromium
@@ -176,7 +174,7 @@ npm run generate:sources -- TRAVEL/新疆-2026-05-27/research-ledger.json
 
 ```bash
 npm run validate:ledger -- TRAVEL/新疆-2026-05-27/research-ledger.json
-npm run validate:map -- TRAVEL/新疆-2026-05-27/map-data.json TRAVEL/新疆-2026-05-27/map.html
+npm run validate:map -- TRAVEL/新疆-2026-05-27/map-data.json
 npm run validate:guidebook -- TRAVEL/新疆-2026-05-27/guidebook-data.json TRAVEL/新疆-2026-05-27/guidebook.html
 npm run validate:trip -- TRAVEL/新疆-2026-05-27
 ```

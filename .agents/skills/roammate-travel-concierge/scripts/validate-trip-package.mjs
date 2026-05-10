@@ -92,12 +92,12 @@ if (!itineraryData) {
 }
 
 let mapData = null;
-if (exists("map-data.json") && exists("map.html")) {
+if (exists("map-data.json")) {
   mapData = readJson("map-data.json");
   runValidator(
-    "Map validation",
+    "Map data validation",
     "node",
-    [".claude/skills/map-route-builder/scripts/validate_map.mjs", path.join(tripDir, "map-data.json"), path.join(tripDir, "map.html")],
+    [".claude/skills/map-route-builder/scripts/validate_map.mjs", path.join(tripDir, "map-data.json")],
   );
   if (exists("pois.json")) {
     const legacy = readJson("pois.json");
@@ -106,7 +106,7 @@ if (exists("map-data.json") && exists("map.html")) {
     }
   }
 } else if (!exists("map-error.md")) {
-  issues.push("Need either valid map-data.json + map.html or map-error.md.");
+  issues.push("Need either valid map-data.json or map-error.md.");
 }
 
 const guidebookData = exists("guidebook-data.json") ? readJson("guidebook-data.json") : null;
@@ -130,13 +130,6 @@ if (exists("guidebook-data.json") && exists("guidebook.html")) {
 
 if (!exists("sources.md")) {
   issues.push("Missing sources.md.");
-}
-
-if (exists("map.html")) {
-  const html = readText("map.html");
-  if (html.includes("map-placeholder") || html.includes("需要高德 Web JS API Key")) {
-    issues.push("map.html appears to be a placeholder.");
-  }
 }
 
 if (exists("guidebook.html")) {

@@ -13,12 +13,12 @@
 | `local-reputation-research` | 口碑调研、避坑、值不值得去 |
 | `itinerary-planner` | 多日行程、家庭出行、自驾、预算 |
 | `map-route-builder` | POI 规范化、路线图、高德、FlyAI 交通/酒店/票务 |
-| `guidebook-maker` | dashboard 型 HTML Travel Atlas / PDF 旅行手册 |
+| `guidebook-maker` | dashboard 型 HTML Travel Atlas 旅行地图册 |
 
 ## 工具与 API
 
 - **高德地图 MCP**：`amap_maps` 服务器，自动注入 `AMAP_MAPS_API_KEY`
-- **高德 Web JS API**：`AMAP_WEB_JS_API_KEY`，用于 `map.html` 和 dashboard 型 `guidebook.html` 前端地图渲染
+- **高德 Web JS API**：`AMAP_WEB_JS_API_KEY`，用于 dashboard 型 `guidebook.html` 前端地图渲染
 - **FlyAI CLI**：`FLYAI_API_KEY`，用于航班、火车、酒店、景点商品、门票/套餐参考
 - **Web-Rooter CLI**：`wr`，用于官方公告、公开网页抓取、多源交叉验证、游客口碑、餐厅口碑和带引用的网页证据输出
 
@@ -42,9 +42,8 @@ Web-Rooter 网络搜索统一使用 Quark：优先使用 `wr web --engine=quark 
 
 - `research-ledger.json`：信息总账，记录事实、工具调用、来源、可信度、取舍和下游使用情况。
 - `itinerary-data.json`：行程结构，供地图和手册复用。
-- `map-data.json`：地图权威数据，包含 POI、坐标、路线、酒店；`pois.json` 仅作为 V1 兼容别名。
+- `map-data.json`：地图权威数据，包含 POI、坐标、路线、酒店，供 `guidebook.html` 内嵌地图使用；`pois.json` 仅作为 V1 兼容别名。
 - `guidebook-data.json`：Travel Atlas 渲染输入，保留每日卡片、POI 攻略档案、酒店组合、美食、预算、清单和来源标签。
-- `map.html`：必须由 `map-route-builder/scripts/build_real_map.py` 生成并通过校验；作为独立 Amap dashboard 地图。
 - `guidebook.html`：必须由 `guidebook-maker/scripts/build-guidebook.mjs` 生成并通过校验；这是主交付的 dashboard 型交互旅行地图册，会合并 `guidebook-data.json` 和同目录 `map-data.json`。
 
 最终交付前运行：
@@ -61,7 +60,7 @@ npm run validate:trip -- TRAVEL/{目的地}-{日期}
 2. `local-reputation-research`：口碑与避坑
 3. `itinerary-planner`：每日行程
 4. `map-route-builder`：POI、路线、地图、酒店参考
-5. `guidebook-maker`：dashboard 型 HTML Travel Atlas / PDF 旅行手册
+5. `guidebook-maker`：dashboard 型 HTML Travel Atlas 旅行地图册
 
 不要在第 3 步后停止，也不要再问用户是否需要地图或手册；除非缺少会影响规划的关键信息，否则直接写入 `TRAVEL/{目的地}-{日期}/`。中间步骤只能输出简短进度，不得在 `itinerary-data.json` 验证通过后说“完整规划已完成”或给最终总结；只有第 4 步地图、第 5 步手册、`sources.md` 和 `npm run validate:trip -- TRAVEL/{目的地}-{日期}` 全部完成或明确降级失败后，才能输出最终交付说明。
 
@@ -71,6 +70,6 @@ npm run validate:trip -- TRAVEL/{目的地}-{日期}
 - 不使用小红书、小红书 MCP 或 `wr xhs`
 - 不代替用户预订、付款或登录
 - 高德和 FlyAI 不可用时降级继续，标注估算
-- 不手写正式 `map.html` 或 `guidebook.html`；失败时写明降级原因，而不是生成占位正式产物
+- 不手写正式 `guidebook.html`；失败时写明降级原因，而不是生成占位正式产物
 - 不重复查询已经在 `research-ledger.json` 中有新鲜高可信记录的事实
 - 需要公共网页证据时优先使用 Web-Rooter CLI；Claude Code 内置 Web Search 只能在用户明确要求时使用

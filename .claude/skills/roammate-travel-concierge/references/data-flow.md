@@ -14,7 +14,6 @@ Use this contract for full-package trips. Markdown files are reading reports; JS
 | `map-data.json` | `map-route-builder` | Authoritative map handoff with POIs, coordinates, routes, hotels |
 | `pois.json` | `map-route-builder` | V1 legacy alias of `map-data.json`; do not use for itinerary data |
 | `guidebook-data.json` | `guidebook-maker` | Adaptive Travel Atlas render input with day cards, POI dossiers, hotels, food, budget, checklist, and source labels |
-| `map.html` | `map-route-builder` script | Generated standalone Amap dashboard map |
 | `guidebook.html` | `guidebook-maker` script | Generated dashboard-style Travel Atlas; reads `guidebook-data.json` and sibling `map-data.json` |
 | `sources.md` | full pipeline | Human-readable source index, generated from ledger by `scripts/generate-sources.mjs` |
 
@@ -59,7 +58,6 @@ Avoid copying entire Markdown sections into JSON. JSON files should contain norm
 Allowed repetition:
 
 - `guidebook.html` combining itinerary, map, reputation, hotels, food, checklist, and sources into one interactive dashboard;
-- `map.html` visualizing `map-data.json` as a standalone route dashboard;
 - `itinerary.md` showing key reservation and rest notes inline.
 
 Avoided repetition:
@@ -77,7 +75,7 @@ node .claude/skills/roammate-travel-concierge/scripts/validate-trip-package.mjs 
   TRAVEL/{目的地}-{日期}
 ```
 
-If validation fails, fix the data or artifact that failed. Do not deliver placeholder `map.html` or handwritten `guidebook.html`.
+If validation fails, fix the data or artifact that failed. Do not deliver placeholder map data or handwritten `guidebook.html`.
 
 Generate `sources.md` before package validation:
 

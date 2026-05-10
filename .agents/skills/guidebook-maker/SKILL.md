@@ -1,11 +1,11 @@
 ---
 name: guidebook-maker
-description: Turn mainland China trip briefs, reputation research, itineraries, maps, hotels, budgets, and source notes into a polished dashboard-style interactive HTML travel atlas and optional printable PDF.
+description: Turn mainland China trip briefs, reputation research, itineraries, maps, hotels, budgets, and source notes into a polished dashboard-style interactive HTML travel atlas.
 ---
 
 # Guidebook Maker
 
-Use this nested skill when the user wants the final interactive travel atlas, printable guidebook, HTML page, PDF, or polished artifact for family and friends.
+Use this nested skill when the user wants the final interactive travel atlas, printable guidebook, HTML page, or polished artifact for family and friends.
 
 ## Workflow
 
@@ -19,8 +19,6 @@ Use this nested skill when the user wants the final interactive travel atlas, pr
 8. Generate `guidebook.html` with `scripts/build-guidebook.mjs`. The renderer produces a dashboard-style Travel Atlas and automatically reads sibling `map-data.json` when present, so map, day timeline, POI dossiers, hotels, food, budget, checklist, and sources can be used together.
 9. Validate `guidebook.html` with `scripts/validate-guidebook.mjs`.
 10. Run `scripts/qa-guidebook.mjs` when Playwright is available to check desktop/mobile rendering, drawer navigation, and horizontal overflow.
-11. If PDF is requested and Playwright is available, use `scripts/html2pdf.mjs`.
-12. If PDF export fails, deliver HTML and explain the failure.
 
 ## Required Commands
 

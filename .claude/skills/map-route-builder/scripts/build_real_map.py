@@ -1,10 +1,9 @@
 #!/usr/bin/env python3
-"""Build real Amap POIs/routes and FlyAI hotel results into map.html."""
+"""Build real Amap POIs/routes and FlyAI hotel results into reusable map data."""
 
 from __future__ import annotations
 
 import argparse
-import html
 import json
 import math
 import os
@@ -477,220 +476,6 @@ def write_json(path: Path, payload: dict[str, Any]) -> None:
     path.write_text(json.dumps(payload, ensure_ascii=False, indent=2) + "\n", encoding="utf-8")
 
 
-def render_map_html(title: str, js_key: str, payload: dict[str, Any], security_js_code: str = "") -> str:
-    safe_title = html.escape(title)
-    safe_key = html.escape(js_key)
-    security_config = ""
-    if security_js_code:
-        safe_security = json.dumps(str(security_js_code), ensure_ascii=False).replace("</", "<\\/")
-        security_config = f"  <script>window._AMapSecurityConfig = {{ securityJsCode: {safe_security} }};</script>\n"
-    data_json = json.dumps(payload, ensure_ascii=False).replace("</", "<\\/")
-    template = """<!doctype html>
-<html lang="zh-CN">
-<head>
-  <meta charset="utf-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>__TITLE__路线地图</title>
-  <style>
-    :root {
-      --bg: #f4efe6;
-      --paper: #fffdf8;
-      --ink: #202823;
-      --muted: #69736d;
-      --line: #e7dccd;
-      --accent: #1d766f;
-      --warm: #b7791f;
-      --danger: #c7563b;
-      --blue: #2f6f9f;
-      --shadow: 0 18px 45px rgba(38, 30, 20, .12);
-    }
-    * { box-sizing: border-box; }
-    html, body { margin: 0; height: 100%; font-family: "PingFang SC", "Microsoft YaHei", sans-serif; color: var(--ink); letter-spacing: 0; }
-    body { background: var(--bg); }
-    .app { display: grid; grid-template-columns: 390px minmax(0, 1fr); height: 100vh; }
-    aside { overflow: auto; padding: 18px; background: var(--paper); border-right: 1px solid var(--line); }
-    #map { min-height: 100vh; }
-    h1, h2, h3, p { margin-top: 0; }
-    h1 { font-size: 22px; line-height: 1.2; margin: 0 0 10px; }
-    h2 { font-size: 13px; margin: 22px 0 8px; color: var(--danger); letter-spacing: .08em; text-transform: uppercase; }
-    h3 { font-size: 15px; margin: 0 0 5px; }
-    .summary { display: grid; grid-template-columns: repeat(3, 1fr); gap: 8px; margin: 14px 0; }
-    .metric { border: 1px solid var(--line); border-radius: 8px; background: #fff; padding: 10px; }
-    .metric span { display: block; color: var(--muted); font-size: 12px; }
-    .metric strong { display: block; font-size: 20px; line-height: 1; }
-    .toolbar { position: sticky; top: -18px; z-index: 2; margin: 0 -18px 14px; padding: 12px 18px; background: rgba(255, 253, 248, .96); border-bottom: 1px solid var(--line); }
-    .filters { display: flex; flex-wrap: wrap; gap: 7px; }
-    .filters button { min-height: 30px; border: 1px solid var(--line); border-radius: 999px; padding: 5px 10px; background: #fff; color: var(--muted); cursor: pointer; }
-    .filters button.active { border-color: var(--accent); background: var(--accent); color: #fff; }
-    .card { display: grid; gap: 5px; width: 100%; margin: 8px 0; padding: 12px; border: 1px solid var(--line); border-radius: 8px; background: #fff; box-shadow: 0 8px 20px rgba(38, 30, 20, .05); text-align: left; cursor: pointer; transition: transform .16s ease, border-color .16s ease, background .16s ease; }
-    .card:hover, .card.active { transform: translateY(-1px); border-color: var(--accent); background: #eef7f4; }
-    .meta { color: var(--muted); font-size: 12px; line-height: 1.5; }
-    .price { color: var(--warm); font-weight: 800; }
-    .badge { display: inline-flex; width: 26px; height: 26px; align-items: center; justify-content: center; margin-right: 6px; border-radius: 999px; background: var(--accent); color: #fff; font-size: 12px; font-weight: 900; vertical-align: middle; }
-    .badge.hotel { background: var(--warm); }
-    .badge.transport { background: var(--blue); }
-    .badge.city { background: var(--danger); }
-    .map-marker { display: grid; width: 34px; height: 34px; place-items: center; border: 2px solid #fff; border-radius: 999px; background: var(--accent); color: #fff; box-shadow: 0 8px 20px rgba(0,0,0,.2); font-weight: 900; }
-    .map-marker.hotel { background: var(--warm); }
-    .map-marker.transport { background: var(--blue); }
-    .map-marker.city { background: var(--danger); }
-    .map-marker.culture { background: #8461a8; }
-    .detail { position: fixed; right: 18px; bottom: 18px; z-index: 10; width: min(380px, calc(100vw - 36px)); max-height: 46vh; overflow: auto; border: 1px solid var(--line); border-radius: 8px; background: var(--paper); box-shadow: var(--shadow); padding: 14px; transform: translateY(calc(100% + 30px)); transition: transform .18s ease; }
-    .detail.open { transform: translateY(0); }
-    .detail-head { display: flex; justify-content: space-between; gap: 10px; }
-    .detail button { border: 1px solid var(--line); border-radius: 999px; background: #fff; width: 30px; height: 30px; cursor: pointer; }
-    a { color: var(--accent); font-weight: 800; text-decoration: none; }
-    a:hover { text-decoration: underline; }
-    @media (max-width: 900px) {
-      .app { grid-template-columns: 1fr; grid-template-rows: 52vh auto; height: auto; min-height: 100vh; }
-      aside { grid-row: 2; border-right: 0; border-top: 1px solid var(--line); }
-      #map { min-height: 52vh; }
-    }
-  </style>
-__AMAP_SECURITY_CONFIG__  <script src="https://webapi.amap.com/maps?v=2.0&key=__AMAP_KEY__"></script>
-</head>
-<body>
-  <div class="app">
-    <aside>
-      <div class="toolbar">
-        <h1>__TITLE__</h1>
-        <div class="filters" id="filters"></div>
-      </div>
-      <div id="summary"></div>
-      <h2>地点路线</h2>
-      <div id="pois"></div>
-      <h2>酒店候选</h2>
-      <div id="hotels"></div>
-    </aside>
-    <div id="map"></div>
-  </div>
-  <section class="detail" id="detail">
-    <div class="detail-head"><h3 id="detailTitle">地点详情</h3><button id="detailClose" type="button" aria-label="关闭">×</button></div>
-    <div id="detailBody"></div>
-  </section>
-  <script>
-    const data = __DATA_JSON__;
-    const esc = (value) => String(value ?? '').replace(/[&<>"']/g, (ch) => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[ch]));
-    function category(item) {
-      const text = [item.name, item.type, item.address].filter(Boolean).join(' ');
-      if (/机场|车站|火车站|高铁站|地铁|码头/.test(text)) return 'transport';
-      if (/酒店|民宿|客栈|宾馆|住宿/.test(text)) return 'hotel';
-      if (/博物馆|科技馆|美术馆|纪念馆|展览馆/.test(text)) return 'culture';
-      if (/街|巷|太古里|商圈|广场|步行街/.test(text)) return 'city';
-      return 'attraction';
-    }
-    function markerLabel(kind) {
-      return { transport: '交', hotel: '住', culture: '文', city: '街', attraction: '景' }[kind] || '点';
-    }
-    const pois = (data.pois || []).map((poi, index) => ({ ...poi, _kind: category(poi), _label: markerLabel(category(poi)), _index: index + 1 }));
-    const hotels = (data.hotels || []).filter(h => !h.error).map((hotel, index) => ({
-      ...hotel,
-      _kind: 'hotel',
-      _label: '住',
-      _index: index + 1,
-      location: hotel.longitude && hotel.latitude ? [Number(hotel.longitude), Number(hotel.latitude)] : null,
-    }));
-    const validPois = pois.filter(p => Array.isArray(p.location));
-    const validHotels = hotels.filter(h => Array.isArray(h.location));
-    const allPoints = [...validPois, ...validHotels];
-    const center = validPois.length ? validPois[0].location : [120.1551, 30.2741];
-    const map = new AMap.Map('map', { zoom: 12, center, mapStyle: 'amap://styles/fresh' });
-    const markerByName = new Map();
-    const bounds = [];
-    function openDetail(item) {
-      document.getElementById('detailTitle').textContent = item.name || '地点详情';
-      const hotelUrl = item.booking_url || item.detailUrl || item.jumpUrl || item.url || '';
-      document.getElementById('detailBody').innerHTML = [
-        '<p class="meta">' + esc([item.address, item.confidence, item.source].filter(Boolean).join(' · ')) + '</p>',
-        item.price ? '<p class="price">' + esc(item.price) + '</p>' : '',
-        item.room_type ? '<p>房型：' + esc(item.room_type) + '</p>' : '',
-        item.fit ? '<p>' + esc(item.fit) + '</p>' : '',
-        hotelUrl ? '<p><a href="' + esc(hotelUrl) + '" target="_blank" rel="noopener noreferrer">飞猪查看</a></p>' : '',
-      ].filter(Boolean).join('');
-      document.getElementById('detail').classList.add('open');
-    }
-    function addMarker(item) {
-      if (!Array.isArray(item.location)) return;
-      const marker = new AMap.Marker({
-        position: item.location,
-        title: item.name,
-        content: '<button class="map-marker ' + esc(item._kind) + '" type="button">' + esc(item._label) + '</button>',
-        anchor: 'center',
-      });
-      marker.setMap(map);
-      marker.on('click', () => {
-        openDetail(item);
-      });
-      markerByName.set(item.name, marker);
-      bounds.push(item.location);
-    }
-    allPoints.forEach(addMarker);
-    if (validPois.length > 1) {
-      const line = new AMap.Polyline({
-        path: validPois.map(p => p.location),
-        strokeColor: '#1d766f',
-        strokeWeight: 6,
-        strokeOpacity: 0.82,
-        lineJoin: 'round'
-      });
-      line.setMap(map);
-    }
-    if (bounds.length) map.setFitView(null, false, [60, 60, 60, 60]);
-
-    function focusItem(item) {
-      document.querySelectorAll('.card').forEach(card => card.classList.toggle('active', card.dataset.name === item.name));
-      if (Array.isArray(item.location)) {
-        map.setZoomAndCenter(14, item.location, true, 500);
-        const marker = markerByName.get(item.name);
-        marker?.setAnimation('AMAP_ANIMATION_BOUNCE');
-        window.setTimeout(() => marker?.setAnimation(null), 900);
-      }
-      openDetail(item);
-    }
-    function renderCard(item, prefix) {
-      return '<button class="card" type="button" data-name="' + esc(item.name) + '" data-kind="' + esc(item._kind) + '">' +
-        '<h3><span class="badge ' + esc(item._kind) + '">' + esc(item._label) + '</span>' + esc(prefix + item.name) + '</h3>' +
-        '<div class="meta">' + esc([item.address || item.area || '地址待核实', item.confidence || item.tier, item.source || item.star].filter(Boolean).join(' · ')) + '</div>' +
-        (item.price ? '<div class="price">' + esc(item.price) + '</div>' : '') +
-        '</button>';
-    }
-    document.getElementById('summary').innerHTML =
-      '<div class="summary">' +
-      '<div class="metric"><span>高德 POI</span><strong>' + esc(pois.length) + '</strong></div>' +
-      '<div class="metric"><span>路线段</span><strong>' + esc((data.routes || []).length) + '</strong></div>' +
-      '<div class="metric"><span>酒店</span><strong>' + esc(hotels.length) + '</strong></div>' +
-      '</div><p class="meta">生成时间：' + esc(data.generated_at || '') + '</p>';
-    document.getElementById('pois').innerHTML = pois.map((p, i) => renderCard(p, (i + 1) + '. ')).join('');
-    document.getElementById('hotels').innerHTML = hotels.map((h, i) => renderCard(h, (i + 1) + '. ')).join('') || '<p class="meta">暂无酒店候选。</p>';
-    document.querySelectorAll('.card').forEach(card => {
-      const item = [...pois, ...hotels].find(candidate => candidate.name === card.dataset.name);
-      card.addEventListener('click', () => focusItem(item));
-    });
-    const kinds = [['all', '全部'], ['attraction', '景点'], ['culture', '文化'], ['city', '街区'], ['hotel', '酒店'], ['transport', '交通']];
-    document.getElementById('filters').innerHTML = kinds.map(([key, label]) => '<button type="button" data-kind="' + key + '">' + label + '</button>').join('');
-    document.querySelector('[data-kind="all"]').classList.add('active');
-    document.querySelectorAll('#filters button').forEach(button => {
-      button.addEventListener('click', () => {
-        document.querySelectorAll('#filters button').forEach(item => item.classList.toggle('active', item === button));
-        document.querySelectorAll('.card').forEach(card => {
-          card.style.display = button.dataset.kind === 'all' || card.dataset.kind === button.dataset.kind ? '' : 'none';
-        });
-      });
-    });
-    document.getElementById('detailClose').addEventListener('click', () => document.getElementById('detail').classList.remove('open'));
-  </script>
-</body>
-</html>
-"""
-    return (
-        template
-        .replace("__TITLE__", safe_title)
-        .replace("__AMAP_SECURITY_CONFIG__", security_config)
-        .replace("__AMAP_KEY__", safe_key)
-        .replace("__DATA_JSON__", data_json)
-    )
-
-
 def main() -> int:
     load_codex_env()
     parser = argparse.ArgumentParser(description="Build real Amap/FlyAI route map artifacts.")
@@ -708,13 +493,8 @@ def main() -> int:
     args = parser.parse_args()
 
     amap_key = os.environ.get("AMAP_MAPS_API_KEY")
-    js_key = os.environ.get("AMAP_WEB_JS_API_KEY")
-    security_js_code = os.environ.get("AMAP_SECURITY_JS_CODE") or os.environ.get("AMAP_WEB_JS_SECURITY_CODE", "")
     if not amap_key:
         print("Missing AMAP_MAPS_API_KEY.", file=sys.stderr)
-        return 1
-    if not js_key:
-        print("Missing AMAP_WEB_JS_API_KEY.", file=sys.stderr)
         return 1
 
     names = locations_from_input(args)
@@ -750,11 +530,7 @@ def main() -> int:
     }
     write_json(output_dir / "map-data.json", payload)
     write_json(output_dir / "pois.json", payload)
-    (output_dir / "map.html").write_text(
-        render_map_html(f"{args.destination}旅行路线", js_key, payload, security_js_code),
-        encoding="utf-8",
-    )
-    print(json.dumps({"map_data_json": str(output_dir / "map-data.json"), "legacy_pois_json": str(output_dir / "pois.json"), "map_html": str(output_dir / "map.html"), "poi_count": len(pois), "route_count": len(routes), "hotel_count": len([h for h in hotels if not h.get("error")])}, ensure_ascii=False))
+    print(json.dumps({"map_data_json": str(output_dir / "map-data.json"), "legacy_pois_json": str(output_dir / "pois.json"), "poi_count": len(pois), "route_count": len(routes), "hotel_count": len([h for h in hotels if not h.get("error")])}, ensure_ascii=False))
     return 0
 
 
