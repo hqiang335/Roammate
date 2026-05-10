@@ -4,7 +4,7 @@
 
 Roammate is an AI-assisted travel planning agent for mainland China. It coordinates destination briefing, local reputation research, itinerary planning, route mapping, hotel and ticket references, source tracking, and a dashboard-style interactive HTML travel atlas.
 
-The project is designed for Claude Code, Codex, and StudyClawHub-style agent/skill workflows. It can run as a multi-skill travel planning agent, while each skill can also be inspected or submitted independently.
+The committed skill implementation lives in `.claude/skills`. The repository also includes `AGENTS.md` at the root so Codex / StudyClawHub-style agent workflows can read the same project instructions without requiring a duplicated `.agents` directory.
 
 ## Online Demo
 
@@ -34,8 +34,6 @@ Roammate turns a natural-language trip request into a complete travel package:
 
 ```text
 Roammate/
-├── .agents/
-│   └── skills/                    # Codex / agent-compatible skill mirror
 ├── .claude/
 │   ├── skills/                    # Primary Claude Code skill implementation
 │   │   ├── roammate-travel-concierge/
@@ -64,6 +62,8 @@ Roammate/
 ├── package.json
 └── package-lock.json
 ```
+
+This repository intentionally tracks only `.claude/skills` as the source of truth. If a local `.agents/` folder exists, it is an optional local mirror for some Codex/agent environments and does not need to be uploaded. Keeping `AGENTS.md` and `CLAUDE.md` aligned is expected: they target different tool entry points while describing the same project rules.
 
 ## Requirements
 
@@ -136,13 +136,13 @@ The project intentionally avoids login-only scraping, account operations, bookin
 
 ## Usage
 
-Open this repository in Claude Code or Codex, then start with the main routing skill:
+Open this repository in Claude Code, then start with the main routing skill:
 
 ```text
 /roammate-travel-concierge Plan a 4-day family trip to Xinjiang from May 27, 2026. Include transport, hotels, routes, attractions, food, budget, and an interactive guidebook.
 ```
 
-If slash commands are not available, provide the same request in natural language and ask Roammate to run the complete five-step workflow.
+If slash commands are not available, or if you are using Codex through `AGENTS.md`, provide the same request in natural language and ask Roammate to run the complete five-step workflow from the `.claude/skills` files.
 
 The final artifacts will be written under:
 

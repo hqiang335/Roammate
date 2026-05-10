@@ -9,6 +9,7 @@ __pycache__/
 .venv*/
 web-rooter/
 .web-rooter/
+.agents/
 
 # Local secrets live outside this repo in ~/.codex/.env and ~/.flyai/config.json.
 .env

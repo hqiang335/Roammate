@@ -4,7 +4,7 @@
 
 ## Skills
 
-项目级 skills 位于 `.agents/skills/{skill-name}/SKILL.md`，通过 `/roammate-travel-concierge` 触发主路由。
+项目级 skills 位于 `.claude/skills/{skill-name}/SKILL.md`，通过 `/roammate-travel-concierge` 触发主路由。
 
 | Skill | 触发场景 |
 | --- | --- |
