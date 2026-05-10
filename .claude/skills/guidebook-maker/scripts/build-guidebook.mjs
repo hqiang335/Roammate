@@ -95,6 +95,13 @@ function stripMarkdown(value) {
     .trim();
 }
 
+function extractFirstUrl(value) {
+  const raw = String(value || "");
+  const markdownUrl = raw.match(/\[[^\]]+\]\((https?:\/\/[^)\s]+)\)/)?.[1];
+  const plainUrl = raw.match(/https?:\/\/[^\s)）]+/)?.[0];
+  return (markdownUrl || plainUrl || "").replace(/[。。，，；;、]+$/, "");
+}
+
 function markdownInline(value) {
   let html = escapeHtml(normalizeInlineBreaks(value));
   html = html.replace(/`([^`]+)`/g, "<code>$1</code>");
@@ -269,6 +276,24 @@ function markdownToHtml(markdown) {
   return html.join("\n");
 }
 
+function stripArchiveProvenanceSections(markdown) {
+  const lines = String(markdown || "").replace(/\r\n/g, "\n").split("\n");
+  const kept = [];
+  let skipLevel = 0;
+  const sourceHeading = /^(#{2,6})\s*(来源与可信度|搜索与来源|数据来源|来源|Sources?|References?)\s*$/i;
+  for (const line of lines) {
+    const heading = line.match(/^(#{1,6})\s+/);
+    if (skipLevel && heading && heading[1].length <= skipLevel) skipLevel = 0;
+    const sourceMatch = line.match(sourceHeading);
+    if (!skipLevel && sourceMatch) {
+      skipLevel = sourceMatch[1].length;
+      continue;
+    }
+    if (!skipLevel) kept.push(line);
+  }
+  return kept.join("\n").replace(/\n{3,}/g, "\n\n").trim();
+}
+
 function loadSourceDocuments(dir) {
   return [
     { file: "destination-brief.md", title: "完整目的地简报", anchor: "doc-destination-brief" },
@@ -276,7 +301,7 @@ function loadSourceDocuments(dir) {
     { file: "reputation.md", title: "完整口碑与避雷原文", anchor: "doc-reputation" },
   ].map((doc) => ({
     ...doc,
-    text: readOptionalText(path.join(dir, doc.file)),
+    text: stripArchiveProvenanceSections(readOptionalText(path.join(dir, doc.file))),
   })).filter((doc) => doc.text.trim());
 }
 
@@ -304,6 +329,108 @@ function inferPoiName(text, knownNames = []) {
   return knownNames.find((name) => text.includes(name) || name.includes(text)) || "";
 }
 
+function comparableText(value) {
+  return stripMarkdown(value)
+    .replace(/[（(].*?[）)]/g, "")
+    .replace(/[，,、\s]/g, "")
+    .toLowerCase();
+}
+
+function isMoreSpecificTitle(candidate, current) {
+  const candidateText = stripMarkdown(candidate);
+  const currentText = stripMarkdown(current);
+  return candidateText && currentText && candidateText.includes(currentText) && candidateText.length > currentText.length;
+}
+
+function titlesMatch(a, b) {
+  const left = comparableText(a);
+  const right = comparableText(b);
+  if (!left || !right) return false;
+  if (left === right) return true;
+  return (left.length >= 5 && right.includes(left)) || (right.length >= 5 && left.includes(right));
+}
+
+function minutesFromClock(value) {
+  const match = String(value || "").match(/(\d{1,2}):(\d{2})/);
+  if (!match) return null;
+  return Number(match[1]) * 60 + Number(match[2]);
+}
+
+function durationFromTimeRange(value) {
+  const text = String(value || "");
+  const match = text.match(/(\d{1,2}):(\d{2})\s*[—–-]\s*(次日)?\s*(\d{1,2}):(\d{2})/);
+  if (!match) return "";
+  let start = Number(match[1]) * 60 + Number(match[2]);
+  let end = Number(match[4]) * 60 + Number(match[5]);
+  if (match[3] || end < start) end += 24 * 60;
+  const minutes = end - start;
+  if (!Number.isFinite(minutes) || minutes <= 0) return "";
+  const hours = Math.floor(minutes / 60);
+  const rest = minutes % 60;
+  if (!hours) return `约${rest}分钟`;
+  return rest ? `约${hours}小时${rest}分钟` : `约${hours}小时`;
+}
+
+function inferTransportMode(title = "", type = "") {
+  const text = `${title} ${type}`;
+  if (/高铁|动车|火车|广州南|成都东|成都西|车站/.test(text)) return "高铁/火车";
+  if (/机场.*→.*机场|白云机场.*天府机场|天府机场.*白云机场|双流机场.*白云机场|白云机场.*双流机场/.test(text)) return "飞机";
+  if (/机场|酒店|景区|基地|市区|商圈/.test(text) && String(title).includes("→")) return "地铁/打车";
+  if (/地铁|打车|出租|网约车|公交|景区直通车|自驾|包车/.test(text)) return text.match(/景区直通车|地铁\/打车|地铁|打车|出租|网约车|公交|自驾|包车/)?.[0] || "";
+  return "";
+}
+
+function scoreActivityMatch(primary, candidate) {
+  let score = 0;
+  if (primary.time && candidate.time && primary.time === candidate.time) score += 5;
+  if (titlesMatch(primary.title, candidate.title)) score += 4;
+  if (primary.poiName && candidate.poiName && titlesMatch(primary.poiName, candidate.poiName)) score += 2;
+  const primaryStart = minutesFromClock(primary.time);
+  const candidateStart = minutesFromClock(candidate.time);
+  if (primaryStart !== null && candidateStart !== null && Math.abs(primaryStart - candidateStart) <= 15) score += 2;
+  return score;
+}
+
+function mergeActivityLists(primaryRaw, fallbackRaw, knownNames = []) {
+  const primary = primaryRaw.map((activity) => normalizeActivity(activity, knownNames)).filter((activity) => activity.title);
+  const fallback = fallbackRaw.map((activity) => normalizeActivity(activity, knownNames)).filter((activity) => activity.title);
+  if (!primary.length) return fallback;
+  const usedFallback = new Set();
+  const merged = primary.map((activity) => {
+    let bestIndex = -1;
+    let bestScore = 0;
+    fallback.forEach((candidate, index) => {
+      if (usedFallback.has(index)) return;
+      const score = scoreActivityMatch(activity, candidate);
+      if (score > bestScore) {
+        bestScore = score;
+        bestIndex = index;
+      }
+    });
+    const candidate = bestScore >= 4 ? fallback[bestIndex] : null;
+    if (candidate) usedFallback.add(bestIndex);
+    const title = isMoreSpecificTitle(candidate?.title, activity.title) ? candidate.title : activity.title;
+    return {
+      time: firstPresent(activity.time, candidate?.time),
+      title,
+      poiName: firstPresent(activity.poiName, candidate?.poiName, title),
+      transport: firstPresent(activity.transport, candidate?.transport, inferTransportMode(title, activity.type)),
+      cost: firstPresent(activity.cost, candidate?.cost),
+      notes: firstPresent(activity.notes, candidate?.notes),
+      duration: firstPresent(activity.duration, candidate?.duration, durationFromTimeRange(activity.time || candidate?.time)),
+      source: firstPresent(activity.source, candidate?.source),
+      tags: [...new Set([...asArray(candidate?.tags), ...asArray(activity.tags)])],
+      type: firstPresent(activity.type, candidate?.type),
+    };
+  });
+  fallback.forEach((activity, index) => {
+    if (!usedFallback.has(index) && !merged.some((item) => titlesMatch(item.title, activity.title))) {
+      merged.push(activity);
+    }
+  });
+  return merged;
+}
+
 function parseItineraryMarkdown(text, knownNames = []) {
   if (!text) return new Map();
   const matches = [...text.matchAll(/^###\s+Day\s+(\d+)\s*[·.-]\s*(.+)$/gm)];
@@ -324,6 +451,7 @@ function parseItineraryMarkdown(text, knownNames = []) {
         const cells = splitMarkdownRow(line);
         if (cells.length < 5) continue;
         const titleText = cells[1];
+        if (!cells[0] && /^[-•]/.test(titleText)) continue;
         activities.push({
           time: cells[0],
           title: titleText,
@@ -350,6 +478,43 @@ function parseItineraryMarkdown(text, knownNames = []) {
     });
   }
   return days;
+}
+
+function parseTransportMarkdown(text) {
+  if (!text) return [];
+  const block = extractHeadingBlock(text, /^##\s+交通与住宿参考\s*$/m, /^##\s+/gm)
+    || extractHeadingBlock(text, /^###\s+城际交通\s*$/m, /^###\s+/gm)
+    || text;
+  const rows = [];
+  let direction = "";
+  let source = "";
+  for (const rawLine of block.split(/\r?\n/)) {
+    const line = stripMarkdown(rawLine);
+    const url = extractFirstUrl(rawLine);
+    const directionMatch = line.match(/^(去程|返程|高铁|火车|飞机|航班)[^：:]*[：:]?$/);
+    if (directionMatch) direction = directionMatch[1];
+    if (/^来源[:：]/.test(line)) {
+      source = line.replace(/^来源[:：]\s*/, "");
+      continue;
+    }
+    const item = line.match(/^-\s*(推荐航班|备选航班|高铁备选|火车备选|推荐高铁|备选高铁)[:：]\s*(.+)$/);
+    if (!item) continue;
+    const label = item[1];
+    const body = item[2];
+    const code = body.match(/^([A-Z]{1,3}\d{3,5}|G\d{1,5}|D\d{1,5}|C\d{1,5})/)?.[1] || "";
+    const time = body.match(/[（(]([^）)]+\d{1,2}:\d{2}[^）)]*)[）)]/)?.[1] || "";
+    const duration = body.match(/(?:飞行时间|行程时间)\s*([^，,；;]+)/)?.[1] || "";
+    const price = body.match(/(?:参考价格|价格)\s*(¥[^，,；;]+)/)?.[1] || "";
+    rows.push({
+      type: `${direction ? `${direction} · ` : ""}${/高铁|火车/.test(label) ? "高铁" : "航班"}`,
+      route: [code, time].filter(Boolean).join(" · ") || body,
+      duration,
+      cost: price,
+      source: source || "itinerary.md",
+      url,
+    });
+  }
+  return rows;
 }
 
 function parseItineraryOverview(text) {
@@ -434,6 +599,7 @@ function normalizeActivity(activity, knownNames = []) {
     duration: firstPresent(activity.duration, activity.estimated_duration_minutes, activity.comfortable_duration_minutes),
     source: firstPresent(activity.source),
     tags: asArray(firstPresent(activity.tags, activity.labels)),
+    type: firstPresent(activity.type, activity.category),
   };
 }
 
@@ -447,8 +613,12 @@ function normalizeDays(data, itineraryData, itineraryText) {
     const day = guideDays[index] || {};
     const handoff = handoffDays[index] || {};
     const markdown = markdownDays.get(Number(firstPresent(day.day, handoff.day, index + 1))) || {};
-    let rawActivities = asArray(firstPresent(day.activities, day.timeline, day.pois));
-    if (!rawActivities.length) rawActivities = asArray(firstPresent(markdown.activities, handoff.activities, handoff.timeline, handoff.pois));
+    const rawActivities = asArray(firstPresent(day.activities, day.timeline, day.pois));
+    const fallbackActivities = [
+      ...asArray(markdown.activities),
+      ...asArray(firstPresent(handoff.activities, handoff.timeline, handoff.pois)),
+    ];
+    const activities = mergeActivityLists(rawActivities, fallbackActivities, names);
     return {
       day: Number(firstPresent(day.day, handoff.day, markdown.day, index + 1)),
       date: firstPresent(day.date, day.dayDate, handoff.date),
@@ -462,7 +632,7 @@ function normalizeDays(data, itineraryData, itineraryText) {
       reservations: firstPresent(day.reservations, day.booking, day.reservationReminders, markdown.reservations, handoff.reservations, handoff.booking),
       backup: firstPresent(day.backup, day.rainPlan, day.alternative, handoff.backup, handoff.rainPlan, handoff.alternative),
       reminders: asArray(firstPresent(day.reminders, day.warnings, markdown.reminders, handoff.reminders, handoff.warnings)),
-      activities: rawActivities.map((activity) => normalizeActivity(activity, names)).filter((activity) => activity.title),
+      activities,
     };
   });
 }
@@ -565,32 +735,252 @@ function normalizeHotels(data, mapData) {
   };
 }
 
-function normalizeTransportRows(data) {
+function normalizeTransportRows(data, itineraryText = "") {
   const transport = data.transport || {};
   const rows = asArray(firstPresent(transport.items, transport.routes, data.routes));
   const flightRows = asArray(transport.flights).map((flight) => ({
-    type: "航班",
-    route: [flight.route, flight.option].filter(Boolean).join(" · "),
+    type: firstPresent(flight.type, "航班"),
+    route: [flight.route, flight.option, flight.flightNo, flight.trainNo].filter(Boolean).join(" · "),
     duration: firstPresent(flight.duration, flight.time),
     cost: firstPresent(flight.price, flight.cost),
     source: firstPresent(flight.source, flight.notes),
+    url: firstPresent(flight.url, flight.bookingUrl, flight.booking_url, flight.ticketUrl, flight.ticket_url, flight.detailUrl, flight.jumpUrl),
   }));
-  const localRows = transport.local
-    ? [{ type: "市内交通", route: transport.local, duration: "", cost: "", source: transport.source || "" }]
-    : [];
-  return [...rows, ...flightRows, ...localRows];
+  const trainRows = asArray(transport.trains).map((train) => ({
+    type: firstPresent(train.type, "高铁/火车"),
+    route: [train.route, train.option, train.trainNo].filter(Boolean).join(" · "),
+    duration: firstPresent(train.duration, train.time),
+    cost: firstPresent(train.price, train.cost),
+    source: firstPresent(train.source, train.notes),
+    url: firstPresent(train.url, train.bookingUrl, train.booking_url, train.ticketUrl, train.ticket_url, train.detailUrl, train.jumpUrl),
+  }));
+  const localRows = asArray(transport.local).map((item) => {
+    if (typeof item === "string") return { type: "市内交通", route: item, duration: "", cost: "", source: transport.source || "" };
+    return {
+      type: firstPresent(item.type, "市内交通"),
+      route: firstPresent(item.route, item.name, item.summary),
+      duration: firstPresent(item.duration, item.time, item.notes),
+      cost: firstPresent(item.price, item.cost),
+      source: firstPresent(item.source, transport.source),
+      url: firstPresent(item.url, item.bookingUrl, item.booking_url, item.ticketUrl, item.ticket_url, item.detailUrl, item.jumpUrl),
+    };
+  });
+  const markdownRows = parseTransportMarkdown(itineraryText);
+  const allRows = [...rows, ...flightRows, ...trainRows, ...localRows, ...markdownRows]
+    .map((row) => ({
+      type: firstPresent(row.type, row.category, "交通"),
+      route: firstPresent(row.route, row.name, row.summary),
+      duration: firstPresent(row.duration, row.time),
+      cost: firstPresent(row.cost, row.price),
+      source: firstPresent(row.source, row.notes),
+      url: firstPresent(row.url, row.bookingUrl, row.booking_url, row.ticketUrl, row.ticket_url, row.detailUrl, row.jumpUrl),
+    }))
+    .filter((row) => row.route);
+  const seen = new Set();
+  return allRows.filter((row) => {
+    const key = comparableText(`${row.type}|${row.route}|${row.duration}|${row.cost}`);
+    if (seen.has(key)) return false;
+    seen.add(key);
+    return true;
+  });
 }
 
-function normalizeFood(data) {
-  const food = Array.isArray(data.food) ? { items: data.food } : (data.food || {});
-  return asArray(firstPresent(food.items, data.foodItems)).map((item) => ({
-    name: firstPresent(item.name, item.item),
+function splitFoodDishes(value) {
+  return String(value || "")
+    .split(/[、,，/]/)
+    .map((item) => stripMarkdown(item).replace(/[。；;]+$/, "").trim())
+    .filter((item) => item && item.length <= 18);
+}
+
+function parentheticalNote(value) {
+  return String(value || "").match(/[（(]([^）)]+)[）)]/)?.[1] || "";
+}
+
+function inferFoodArea(text) {
+  const raw = String(text || "");
+  const areas = ["春熙路", "太古里", "锦里", "宽窄巷子", "都江堰", "熊猫基地", "人民公园", "酒店附近", "市区", "景区内", "机场"];
+  return areas.find((area) => raw.includes(area)) || "";
+}
+
+function cleanFoodName(value) {
+  return stripMarkdown(value)
+    .replace(/^\s*(早餐|午餐|晚餐|夜宵|餐食)\s*[：:]\s*/, "")
+    .replace(/[；;].*$/, "")
+    .replace(/[（(][^）)]*[）)]/g, "")
+    .replace(/^(推荐|备选)\s*/, "")
+    .trim();
+}
+
+function addFoodItem(items, seen, item) {
+  const name = cleanFoodName(firstPresent(item.name, item.item));
+  const note = compactText(firstPresent(item.note, item.notes, item.avoid, item.tip, item.description));
+  const normalized = {
+    name,
     area: firstPresent(item.area, item.type),
     price: firstPresent(item.price, item.cost),
-    dishes: asArray(item.dishes),
-    note: firstPresent(item.note, item.notes, item.avoid, item.tip),
-    source: item.source,
-  })).filter((item) => item.name);
+    dishes: asArray(item.dishes).length ? asArray(item.dishes) : splitFoodDishes(item.dishText),
+    note,
+    source: firstPresent(item.source),
+  };
+  if (!normalized.name) return;
+  if (/酒店早餐|早餐[,，、]|早餐、|出发|退房/.test(normalized.name)) return;
+  const key = comparableText(`${normalized.name}|${normalized.area}`);
+  const existing = seen.get(key);
+  if (existing) {
+    existing.price = firstPresent(existing.price, normalized.price);
+    existing.note = firstPresent(existing.note, normalized.note);
+    existing.source = firstPresent(existing.source, normalized.source);
+    existing.dishes = existing.dishes?.length ? existing.dishes : normalized.dishes;
+    return;
+  }
+  seen.set(key, normalized);
+  items.push(normalized);
+}
+
+function parseFoodFromDestinationBrief(text, items, seen) {
+  for (const rawLine of String(text || "").split(/\r?\n/)) {
+    const line = stripMarkdown(rawLine.replace(/^\s*[-*]\s*/, ""));
+    if (!line || !/(美食|餐|吃|火锅|小吃|不辣|微辣)/.test(line)) continue;
+    if (/不辣/.test(line) && /[:：]/.test(line)) {
+      addFoodItem(items, seen, {
+        name: "不辣/少辣小吃",
+        area: "全城小吃店",
+        dishText: line.split(/[:：]/).slice(1).join("："),
+        note: "适合小朋友垫肚子；点餐时明确说不辣或少辣。",
+        source: "destination-brief.md",
+      });
+    } else if (/火锅/.test(line) && /(鸳鸯|微辣|全家|小孩|儿童)/.test(line)) {
+      addFoodItem(items, seen, {
+        name: "鸳鸯锅/亲子火锅",
+        area: inferFoodArea(line) || "春熙路/太古里或酒店周边",
+        note: line,
+        source: "destination-brief.md",
+      });
+    } else if (/小吃街|小吃/.test(line) && /(锦里|宽窄)/.test(line)) {
+      addFoodItem(items, seen, {
+        name: "锦里/宽窄巷子小吃",
+        area: "锦里、宽窄巷子",
+        note: "适合快速尝鲜和拍照，正餐优先放到街区外。",
+        source: "destination-brief.md",
+      });
+    } else if (/川菜以辣|小孩|儿童|不辣|微辣/.test(line)) {
+      addFoodItem(items, seen, {
+        name: "点餐口味提醒",
+        area: inferFoodArea(line) || "全程",
+        note: line,
+        source: "destination-brief.md",
+      });
+    }
+  }
+}
+
+function parseFoodFromDays(days, items, seen) {
+  for (const day of days) {
+    const foodTexts = [];
+    for (const activity of asArray(day.activities)) {
+      const title = compactText(firstPresent(activity.title, activity.name, activity.activity));
+      if (activity.type === "meal" || /(早餐|午餐|晚餐|餐|火锅|小吃)/.test(title)) {
+        foodTexts.push([title, activity.notes, activity.cost].filter(Boolean).join("；"));
+      }
+    }
+    for (const meal of asArray(day.meals)) foodTexts.push(compactText(meal));
+
+    for (const text of foodTexts) {
+      const clean = stripMarkdown(text);
+      if (!clean || /^酒店含早/.test(clean) || /酒店早餐|早餐、|退房|出发/.test(clean)) continue;
+      const body = clean.replace(/^\s*(早餐|午餐|晚餐|餐食)\s*[：:]\s*/, "");
+      if (/火锅/.test(body)) {
+        addFoodItem(items, seen, {
+          name: "火锅初体验",
+          area: inferFoodArea(body) || "春熙路/太古里或酒店周边",
+          price: body.match(/¥[^；;]+/)?.[0] || "",
+          note: firstPresent(parentheticalNote(body), "选择鸳鸯锅，儿童用清汤区；避开长队网红店。"),
+          source: "itinerary.md",
+        });
+      } else if (/熊猫基地/.test(body) && /餐/.test(body)) {
+        addFoodItem(items, seen, {
+          name: "熊猫基地午餐策略",
+          area: "熊猫基地/返回市区",
+          price: body.match(/¥[^；;]+/)?.[0] || "",
+          note: body.includes("排队") ? body : "基地内餐厅容易排队且偏贵，建议自带水和零食，或回市区午餐。",
+          source: "itinerary.md",
+        });
+      } else if (/(锦里|宽窄巷子)/.test(body) && /(川菜|餐|小吃)/.test(body)) {
+        addFoodItem(items, seen, {
+          name: `${inferFoodArea(body) || "商业街"}周边用餐`,
+          area: inferFoodArea(body),
+          price: body.match(/¥[^；;]+/)?.[0] || "",
+          note: body.includes("避开") ? body : "小吃尝鲜即可，正餐放到街区外的川菜馆。",
+          source: "itinerary.md",
+        });
+      } else if (/都江堰/.test(body) && /(川菜|餐|市区)/.test(body)) {
+        addFoodItem(items, seen, {
+          name: "都江堰市区午餐",
+          area: "都江堰市区",
+          price: body.match(/¥[^；;]+/)?.[0] || "",
+          note: "景区内餐厅偏贵，午餐优先放在都江堰市区。",
+          source: "itinerary.md",
+        });
+      } else if (/川菜馆|餐厅|餐/.test(body)) {
+        addFoodItem(items, seen, {
+          name: cleanFoodName(body),
+          area: inferFoodArea(body),
+          price: body.match(/¥[^；;]+/)?.[0] || "",
+          note: firstPresent(parentheticalNote(body), "带小朋友点不辣或微辣菜品。"),
+          source: "itinerary.md",
+        });
+      } else if (/小吃|美食/.test(body)) {
+        addFoodItem(items, seen, {
+          name: cleanFoodName(body),
+          area: inferFoodArea(body),
+          note: parentheticalNote(body),
+          source: "itinerary.md",
+        });
+      }
+    }
+  }
+}
+
+function parseFoodFromReputation(text, items, seen) {
+  const lines = String(text || "").split(/\r?\n/).map((line) => stripMarkdown(line.replace(/^\s*[-*\d.]+\s*/, ""))).filter(Boolean);
+  for (const line of lines) {
+    if (line.includes("|")) continue;
+    if (/园区内餐厅.*(排队|价格高|贵)/.test(line)) {
+      addFoodItem(items, seen, {
+        name: "景区内餐饮避雷",
+        area: inferFoodArea(line) || "热门景区",
+        note: line,
+        source: "reputation.md",
+      });
+    } else if (/(锦里|宽窄巷子|这里)/.test(line) && /(不要.*吃正餐|小吃.*贵|游客价|又贵又难吃|口味一般)/.test(line)) {
+      const area = line.includes("宽窄") ? "宽窄巷子" : line.includes("锦里") ? "锦里" : "商业街";
+      addFoodItem(items, seen, {
+        name: `${area}小吃避雷`,
+        area,
+        note: line.replace(/^["“]|["”]$/g, ""),
+        source: "reputation.md",
+      });
+    }
+  }
+}
+
+function isDiningWarning(item) {
+  return /(避雷|不要|游客价|又贵又难吃|口味一般|排队|价格高|偏高|谨慎|避开)/.test(`${item.name || ""}${item.note || ""}`);
+}
+
+function normalizeFood(data, context = {}) {
+  const food = Array.isArray(data.food) ? { items: data.food } : (data.food || {});
+  const items = [];
+  const seen = new Map();
+  for (const item of asArray(firstPresent(food.items, data.foodItems))) addFoodItem(items, seen, item);
+  parseFoodFromDays(context.days || [], items, seen);
+  parseFoodFromDestinationBrief(context.destinationBriefText, items, seen);
+  parseFoodFromReputation(context.reputationText, items, seen);
+  return items
+    .map((item, index) => ({ item, index }))
+    .sort((left, right) => Number(isDiningWarning(right.item)) - Number(isDiningWarning(left.item)) || left.index - right.index)
+    .map(({ item }) => item)
+    .slice(0, 10);
 }
 
 function normalizeBudget(data) {
@@ -605,9 +995,9 @@ function normalizeBudget(data) {
   };
   const explicitRows = asArray(firstPresent(budget.items, budget.rows, data.budgetItems));
   const rows = explicitRows.length ? explicitRows.map((row) => ({
-    item: firstPresent(row.item, row.name),
+    item: firstPresent(row.item, row.name, row.category, row.label),
     amount: firstPresent(row.amount, row.cost, row.comfortable, row.economy, row.value),
-    note: row.note,
+    note: firstPresent(row.note, row.notes, row.remark),
   })) : Object.entries(budget)
     .filter(([key, value]) => key !== "total" && value && typeof value !== "object")
     .map(([key, value]) => ({ item: labelMap[key] || key, amount: value, note: "" }));
@@ -618,41 +1008,51 @@ function normalizeBudget(data) {
 }
 
 function normalizeRouteSegments(mapData, days) {
+  const mapRoutes = asArray(mapData?.routes)
+    .flatMap((route) => {
+      if (Array.isArray(route?.segments)) {
+        return route.segments.map((segment) => ({
+          ...segment,
+          day: firstPresent(segment.day, route.day),
+          source: firstPresent(segment.source, route.source, "map-data"),
+        }));
+      }
+      return route;
+    })
+    .map((route) => ({
+      ...route,
+      mode: firstPresent(route.mode, route.method, route.transport),
+      duration: firstPresent(route.duration, route.duration_text, route.duration_min ? `${route.duration_min}分钟` : "", route.duration_minutes ? `${route.duration_minutes}分钟` : ""),
+      cost: firstPresent(route.cost, route.cost_cny ? `¥${route.cost_cny}` : ""),
+    }))
+    .filter((route) => !(route.mode === "walking" && Number(route.duration_min) > 45));
   const fromDays = [];
   for (const day of days) {
     for (const activity of day.activities) {
       const title = String(activity.title || "");
       const transport = String(activity.transport || "");
-      const isMovement = title.includes("→") || /飞机|高铁|火车|地铁|打车|出租|网约车|公交|机场|车站|自驾/.test(transport);
+      const type = String(activity.type || "");
+      if (["meal", "rest", "attraction", "activity"].includes(type) && !title.includes("→")) continue;
+      const isMovement = type === "transport"
+        || title.includes("→")
+        || (/出发|返回|前往|抵达|机场|车站|办理登机/.test(title) && /飞机|高铁|火车|地铁|打车|出租|网约车|公交|机场|车站|自驾|包车/.test(transport));
       if (!isMovement) continue;
       const [from, to] = String(activity.title || "").split("→").map((part) => stripMarkdown(part));
+      const duration = firstPresent(activity.duration, activity.notes, durationFromTimeRange(activity.time));
+      const cost = activity.cost || "";
       fromDays.push({
         day: day.day,
         from: to ? from : "",
         to: to || stripMarkdown(activity.title),
-        mode: activity.transport || "待核实",
-        duration: activity.notes || activity.duration || "",
-        cost: activity.cost || "",
+        mode: firstPresent(activity.transport, inferTransportMode(title, activity.type)),
+        duration: duration === "-" ? "" : duration,
+        cost: cost === "-" ? "" : cost,
         source: "itinerary-data",
       });
     }
   }
-  if (fromDays.length) return fromDays;
-  return asArray(mapData?.routes).filter((route) => !(route.mode === "walking" && Number(route.duration_min) > 45));
-}
-
-function normalizeSources(data) {
-  const rawSources = firstPresent(data.sources, data.sourceNotes);
-  if (Array.isArray(rawSources)) return rawSources;
-  if (rawSources && typeof rawSources === "object") {
-    return [
-      rawSources.research_date ? { label: "Research date", note: rawSources.research_date } : null,
-      ...asArray(rawSources.tools_used).map((tool) => ({ label: "Tool", note: tool })),
-      ...asArray(rawSources.volatile_items).map((item) => ({ label: "Volatile", note: item })),
-      rawSources.confidence_notes ? { label: "Confidence", note: rawSources.confidence_notes } : null,
-    ].filter(Boolean);
-  }
-  return asArray(rawSources);
+  const usefulFromDays = fromDays.filter((route) => route.mode || route.duration || route.cost);
+  return usefulFromDays.length ? usefulFromDays : mapRoutes;
 }
 
 function inferCategory(name = "", type = "") {
@@ -814,11 +1214,11 @@ function renderHero(trip) {
       </div>
       <nav class="mode-nav" aria-label="页面导航">
         <a href="#plan-overview">行程总览</a>
+        <a href="#transport-board">交通参考</a>
         <a href="#dashboard">地图工作台</a>
         <a href="#poi-dossier">地点档案</a>
         <a href="#hotel-board">酒店组合</a>
         <a href="#full-docs">完整资料</a>
-        <a href="#sources">来源</a>
       </nav>
     </header>`;
 }
@@ -832,14 +1232,21 @@ function renderDayTabs(days) {
     </div>`;
 }
 
+function isMovementActivity(activity) {
+  return String(activity.type || "") === "transport"
+    || String(activity.title || "").includes("→")
+    || /飞机|高铁|火车|机场|车站|自驾|包车/.test(String(activity.transport || ""));
+}
+
 function renderActivity(activity, day) {
   const exp = activity.poiName ? "has-detail" : "";
+  const durationLabel = activity.duration ? `${isMovementActivity(activity) ? "耗时" : "停留"} ${activity.duration}` : "";
   return `
     <button class="activity-card ${exp}" type="button" data-focus-poi="${escapeHtml(activity.poiName || activity.title)}" data-day="${escapeHtml(day.day)}">
       <span class="time">${escapeHtml(activity.time || "时间待定")}</span>
       <span class="activity-main">
         <strong>${escapeHtml(activity.title)}</strong>
-        <span>${[activity.duration ? `停留 ${activity.duration}` : "", activity.transport, activity.notes].filter(Boolean).map(escapeHtml).join(" · ")}</span>
+        <span>${[durationLabel, activity.transport, activity.notes].filter(Boolean).map(escapeHtml).join(" · ")}</span>
       </span>
       ${activity.cost ? `<span class="cost">${escapeHtml(activity.cost)}</span>` : ""}
     </button>`;
@@ -874,6 +1281,25 @@ function renderDayCards(days) {
               ${day.backup ? `<p><strong>备选</strong>${escapeHtml(compactText(day.backup))}</p>` : ""}
               ${day.reminders?.length ? `<div><strong>提醒</strong>${list(day.reminders)}</div>` : ""}
             </div>
+          </article>`).join("")}
+      </div>
+    </section>`;
+}
+
+function renderTransportRows(rows) {
+  if (!rows.length) return "";
+  return `
+    <section class="panel transport-panel" id="transport-board">
+      <div class="section-kicker">交通参考</div>
+      <h2>城际航班/车次与市内移动</h2>
+      <div class="transport-grid">
+        ${rows.map((row) => `
+          <article class="transport-card">
+            <span>${escapeHtml(row.type || "交通")}</span>
+            <h3>${escapeHtml(row.route || "")}</h3>
+            <p>${[row.duration, row.cost].filter(Boolean).map(escapeHtml).join(" · ")}</p>
+            ${row.url ? `<div>${link(row.url, /航班|高铁|火车|车次/.test(row.type || "") ? "订票/查询" : "查看链接")}</div>` : ""}
+            ${row.source ? `<small>${escapeHtml(row.source)}</small>` : ""}
           </article>`).join("")}
       </div>
     </section>`;
@@ -921,32 +1347,16 @@ function renderPoiDossiers(experiences) {
   return `
     <section class="panel dossier-panel" id="poi-dossier">
       <div class="section-kicker">重点景点怎么玩</div>
-      <h2>地点档案：攻略、避雷、亲子注意事项</h2>
+      <h2>地点档案：点击卡片查看完整攻略</h2>
       <div class="dossier-grid">
         ${experiences.map((item) => `
-          <details class="dossier-card" data-dossier="${escapeHtml(item.name)}">
-            <summary>
-              <span>${item.day ? `Day ${escapeHtml(item.day)}` : "地点"}</span>
-              <strong>${escapeHtml(item.name)}</strong>
-              ${item.recommendedDuration || item.rating ? `<em>${[item.rating, item.recommendedDuration].filter(Boolean).map(escapeHtml).join(" · ")}</em>` : ""}
-              ${item.whyGo.length || item.tips ? `<p>${escapeHtml(firstPresent(item.tips, item.whyGo[0]))}</p>` : ""}
-              ${item.avoid.length || item.queueAndReservation.length ? `<small>${escapeHtml(firstPresent(item.queueAndReservation[0], item.avoid[0]))}</small>` : ""}
-            </summary>
-            <div class="dossier-body">
-              ${item.image ? `<img src="${escapeHtml(item.image)}" alt="${escapeHtml(item.name)}">` : ""}
-              ${item.whyGo.length ? `<h4>推荐理由</h4>${list(item.whyGo)}` : ""}
-              ${item.tips ? `<h4>核心判断</h4><p>${escapeHtml(item.tips)}</p>` : ""}
-              ${item.mustDo.length ? `<h4>必玩/必看</h4>${list(item.mustDo)}` : ""}
-              ${item.queueAndReservation.length ? `<h4>排队与预约</h4>${list(item.queueAndReservation)}` : ""}
-              ${item.familyNotes.length ? `<h4>亲子提醒</h4>${list(item.familyNotes)}` : ""}
-              ${item.preparation.length ? `<h4>准备材料</h4>${list(item.preparation)}` : ""}
-              ${item.commonComplaints.length ? `<h4>常见差评</h4>${list(item.commonComplaints)}` : ""}
-              ${item.avoid.length ? `<h4>避雷</h4>${list(item.avoid)}` : ""}
-              ${item.suitable ? `<h4>适合</h4><p>${escapeHtml(item.suitable)}</p>` : ""}
-              ${item.notSuitable ? `<h4>不适合</h4><p>${escapeHtml(item.notSuitable)}</p>` : ""}
-              ${item.source ? `<p class="source-note">${escapeHtml(item.source)}</p>` : ""}
-            </div>
-          </details>`).join("")}
+          <button class="dossier-card dossier-button" type="button" data-focus-poi="${escapeHtml(item.name)}" data-dossier="${escapeHtml(item.name)}">
+            <span>${item.day ? `Day ${escapeHtml(item.day)}` : "地点"}</span>
+            <strong>${escapeHtml(item.name)}</strong>
+            ${item.recommendedDuration || item.rating ? `<em>${[item.rating, item.recommendedDuration].filter(Boolean).map(escapeHtml).join(" · ")}</em>` : ""}
+            ${item.whyGo.length || item.tips ? `<p>${escapeHtml(firstPresent(item.tips, item.whyGo[0]))}</p>` : ""}
+            ${item.avoid.length || item.queueAndReservation.length ? `<small>${escapeHtml(firstPresent(item.queueAndReservation[0], item.avoid[0]))}</small>` : ""}
+          </button>`).join("")}
       </div>
     </section>`;
 }
@@ -1051,24 +1461,6 @@ function renderSourceDocuments(documents) {
           <pre><code>${escapeHtml(doc.text)}</code></pre>
         </details>
       </details>`).join("")}`;
-}
-
-function renderSources(data, trip, sources) {
-  const sourceFactIds = asArray(data.sourceFactIds);
-  return `
-    <section class="panel sources-panel" id="sources">
-      <div class="section-kicker">来源与可信度</div>
-      <h2>所有价格、票务、天气和口碑均需按来源理解</h2>
-      ${sources.length ? `<div class="source-list">${sources.map((source) => {
-        if (typeof source === "string") return `<p>${escapeHtml(source)}</p>`;
-        const label = firstPresent(source.title, source.label, source.name, source.type, source.url, "来源");
-        const note = firstPresent(source.note, source.summary, source.source, Array.isArray(source.items) ? source.items.join("、") : "");
-        const supports = firstPresent(source.supports, source.usedFor, source.usage);
-        return `<p>${source.url ? link(source.url, label) : `<strong>${escapeHtml(label)}</strong>`}${note ? `<span>${escapeHtml(note)}</span>` : ""}${supports ? `<em>用于：${escapeHtml(compactText(supports))}</em>` : ""}</p>`;
-      }).join("")}</div>` : "<p>来源未单独列出，请以各章节标注为准。</p>"}
-      ${sourceFactIds.length ? `<details class="technical-facts"><summary>查看内部事实 ID</summary>${list(sourceFactIds)}</details>` : ""}
-      <p class="source-note">Research conducted: ${escapeHtml(trip.generatedAt)}</p>
-    </section>`;
 }
 
 function css() {
@@ -1187,16 +1579,20 @@ function css() {
     .route-pill { flex: 0 0 auto; max-width: 300px; display: grid; gap: 2px; padding: 8px 10px; border: 1px solid var(--line); border-radius: var(--radius); background: #fff; text-align: left; cursor: pointer; }
     .route-pill span { overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
     .route-pill strong { color: var(--accent); font-size: 12px; }
+    .transport-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(230px, 1fr)); gap: 12px; }
+    .transport-card { padding: 14px; border: 1px solid var(--line); border-radius: var(--radius); background: #fff; }
+    .transport-card span { color: var(--accent-2); font-size: 12px; font-weight: 900; }
+    .transport-card h3 { margin: 4px 0 6px; }
+    .transport-card p { margin: 0; color: var(--accent); font-weight: 800; }
+    .transport-card small { display: block; margin-top: 8px; color: var(--muted); }
     .dossier-grid, .hotel-grid, .check-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(260px, 1fr)); gap: 14px; }
     .dossier-card, .hotel-card, .check-card, .split-card { border: 1px solid var(--line); border-radius: var(--radius); background: #fff; overflow: hidden; }
-    .dossier-card summary { display: grid; gap: 4px; padding: 14px; cursor: pointer; list-style: none; }
-    .dossier-card summary::-webkit-details-marker { display: none; }
-    .dossier-card summary span { color: var(--accent-2); font-size: 12px; font-weight: 800; }
-    .dossier-card summary em { color: var(--muted); font-size: 12px; font-style: normal; }
-    .dossier-card summary p { margin: 2px 0 0; color: #3d4842; font-size: 13px; }
-    .dossier-card summary small { color: var(--accent-2); font-size: 12px; }
-    .dossier-body { padding: 0 14px 14px; }
-    .dossier-body img { width: 100%; height: 150px; object-fit: cover; border-radius: var(--radius); margin-bottom: 10px; }
+    .dossier-button { width: 100%; min-height: 148px; display: grid; gap: 4px; align-content: start; padding: 14px; text-align: left; cursor: pointer; color: inherit; transition: transform .18s ease, box-shadow .18s ease, border-color .18s ease; }
+    .dossier-button:hover, .dossier-button:focus-visible { transform: translateY(-2px); border-color: rgba(29,118,111,.38); box-shadow: 0 12px 28px rgba(31, 24, 17, .12); outline: none; }
+    .dossier-button span { color: var(--accent-2); font-size: 12px; font-weight: 800; }
+    .dossier-button em { color: var(--muted); font-size: 12px; font-style: normal; }
+    .dossier-button p { margin: 2px 0 0; color: #3d4842; font-size: 13px; }
+    .dossier-button small { color: var(--accent-2); font-size: 12px; }
     ul { margin: 6px 0 0; padding-left: 19px; }
     li { margin: 3px 0; }
     .source-note, .muted { color: var(--muted); font-size: 13px; }
@@ -1216,9 +1612,6 @@ function css() {
     .total { margin: 14px 0 0; color: var(--amber); font-weight: 900; }
     .check-card { padding: 14px; }
     .check-card label { display: flex; gap: 8px; align-items: flex-start; padding: 6px 0; color: #3d4842; }
-    .source-list { display: grid; gap: 8px; }
-    .source-list p { margin: 0; padding: 10px 12px; border: 1px solid var(--line); border-radius: var(--radius); background: #fff; }
-    .source-list span, .source-list em { display: block; color: var(--muted); font-size: 13px; font-style: normal; }
     .docs-intro { scroll-margin-top: 18px; }
     .doc-jump { display: flex; flex-wrap: wrap; gap: 8px; margin-top: 14px; }
     .doc-jump a { display: inline-flex; min-height: 34px; align-items: center; padding: 6px 10px; border: 1px solid var(--line); border-radius: 999px; background: #fff; }
@@ -1246,8 +1639,6 @@ function css() {
     .raw-markdown { margin-top: 18px; border-top: 1px solid var(--line); padding-top: 12px; }
     .raw-markdown summary { cursor: pointer; color: var(--accent); font-weight: 900; }
     .raw-markdown pre { max-height: 420px; overflow: auto; padding: 12px; border-radius: var(--radius); background: #233029; color: #fff8ed; white-space: pre-wrap; }
-    .technical-facts { margin-top: 14px; color: var(--muted); }
-    .technical-facts summary { cursor: pointer; color: var(--accent); font-weight: 800; }
     .drawer-backdrop { position: fixed; inset: 0; z-index: 19; background: rgba(32,40,35,.28); opacity: 0; pointer-events: none; transition: opacity .18s ease; }
     .drawer-backdrop.open { opacity: 1; pointer-events: auto; }
     .drawer { position: fixed; top: 0; right: 0; z-index: 20; width: min(420px, 100vw); height: 100vh; background: var(--paper); border-left: 1px solid var(--line); box-shadow: -20px 0 60px rgba(0,0,0,.16); transform: translateX(105%); transition: transform .22s ease; overflow: auto; }
@@ -1316,10 +1707,23 @@ function js() {
     const markerEntries = [];
     let routeLine = null;
 
-    function matchExperience(name) {
-      if (!name) return null;
-      if (experiences.has(name)) return experiences.get(name);
-      return [...experiences.values()].find((item) => name.includes(item.name) || item.name.includes(name)) || null;
+    function matchExperience(target) {
+      const names = [];
+      if (typeof target === 'object' && target) {
+        names.push(target.name, target.originalName);
+      } else if (target) {
+        names.push(target);
+      }
+      const expanded = [];
+      for (const name of names.filter(Boolean)) {
+        const mapped = byName.get(name);
+        expanded.push(name, mapped?.name, mapped?.originalName);
+      }
+      const aliases = [...new Set(expanded.filter(Boolean))];
+      for (const alias of aliases) {
+        if (experiences.has(alias)) return experiences.get(alias);
+      }
+      return [...experiences.values()].find((item) => aliases.some((alias) => alias.includes(item.name) || item.name.includes(alias))) || null;
     }
 
     function markerClass(item) {
@@ -1384,7 +1788,7 @@ function js() {
           window.setTimeout(() => marker.setAnimation(null), 900);
         }
       }
-      if (item) openDrawer(item.name);
+      openDrawer(item?.name || name);
     }
 
     function field(label, value) {
@@ -1395,7 +1799,7 @@ function js() {
 
     function openDrawer(name) {
       const item = byName.get(name) || [...byName.values()].find((candidate) => name.includes(candidate.name) || candidate.name.includes(name)) || { name };
-      const exp = matchExperience(item.name);
+      const exp = matchExperience(item);
       const drawer = $('#atlasDrawer');
       $('#drawerTitle').textContent = item.name || name;
       $('#drawerBody').innerHTML = [
@@ -1469,6 +1873,7 @@ loadEnv();
 const data = readJson(inputPath);
 const mapData = readOptionalJson(path.join(path.dirname(inputPath), "map-data.json"));
 const itineraryData = readOptionalJson(path.join(path.dirname(inputPath), "itinerary-data.json"));
+const destinationBriefText = readOptionalText(path.join(path.dirname(inputPath), "destination-brief.md"));
 const itineraryText = readOptionalText(path.join(path.dirname(inputPath), "itinerary.md"));
 const reputationText = readOptionalText(path.join(path.dirname(inputPath), "reputation.md"));
 const sourceDocuments = loadSourceDocuments(path.dirname(inputPath));
@@ -1479,9 +1884,9 @@ const hotels = normalizeHotels(data, mapData);
 const poiExperiences = normalizePoiExperiences(data, days, itineraryData, reputationText);
 const routeSegments = normalizeRouteSegments(mapData, days);
 const mapPayload = normalizeMapPayload(mapData, days, hotels, routeSegments);
-const food = normalizeFood(data);
+const transportRows = normalizeTransportRows(data, itineraryText);
+const food = normalizeFood(data, { days, destinationBriefText, itineraryText, reputationText });
 const budget = normalizeBudget(data);
-const sources = normalizeSources(data);
 const amapKey = firstPresent(data.map?.amapWebJsKey, process.env.AMAP_WEB_JS_API_KEY);
 const amapSecurityJsCode = firstPresent(
   data.map?.amapSecurityJsCode,
@@ -1494,10 +1899,10 @@ const atlasData = {
   days,
   poiExperiences,
   hotels: hotels.options,
+  transport: transportRows,
   map: mapPayload,
   food,
   budget,
-  sources,
   amapKey: amapKey || "",
 };
 
@@ -1506,6 +1911,7 @@ const sections = [
   `<main class="content">
     ${renderOverview(data, trip, days, mapPayload, hotels)}
     ${renderItineraryOverview(planRows, days)}
+    ${renderTransportRows(transportRows)}
     <div class="dashboard-grid">
       ${renderDayCards(days)}
       ${renderMapPanel(mapPayload)}
@@ -1515,7 +1921,6 @@ const sections = [
     ${renderFoodAndBudget(food, budget)}
     ${renderChecklist(data)}
     ${renderSourceDocuments(sourceDocuments)}
-    ${renderSources(data, trip, sources)}
   </main>`,
   `<div class="drawer-backdrop" id="drawerBackdrop"></div>`,
   `<aside class="drawer" id="atlasDrawer" aria-label="地点详情">
@@ -1524,7 +1929,7 @@ const sections = [
   </aside>`,
 ].join("\n");
 
-const html = `<!doctype html>
+const rawHtml = `<!doctype html>
 <html lang="zh-CN">
 <head>
   <meta charset="utf-8">
@@ -1543,6 +1948,7 @@ const html = `<!doctype html>
 </body>
 </html>
 `;
+const html = rawHtml.replace(/[ \t]+$/gm, "");
 
 fs.mkdirSync(path.dirname(outputPath), { recursive: true });
 fs.writeFileSync(outputPath, html, "utf8");

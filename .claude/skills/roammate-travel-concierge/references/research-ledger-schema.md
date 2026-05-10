@@ -90,7 +90,7 @@ Hotel candidate facts should keep booking fields in the fact object when availab
 }
 ```
 
-For Web-Rooter facts, include `source_url`, `source_urls`, `citations`, or `references` so downstream `sources.md` can preserve the links.
+For Web-Rooter facts, include `source_url`, `source_urls`, `citations`, or `references` so downstream modules can preserve the links inline and in the ledger.
 
 Allowed `source_type` values:
 
@@ -126,7 +126,7 @@ If a search result is irrelevant, stale, duplicated, or too weak, record it only
 
 ## Final Gate
 
-Before final delivery, run `scripts/validate-ledger.mjs --final TRAVEL/{目的地}-{日期}/research-ledger.json`.
+Before final delivery, run `scripts/validate-ledger.mjs --final TRAVEL/{目的地}-{YYYY-MM-DD}/research-ledger.json`.
 
 In final mode:
 

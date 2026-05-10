@@ -1,6 +1,6 @@
 ---
 name: local-reputation-research
-description: Research mainland China destination, attraction, restaurant, and hotel reputation using Amap/FlyAI structured facts plus Web-Rooter cited public web evidence. Summarize recommendations, warnings, tourist traps, queues, reservation friction, food, hotel-area convenience, and source confidence.
+description: Research mainland China destination, attraction, restaurant, and hotel reputation using Amap/FlyAI structured facts plus Web-Rooter public evidence. Summarize recommendations, warnings, tourist traps, queues, reservation friction, food, and hotel-area convenience.
 ---
 
 # Local Reputation Research
@@ -10,7 +10,7 @@ Use this nested skill when the user asks whether a place is worth visiting, what
 ## Workflow
 
 1. Parse target POIs, destination, date/season, traveler type, and decision needed.
-2. Read `references/reputation-search-patterns.md`, `../roammate-travel-concierge/references/tool-priority.md`, `../roammate-travel-concierge/references/ai-search-playbook.md`, `../roammate-travel-concierge/references/web-rooter-playbook.md`, `../roammate-travel-concierge/references/research-ledger-schema.md`, and `../roammate-travel-concierge/references/data-flow.md`.
+2. Read `references/reputation-search-patterns.md`. In a full-package run, reuse any shared concierge references already loaded by the router; only open `tool-priority.md`, `ai-search-playbook.md`, `web-rooter-playbook.md`, `research-ledger-schema.md`, or `data-flow.md` if they have not been read yet or a validator failure requires the exact contract.
 3. Build a structured fact base first: Amap POI/detail/rating/location/around search; FlyAI search-poi, keyword-search, hotel inventory, filtered hotel queries, or package results where relevant.
 4. Use FlyAI `ai-search` for scenic tips, must-play projects, queues, preparation, play time, reservation friction, family suitability, ticket reference, and avoid/skip choices. Treat it as semantic reference.
 5. Use Web-Rooter + Quark with multiple query families for cited visitor experience, restaurants/food, hotel-area convenience, hotel tier/type fit, detailed攻略, official/current notices, and avoidance. Use `wr web --engine=quark` and `wr deep --engine=quark`; use `wr visit`/`wr html` for known pages; use `wr do-plan`/`wr do --strict` only for complex non-search tasks.
@@ -59,10 +59,9 @@ Use this nested skill when the user asks whether a place is worth visiting, what
 - Quark 经验信号：
 - 降权或排除原因：
 
-## 搜索与来源
+## 复核记录
 - Research conducted: {YYYY-MM-DD}
-- Queries used:
-- Sources:
+- Key evidence:
 ```
 
 ## Rules
@@ -75,7 +74,7 @@ Use this nested skill when the user asks whether a place is worth visiting, what
 - Use Amap rating only as a weak signal, not a final recommendation by itself.
 - Use FlyAI ticket/package results as booking-market reference, not guaranteed availability.
 - Preserve useful `ai-search` experience facts so itinerary and guidebook can reuse them: play time, must-do, queue, preparation, family fit, rest/meal needs.
-- Mark those preserved facts in `research-ledger.json` with `used_by` planned for `itinerary-data.json` or `guidebook-data.json` when applicable.
+- Preserve reusable facts in `research-ledger.json` when they materially affect itinerary or guidebook output; do not log long raw search text.
 - Do not re-run `ai-search` for a POI if a fresh accepted fact already exists in `research-ledger.json` unless the user constraints changed.
 - If only weak evidence exists, say so plainly and keep the recommendation conservative.
 - Treat non-official Web-Rooter evidence as experiential or corroborating evidence, not official proof. Never use it as the sole source for ticket prices, opening hours, closures, exact release times, or current availability.

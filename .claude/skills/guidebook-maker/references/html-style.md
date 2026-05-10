@@ -5,11 +5,11 @@ Use a dashboard-style Chinese travel atlas. The page should feel practical, rich
 ## Layout
 
 - Single self-contained HTML file.
-- Dashboard-first desktop layout: overview panel, day timeline panel, interactive map workspace, POI dossiers, hotels, food/budget, checklist, and sources.
+- Dashboard-first desktop layout: overview panel, day timeline panel, interactive map workspace, POI dossiers, hotels, food/budget, checklist, and collapsed source documents.
 - The primary desktop interaction is left itinerary + right map/detail workspace. Mobile stacks the panels and keeps day tabs usable.
 - Print target: A4.
 - Avoid nested cards. Use panels, cards, drawers, tabs, chips, and expandable details with stable spacing.
-- Dense information must be progressive: default cards show the decision summary; clicks/details reveal must-do, queue, preparation, parent/child cautions, avoid notes, and sources.
+- Dense information must be progressive: default cards show the decision summary; clicks/details reveal must-do, queue, preparation, parent/child cautions, avoid notes, and concise freshness notes when useful.
 
 ## Palette
 

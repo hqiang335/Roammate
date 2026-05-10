@@ -72,7 +72,7 @@ Read `web-rooter-playbook.md` before using Web-Rooter in a planning run. Prefer 
 
 Accept Web-Rooter output only when it contains usable `citations`, source URLs, or `references_text`. Discard irrelevant or low-signal results. Do not use Xiaohongshu, `wr xhs`, login, cookies, comments APIs, likes, posts, or account actions. If Web-Rooter fails or returns no usable citations, record the limitation and continue with Amap/FlyAI/estimates unless the user explicitly asks for another source.
 
-For every Web-Rooter result used downstream, preserve at least one source URL or citation ID in `research-ledger.json` and `sources.md`. Bare claims without a link are not reusable evidence.
+For every Web-Rooter result used downstream, preserve at least one source URL or citation ID in `research-ledger.json`. Bare claims without a link are not reusable evidence.
 
 ## Source Labels
 

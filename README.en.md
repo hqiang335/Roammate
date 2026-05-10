@@ -2,9 +2,9 @@
 
 [Simplified Chinese](README.md) | English
 
-Roammate is an AI-assisted travel planning agent for mainland China. It coordinates destination briefing, local reputation research, itinerary planning, route mapping, hotel and ticket references, source tracking, and a dashboard-style interactive HTML travel atlas.
+Roammate is an AI-assisted travel planning agent for mainland China. It coordinates destination briefing, local reputation research, itinerary planning, route data, hotel and ticket references, source tracking, and a dashboard-style interactive HTML travel atlas.
 
-The committed skill implementation lives in `.claude/skills`. The repository also includes `AGENTS.md` at the root so Codex / StudyClawHub-style agent workflows can read the same project instructions without requiring a duplicated `.agents` directory.
+The project is designed for Claude Code, Codex, and StudyClawHub-style agent/skill workflows. It can run as a multi-skill travel planning agent, while each skill can also be inspected or submitted independently.
 
 ## Online Demo
 
@@ -27,7 +27,7 @@ Roammate turns a natural-language trip request into a complete travel package:
 1. `destination-brief` creates a destination overview, best-season notes, transport gateways, traveler fit, cautions, and source-backed assumptions.
 2. `local-reputation-research` studies attraction, restaurant, hotel-area, and tourist-trap reputation using public web evidence and structured travel data.
 3. `itinerary-planner` builds a detailed multi-day itinerary with timeline, transport, meals, budget, booking reminders, backup plans, and feasibility checks.
-4. `map-route-builder` normalizes POIs, geocodes places, builds routes, collects hotel references, and generates reusable `map-data.json` for the guidebook map.
+4. `map-route-builder` normalizes POIs, geocodes places, builds routes, and collects hotel references into `map-data.json`.
 5. `guidebook-maker` merges all trip artifacts into a dashboard-style `guidebook.html` with map, daily plan, POI dossiers, hotels, food, budget, checklist, and source notes.
 
 ## Project Structure
@@ -51,10 +51,8 @@ Roammate/
 │       ├── itinerary.md
 │       ├── itinerary-data.json
 │       ├── map-data.json
-│       ├── pois.json
 │       ├── guidebook-data.json
-│       ├── guidebook.html
-│       └── sources.md
+│       └── guidebook.html
 ├── AGENTS.md                      # General agent instructions
 ├── CLAUDE.md                      # Claude Code project instructions
 ├── README.md
@@ -62,8 +60,6 @@ Roammate/
 ├── package.json
 └── package-lock.json
 ```
-
-This repository intentionally tracks only `.claude/skills` as the source of truth. If a local `.agents/` folder exists, it is an optional local mirror for some Codex/agent environments and does not need to be uploaded. Keeping `AGENTS.md` and `CLAUDE.md` aligned is expected: they target different tool entry points while describing the same project rules.
 
 ## Requirements
 
@@ -84,7 +80,7 @@ Text-only planning can still run without all external tools, but maps, route qua
 npm install
 ```
 
-If you want to run browser-rendering QA for `guidebook.html`, install Playwright's Chromium browser:
+If you want to run browser rendering QA for `guidebook.html`, install Playwright's Chromium browser:
 
 ```bash
 npx playwright install chromium
@@ -136,13 +132,13 @@ The project intentionally avoids login-only scraping, account operations, bookin
 
 ## Usage
 
-Open this repository in Claude Code, then start with the main routing skill:
+Open this repository in Claude Code or Codex, then start with the main routing skill:
 
 ```text
 /roammate-travel-concierge Plan a 4-day family trip to Xinjiang from May 27, 2026. Include transport, hotels, routes, attractions, food, budget, and an interactive guidebook.
 ```
 
-If slash commands are not available, or if you are using Codex through `AGENTS.md`, provide the same request in natural language and ask Roammate to run the complete five-step workflow from the `.claude/skills` files.
+If slash commands are not available, provide the same request in natural language and ask Roammate to run the complete five-step workflow.
 
 The final artifacts will be written under:
 
@@ -153,21 +149,18 @@ TRAVEL/{destination}-{date}/
 Validate a generated trip package:
 
 ```bash
-npm run finalize:trip -- TRAVEL/新疆-2026-05-27
+npm run validate:trip -- TRAVEL/新疆-2026-05-27
 ```
 
 Rebuild a guidebook from existing data:
 
 ```bash
+node .claude/skills/guidebook-maker/scripts/build-guidebook-data.mjs \
+  TRAVEL/新疆-2026-05-27
+
 node .claude/skills/guidebook-maker/scripts/build-guidebook.mjs \
   TRAVEL/新疆-2026-05-27/guidebook-data.json \
   TRAVEL/新疆-2026-05-27/guidebook.html
-```
-
-Generate a source index:
-
-```bash
-npm run generate:sources -- TRAVEL/新疆-2026-05-27/research-ledger.json
 ```
 
 ## Validation Scripts
@@ -176,11 +169,10 @@ npm run generate:sources -- TRAVEL/新疆-2026-05-27/research-ledger.json
 npm run validate:ledger -- TRAVEL/新疆-2026-05-27/research-ledger.json
 npm run validate:map -- TRAVEL/新疆-2026-05-27/map-data.json
 npm run validate:guidebook -- TRAVEL/新疆-2026-05-27/guidebook-data.json TRAVEL/新疆-2026-05-27/guidebook.html
-npm run finalize:trip -- TRAVEL/新疆-2026-05-27
 npm run validate:trip -- TRAVEL/新疆-2026-05-27
 ```
 
-`finalize:trip` is the main final delivery gate. It regenerates `sources.md`, then runs `validate:trip`; it fails if `guidebook-data.json` or `guidebook.html` is missing. `sources.md` alone is not a complete delivery.
+`validate:trip` is the main final check. It validates the generated trip directory and runs guidebook browser QA when Playwright is available.
 
 ## StudyClawHub Submission
 

@@ -3,15 +3,15 @@
   "version": "1.0.0",
   "main": "index.js",
   "scripts": {
+    "build:guidebook-data": "node .claude/skills/guidebook-maker/scripts/build-guidebook-data.mjs",
+    "build:guidebook": "node .claude/skills/guidebook-maker/scripts/build-guidebook.mjs",
     "validate:ledger": "node .claude/skills/roammate-travel-concierge/scripts/validate-ledger.mjs",
     "validate:trip": "node .claude/skills/roammate-travel-concierge/scripts/validate-trip-package.mjs",
     "validate:map": "node .claude/skills/map-route-builder/scripts/validate_map.mjs",
     "validate:guidebook": "node .claude/skills/guidebook-maker/scripts/validate-guidebook.mjs",
-    "finalize:trip": "node .claude/skills/roammate-travel-concierge/scripts/finalize-trip-package.mjs",
-    "generate:sources": "node .claude/skills/roammate-travel-concierge/scripts/generate-sources.mjs",
     "wr": "bash .claude/skills/roammate-travel-concierge/scripts/run-web-rooter.sh",
     "doctor:webrooter": "bash .claude/skills/roammate-travel-concierge/scripts/run-web-rooter.sh doctor",
-    "test": "node --check .claude/skills/roammate-travel-concierge/scripts/validate-ledger.mjs && node --check .claude/skills/roammate-travel-concierge/scripts/validate-trip-package.mjs && node --check .claude/skills/roammate-travel-concierge/scripts/finalize-trip-package.mjs && node --check .claude/skills/roammate-travel-concierge/scripts/generate-sources.mjs && node --check .claude/skills/map-route-builder/scripts/validate_map.mjs && node --check .claude/skills/guidebook-maker/scripts/build-guidebook.mjs && node --check .claude/skills/guidebook-maker/scripts/validate-guidebook.mjs && python3 -S -m py_compile .claude/skills/map-route-builder/scripts/build_real_map.py .claude/skills/map-route-builder/scripts/normalize_pois.py .claude/skills/itinerary-planner/scripts/validate_itinerary.py"
+    "test": "node --check .claude/skills/roammate-travel-concierge/scripts/validate-ledger.mjs && node --check .claude/skills/roammate-travel-concierge/scripts/validate-trip-package.mjs && node --check .claude/skills/map-route-builder/scripts/validate_map.mjs && node --check .claude/skills/guidebook-maker/scripts/build-guidebook-data.mjs && node --check .claude/skills/guidebook-maker/scripts/build-guidebook.mjs && node --check .claude/skills/guidebook-maker/scripts/validate-guidebook.mjs && PYTHONUTF8=1 LC_ALL=en_US.UTF-8 LANG=en_US.UTF-8 python3 -m py_compile .claude/skills/map-route-builder/scripts/build_real_map.py .claude/skills/map-route-builder/scripts/normalize_pois.py .claude/skills/itinerary-planner/scripts/validate_itinerary.py"
   },
   "keywords": [],
   "author": "",

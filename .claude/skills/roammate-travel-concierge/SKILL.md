@@ -1,6 +1,6 @@
 ---
 name: roammate-travel-concierge
-description: Chinese-first travel concierge skills system for mainland China trip briefing, reputation research, itinerary planning, Amap/FlyAI route building, hotel research, budgets, and dashboard-style interactive travel atlases.
+description: Chinese-first mainland China travel concierge router for destination briefs, reputation research, itinerary planning, Amap/FlyAI map data, hotels, budgets, and dashboard-style interactive travel atlases.
 ---
 
 # Roammate Travel Concierge
@@ -11,144 +11,101 @@ User request:
 $ARGUMENTS
 ```
 
-Use this top-level skill as the router for the V1 travel concierge system. It coordinates five nested skills. Keep this layer light: load only the nested skill that matches the user's request, or combine them in the order below for full trip planning.
+Use this top-level skill as the lightweight router. Load only the nested skill needed for a single-task request; for a complete trip request, run the full package pipeline automatically.
 
-## Routing
+## Full Package Trigger
 
-**Default: Full Pipeline**
+If the request includes destination + date/duration + traveler count, run all stages without asking whether to create maps or a guidebook:
 
-Any request that includes a destination + date/duration + traveler count is a full planning request. Run all five steps automatically without asking for confirmation:
+1. `../destination-brief/SKILL.md` -> `destination-brief.md`
+2. `../local-reputation-research/SKILL.md` -> `reputation.md`
+3. `../itinerary-planner/SKILL.md` -> `itinerary.md` and `itinerary-data.json`
+4. `../map-route-builder/SKILL.md` -> validated `map-data.json`
+5. `../guidebook-maker/SKILL.md` -> `guidebook-data.json`, `guidebook.html`, validation
 
-1. Destination brief -> `../destination-brief/SKILL.md`
-2. Local reputation research -> `../local-reputation-research/SKILL.md`
-3. Itinerary planning -> `../itinerary-planner/SKILL.md`
-4. Map and route building -> `../map-route-builder/SKILL.md` (must run `scripts/build_real_map.py`, produce validated `map-data.json` and legacy `pois.json`)
-5. Guidebook / Travel Atlas -> `../guidebook-maker/SKILL.md` (must run `scripts/build-guidebook.mjs`, produce validated dashboard-style `guidebook.html`)
+Never stop after step 3. A package is complete only after `guidebook.html` exists and `validate-trip-package.mjs` passes.
 
-Do not stop after step 3. Do not ask "do you want a map?" or "should I generate a guidebook?". Proceed through all five steps and write all output files. Intermediate status updates are allowed, but do not produce a success summary, final delivery wording, or "complete planning" message after destination brief, reputation research, itinerary validation, map data generation, or source index generation. A full-package request is not complete until step 4 map data, step 5 guidebook artifacts, `sources.md`, and final package validation have passed or have explicit failure artifacts.
+## Execution Discipline
 
-## Completion Lock
+- Derive one canonical `TRIP_DIR` at the start and reuse it everywhere: `TRAVEL/{目的地}-{YYYY-MM-DD}`. Do not create compact aliases such as `TRAVEL/成都-20260601`.
+- If exact dates are missing but a plausible range exists (`6月初`, holiday window, season + duration), choose representative dates and mark booking/weather/price facts as sample data. Ask only when no plausible range can be inferred.
+- Shared references are read once per run, only as needed: `tool-priority.md`, `ai-search-playbook.md`, `web-rooter-playbook.md`, `research-ledger-schema.md`, and `data-flow.md`.
+- Parallelize independent research when useful: destination facts, reputation evidence, transport/hotel searches, and POI experience searches may run concurrently. Join all background commands before writing final artifacts.
+- Do not loop on progress updates. After a validator passes, run the next gate. After a failure, inspect the failing artifact and validator output immediately.
+- Do not use shell heredocs, ad hoc `cat > file`, or hand-written HTML/JSON to bypass large writes. Use bundled scripts and smaller structured inputs.
 
-For full-package requests, the final response is blocked until this command exits successfully:
+## Evidence Rules
 
-```bash
-npm run finalize:trip -- TRAVEL/{destination-date}
+- Use Amap/FlyAI first for covered structured facts: weather, POIs, coordinates, routes, flights, trains, hotels, tickets/packages, and semantic experience tips.
+- Use Web-Rooter CLI + Quark for public web evidence, official notices, visitor sentiment, restaurant/hotel-area reputation, route tactics, and avoid notes.
+- Do not use Xiaohongshu, Xiaohongshu MCP, `wr xhs`, login/cookie scraping, account actions, posting, booking, payments, or Claude Code built-in Web Search unless explicitly requested.
+- Do not accept a recommendation-sensitive choice from a cheap first list alone. Hotels, restaurants, major attractions, parks, family trips, and older-adult trips need experience evidence or explicit fallback labeling.
+- Preserve FlyAI/Feizhu/airline/12306 booking or query URLs when returned; they must flow into itinerary and guidebook transport/hotel cards.
+- Mark estimates and volatile facts inline. Do not maintain a separate guidebook source panel.
+
+## Gates
+
+1. **Ledger**: create/update `research-ledger.json`, record accepted/discarded facts when available, and run `validate-ledger.mjs` for full packages.
+2. **Itinerary**: every anchor POI needs a duration rationale from FlyAI `ai-search`, Quark evidence, Amap route/time, queue friction, meal/rest needs, or a marked estimate.
+3. **Hotels**: derive stay-area/tier strategy before accepting hotel candidates. Keep price, room-type status, tradeoffs, and booking links.
+4. **Map data**: run `map-route-builder/scripts/build_real_map.py` or an explicit validated fallback, then `validate_map.mjs`. Do not generate standalone `map.html`.
+5. **Guidebook**: run `guidebook-maker/scripts/build-guidebook-data.mjs`, then `build-guidebook.mjs`, then `validate-guidebook.mjs`. Do not hand-write `guidebook-data.json` or `guidebook.html`.
+6. **Package**: run `roammate-travel-concierge/scripts/validate-trip-package.mjs "$TRIP_DIR"` before any successful final response.
+
+## No Early Exit Checklist
+
+Before the final response for a full package, verify:
+
+```text
+□ destination-brief.md
+□ reputation.md
+□ itinerary.md
+□ research-ledger.json
+□ itinerary-data.json
+□ map-data.json
+□ guidebook-data.json
+□ guidebook.html
+□ validate-trip-package.mjs passed
 ```
 
-This finalizer regenerates `sources.md` from `research-ledger.json`, then runs package validation. If it reports missing `guidebook-data.json`, missing `guidebook.html`, invalid `map-data.json`, ledger citation gaps, or guidebook QA failures, fix those issues and rerun it. `sources.md` is not a final artifact by itself; replacing the guidebook step with source documentation is a failed run.
+If any item is missing, continue the missing stage instead of summarizing success. The final answer must mention `guidebook.html` and passed package validation; otherwise it is a blocker report.
 
-Before any public web research, use the structured tool priorities in `references/tool-priority.md` for Amap weather/POI/routes and FlyAI flights/trains/hotel inventory/tickets/packages/semantic trip tips. For any route with specific attractions, read `references/ai-search-playbook.md` and build FlyAI `ai-search` experience intelligence before final itinerary timing. After Amap/FlyAI initialization, read `references/web-rooter-playbook.md` and use Web-Rooter CLI + Quark as the real-experience evidence layer for official notices, public web evidence, visitor sentiment, restaurant reputation, route tactics, hotel-area convenience, hotel tier/type fit, detailed攻略, and avoidance notes. Quark evidence can change, down-rank, or trigger a re-query of earlier FlyAI candidates.
+## Single-Skill Routing
 
-For full packages, also read `references/research-ledger-schema.md` and `references/data-flow.md`. Initialize or update `research-ledger.json` before writing downstream JSON artifacts.
-
-## Pipeline Gates
-
-Use these gates for full planning requests. Do not proceed past a gate until it has passed, failed explicitly, or been marked as a sample assumption.
-
-1. **Date gate**: if exact dates are missing but the user gave a month, season, holiday window, or vague phrase such as `6月初`, choose a reasonable representative date range that matches the requested duration and continue the full pipeline exactly as with explicit dates, including FlyAI flights, trains, hotels, tickets/packages, and Amap route/weather attempts. State the assumed range in every artifact and mark booking-market prices, availability, ticket data, and weather as representative-date sample data. Ask a date question only when no plausible range can be inferred at all.
-2. **Research gate**: all started tool calls and background commands must finish, fail, or be explicitly abandoned before writing final artifacts. Discard clearly irrelevant Web-Rooter results instead of treating them as evidence.
-3. **Ledger gate**: create `research-ledger.json`, record accepted and discarded facts, then run `scripts/validate-ledger.mjs`. In final delivery, run it with `--final`.
-4. **Experience gate**: for hotels, restaurants, major attractions, parks, family trips, older-adult trips, or any recommendation-sensitive choice, include Quark-cited public web evidence before accepting the final recommendation. This gate is not optional merely because Amap/FlyAI returned structured data.
-5. **Itinerary gate**: before finalizing day-by-day plans, each anchor POI must have a visible duration rationale from FlyAI `ai-search`, Quark experience evidence, Amap route/time, queue/reservation friction, meal/rest needs, or a marked estimate. Write this to `itinerary-data.json`, not `pois.json`.
-6. **Hotel gate**: never use FlyAI's first cheap hotel list as the final hotel advice. Derive a stay-area and hotel-tier strategy from Quark evidence, then rerun/filter FlyAI by area, POI, star, hotel type, price band, or rating as needed. Final hotel advice should include tradeoffs across economy, comfortable/family, premium/location-first, and special-stay options when evidence exists.
-7. **Map data gate**: `map-data.json` is valid only if produced by `map-route-builder/scripts/build_real_map.py` and validated by `validate_map.mjs`. Never hand-write placeholder map artifacts. If map data generation fails, write `map-error.md` or route text, not fake coordinates or fake route coverage. A manually written JSON file with `coordinates: {lat,lng}` or without `artifact_type: "map-data"` is invalid and cannot be treated as map completion.
-8. **Guidebook gate**: `guidebook.html` is valid only if produced by `guidebook-maker/scripts/build-guidebook.mjs` from `guidebook-data.json` and sibling `map-data.json` when available, and passes `validate-guidebook.mjs`. It is the main dashboard-style Travel Atlas, not a thin summary. Never write a long guidebook HTML file directly.
-9. **Sources gate**: generate `sources.md` from the ledger with `scripts/generate-sources.mjs TRAVEL/{destination-date}/research-ledger.json`. It must preserve Web-Rooter source URLs/citations and FlyAI Feizhu hotel links used downstream. This gate is after guidebook generation and is never a substitute for it.
-10. **Package gate**: before the final response, run `npm run finalize:trip -- TRAVEL/{destination-date}` and fix failures.
-
-After any intermediate validator passes, continue to the next gate immediately. Do not summarize as "completed the full plan" until the package gate passes.
-
-**Single-skill routing** (only when the request clearly targets one task):
-
-| User intent | Use nested skill |
+| User intent | Nested skill |
 | --- | --- |
 | Destination overview only | `../destination-brief/SKILL.md` |
-| "Is this place worth it?" / reputation only | `../local-reputation-research/SKILL.md` |
-| Itinerary only, user already has research | `../itinerary-planner/SKILL.md` |
-| Map / POI list only | `../map-route-builder/SKILL.md` |
-| Guidebook only, user provides existing files | `../guidebook-maker/SKILL.md` |
+| Reputation / “worth it?” only | `../local-reputation-research/SKILL.md` |
+| Itinerary only with existing research | `../itinerary-planner/SKILL.md` |
+| Map / POI / route data only | `../map-route-builder/SKILL.md` |
+| Guidebook from existing trip files | `../guidebook-maker/SKILL.md` |
 
-## Required Intake
+## Final Commands
 
-Extract what is present. Ask only for missing fields that materially affect the plan.
+```bash
+node .claude/skills/roammate-travel-concierge/scripts/validate-ledger.mjs \
+  --final "$TRIP_DIR/research-ledger.json"
 
-- Destination or region
-- Dates or season
-- Trip length
-- Origin city
-- Transportation mode
-- Travelers and constraints: older adults, children, accessibility, pets
-- Budget tier
-- Interests and pace
-- Desired output: quick answer, markdown plan, map, HTML
+node .claude/skills/guidebook-maker/scripts/build-guidebook-data.mjs "$TRIP_DIR"
 
-## System Rules
+node .claude/skills/guidebook-maker/scripts/build-guidebook.mjs \
+  "$TRIP_DIR/guidebook-data.json" \
+  "$TRIP_DIR/guidebook.html"
 
-- V1 focuses on mainland China travel and simplified Chinese output by default.
-- Do not use Xiaohongshu, Xiaohongshu MCP, or `wr xhs`.
-- Do not use Claude Code built-in Web Search by default. Use Amap/FlyAI for structured facts and Web-Rooter CLI + Quark for cited public web evidence and real-experience decisions.
-- Amap MCP and FlyAI CLI are first-choice sources for covered structured facts. Quark is the required experience layer for recommendation-sensitive choices and may override, down-rank, or refine FlyAI candidates. If a tool is unavailable, continue with remaining sources and mark estimates clearly.
-- Never book, pay, log in, or submit forms for the user. Provide recommendations and human confirmation points.
-- Mark data freshness, sources, and uncertain items in every final travel artifact.
-- Do not produce a final day-by-day schedule for major attractions until play time, must-do projects, queue/reservation friction, meals/rest needs, and Amap transfer time have been considered.
-- Do not write final `guidebook.html` by hand. Use the bundled generator scripts and validators.
-- Do not mark the trip complete, update todos to done, or produce final delivery wording until `npm run finalize:trip -- TRAVEL/{destination-date}` passes.
-- Do not replace the `guidebook-maker` step with `sources.md`, summary prose, or a list of generated markdown files.
-- Do not treat failed, empty, background, or irrelevant tool results as successful evidence.
-- Do not re-query facts already present in `research-ledger.json` unless they are stale, low-confidence, missing a needed field, or require a different tool type.
-- Keep JSON handoff files structured and concise, but preserve actionable experience facts as fields. Do not copy whole Markdown reports into JSON, and do not compress rich reputation/itinerary guidance into generic one-line summaries.
-- Generate `sources.md` from `research-ledger.json` source labels and key tool runs; do not maintain a separate conflicting source list.
-- Use Web-Rooter only for public, non-login pages and cited search/crawl output. Do not use Xiaohongshu, `wr xhs`, login, cookie scraping, account actions, posting, booking, payments, or Claude Code built-in Web Search unless the user explicitly asks.
-- Do not use `npx @modelcontextprotocol/inspector` to call MCP tools during travel planning. It is an interactive debugger that opens a browser and can leave port `6277` occupied. Use native MCP tools or the bundled REST/script fallbacks.
+node .claude/skills/roammate-travel-concierge/scripts/validate-trip-package.mjs "$TRIP_DIR"
+```
 
 ## Standard Outputs
 
-When producing a full package, use:
-
 ```text
-TRAVEL/{destination}-{date}/
+TRAVEL/{destination}-{YYYY-MM-DD}/
 ├── research-ledger.json
 ├── destination-brief.md
 ├── reputation.md
 ├── itinerary.md
 ├── itinerary-data.json
 ├── map-data.json
-├── pois.json                 # legacy alias for map-data.json during V1 transition
 ├── guidebook-data.json
-├── guidebook.html             # dashboard-style Travel Atlas, main visual artifact
-├── map-error.md
-└── sources.md
-```
-
-Use this final package command:
-
-```bash
-npm run finalize:trip -- TRAVEL/{destination-date}
-```
-
-Use this shared intermediate shape when passing itinerary data between nested skills:
-
-```json
-{
-  "destination": "杭州",
-  "start_date": "2026-06-01",
-  "days": [
-    {
-      "day": 1,
-      "theme": "西湖经典线",
-      "pois": [
-        {
-          "name": "断桥残雪",
-          "type": "attraction",
-          "estimated_duration_minutes": 40,
-          "comfortable_duration_minutes": 60,
-          "must_do": ["西湖断桥步行拍照"],
-          "reservation_required": false,
-          "queue_or_friction": "低",
-          "source": "Amap verified + FlyAI semantic reference"
-        }
-      ]
-    }
-  ]
-}
+├── guidebook.html
+└── map-error.md               # only if map-data generation fails
 ```

@@ -5,8 +5,8 @@ function usage() {
   console.error("Usage: node validate_map.mjs map-data.json");
 }
 
-const [, , dataPath] = process.argv;
-if (!dataPath) {
+const [, , dataPath, ...extraArgs] = process.argv;
+if (!dataPath || extraArgs.length) {
   usage();
   process.exit(1);
 }
@@ -30,6 +30,14 @@ function hotelUrl(hotel) {
   return hotel?.booking_url || hotel?.detailUrl || hotel?.jumpUrl || hotel?.url;
 }
 
+function hasLocation(item) {
+  if (Array.isArray(item?.location) && item.location.length === 2) return true;
+  const coordinates = item?.coordinates;
+  return coordinates
+    && Number.isFinite(Number(coordinates.longitude ?? coordinates.lng))
+    && Number.isFinite(Number(coordinates.latitude ?? coordinates.lat));
+}
+
 const data = readJson(dataPath);
 
 if (data) {
@@ -39,7 +47,7 @@ if (data) {
   if (!Array.isArray(data.pois) || data.pois.length === 0) {
     issues.push("map-data JSON must contain a non-empty pois array.");
   } else {
-    const located = data.pois.filter((poi) => Array.isArray(poi.location) && poi.location.length === 2);
+    const located = data.pois.filter(hasLocation);
     if (located.length === 0) {
       issues.push("At least one POI must have a [lng, lat] location.");
     }
@@ -64,11 +72,11 @@ if (data) {
 }
 
 if (issues.length) {
-  console.error("Map data validation failed:");
+  console.error("Map validation failed:");
   for (const issue of issues) {
     console.error(`- ${issue}`);
   }
   process.exit(1);
 }
 
-console.log("Map data validation passed.");
+console.log("Map validation passed.");

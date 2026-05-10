@@ -1,0 +1,294 @@
+{
+  "schema_version": "1.0",
+  "artifact_type": "itinerary-data",
+  "destination": "长沙",
+  "date_range": "2026-05-14 至 2026-05-16",
+  "duration": "3天2夜",
+  "origin": "广州",
+  "travelers": "1人，穷游特种兵",
+  "transport_mode": "高铁+地铁",
+  "budget_tier": "经济/穷游",
+  "assumptions": [],
+  "transport": {
+    "outbound": {
+      "type": "高铁",
+      "train_no": "G2056",
+      "dep_station": "广州南站",
+      "arr_station": "长沙南站",
+      "dep_time": "2026-05-14 07:58",
+      "arr_time": "2026-05-14 10:54",
+      "duration_min": 176,
+      "price": "¥283",
+      "seat_class": "二等座",
+      "booking_url": "https://a.feizhu.com/09ZZDN",
+      "source": "FlyAI booking reference",
+      "note": "代表性样例数据，以12306实时为准"
+    },
+    "return": {
+      "type": "高铁",
+      "train_no": "G913",
+      "dep_station": "长沙南站",
+      "arr_station": "广州南站",
+      "dep_time": "2026-05-16 17:38",
+      "arr_time": "2026-05-16 20:07",
+      "duration_min": 149,
+      "price": "¥314",
+      "seat_class": "二等座",
+      "booking_url": "https://a.feizhu.com/43Bzym",
+      "alt_train_no": "G6129",
+      "alt_dep_time": "2026-05-16 20:44",
+      "alt_price": "¥283",
+      "alt_booking_url": "https://a.feizhu.com/3V3Sw2",
+      "source": "FlyAI booking reference",
+      "note": "代表性样例数据，以12306实时为准"
+    },
+    "local": "全程地铁：1号线（五一广场/黄兴广场）、2号线（橘子洲/长沙南站）、4号线（湖南大学/岳麓山）、6号线（湖南博物院）；约¥3-5/次"
+  },
+  "accommodation": {
+    "area_strategy": "五一广场/黄兴广场/芙蓉广场区域，地铁1+2号线交汇，步行可达太平老街、坡子街，距橘子洲和岳麓山均方便",
+    "hotels": [
+      {
+        "name": "长沙十一豆青旅（五一广场IFS店）",
+        "tier": "经济/穷游优先",
+        "price_reference": "¥57/晚",
+        "location": "近五一广场",
+        "latitude": "28.188242",
+        "longitude": "112.984827",
+        "booking_url": "https://a.feizhu.com/0M9q50",
+        "room_type": "FlyAI未返回具体房型，需点击飞猪链接确认",
+        "source": "FlyAI booking reference",
+        "note": "代表性样例数据，价格以飞猪实时为准"
+      },
+      {
+        "name": "三贵三六酒店（长沙IFS国金中心潮宗古街店）",
+        "tier": "舒适/位置优先",
+        "price_reference": "¥181/晚",
+        "location": "近五一广场",
+        "latitude": "28.201057",
+        "longitude": "112.974555",
+        "booking_url": "https://a.feizhu.com/2HplK8",
+        "room_type": "FlyAI未返回具体房型，需点击飞猪链接确认",
+        "source": "FlyAI booking reference",
+        "note": "代表性样例数据，价格以飞猪实时为准"
+      }
+    ]
+  },
+  "days": [
+    {
+      "day": 1,
+      "date": "2026-05-14",
+      "theme": "抵达长沙，文化美食夜",
+      "area": "五一广场/太平老街/坡子街",
+      "intensity": "中",
+      "pois": [
+        {
+          "name": "长沙南站",
+          "type": "station",
+          "time": "10:54",
+          "estimated_duration_minutes": 30,
+          "comfortable_duration_minutes": 30,
+          "must_do": ["取行李", "地铁2号线前往五一广场"],
+          "reservation_required": false,
+          "queue_or_friction": [],
+          "cost": "¥5（地铁）",
+          "source": "FlyAI booking reference"
+        },
+        {
+          "name": "太平老街历史文化街区",
+          "type": "文创街区",
+          "time": "12:30",
+          "estimated_duration_minutes": 90,
+          "comfortable_duration_minutes": 120,
+          "must_do": ["黑色经典臭豆腐", "糖油粑粑", "茶颜悦色（任意门店）", "贾谊故居外观"],
+          "reservation_required": false,
+          "queue_or_friction": ["主街小吃店常需排队", "建议深入小巷避开高价摊"],
+          "cost": "¥30-50（小吃）",
+          "coordinates": {"longitude": "112.972054", "latitude": "28.193599"},
+          "source": "FlyAI semantic reference"
+        },
+        {
+          "name": "坡子街",
+          "type": "文创街区",
+          "time": "14:30",
+          "estimated_duration_minutes": 60,
+          "comfortable_duration_minutes": 60,
+          "must_do": ["步行串联太平街", "感受湖湘美食文化氛围"],
+          "reservation_required": false,
+          "queue_or_friction": ["火宫殿名气大于口味，仅打卡不用餐"],
+          "cost": "免费",
+          "coordinates": {"longitude": "112.972812", "latitude": "28.190515"},
+          "source": "FlyAI semantic reference"
+        },
+        {
+          "name": "超级文和友剧场（海信广场长沙店）",
+          "type": "打卡景点",
+          "time": "16:00",
+          "estimated_duration_minutes": 60,
+          "comfortable_duration_minutes": 90,
+          "must_do": ["免费参观80年代老长沙复古场景", "拍照打卡"],
+          "reservation_required": false,
+          "queue_or_friction": ["饭点用餐排队极长（可能等数百桌）", "建议非饭点前往仅拍照"],
+          "cost": "免费参观",
+          "coordinates": {"longitude": "112.969695", "latitude": "28.189056"},
+          "source": "FlyAI semantic reference"
+        },
+        {
+          "name": "东瓜山美食街/坡子街大排档",
+          "type": "restaurant",
+          "time": "19:00",
+          "estimated_duration_minutes": 60,
+          "comfortable_duration_minutes": 60,
+          "must_do": ["本地烟火气晚餐", "冬瓜山肉肠/麻辣烫/小龙虾"],
+          "reservation_required": false,
+          "queue_or_friction": [],
+          "cost": "¥50-70",
+          "source": "FlyAI semantic reference"
+        }
+      ],
+      "meals": {
+        "breakfast": "广州出发，车上/到达后解决",
+        "lunch": "太平老街小吃（¥30-50）",
+        "afternoon_tea": "茶颜悦色（¥16）",
+        "dinner": "东瓜山美食街大排档（¥50-70）"
+      },
+      "budget_estimate": "¥465（含高铁¥283+住宿¥57+餐饮¥100+地铁¥5+其他¥20）",
+      "reservation_reminder": "今晚20:00抢湖南博物院Day3门票（提前7天）！",
+      "backup_plan": "IFS国金中心室内逛街；五一广场周边咖啡馆（雨天/疲劳备用）"
+    },
+    {
+      "day": 2,
+      "date": "2026-05-15",
+      "theme": "岳麓山+橘子洲，山水洲城全打卡",
+      "area": "岳麓山/橘子洲/湘江",
+      "intensity": "高",
+      "pois": [
+        {
+          "name": "岳麓书院",
+          "type": "历史古迹",
+          "time": "09:00",
+          "estimated_duration_minutes": 120,
+          "comfortable_duration_minutes": 120,
+          "must_do": ["讲堂", "御书楼", "文庙", "碑廊"],
+          "reservation_required": true,
+          "queue_or_friction": ["需提前在官方公众号预约购票", "旺季排队入场"],
+          "cost": "¥40（学生¥20）",
+          "coordinates": {"longitude": "112.940805", "latitude": "28.180397"},
+          "source": "FlyAI semantic reference"
+        },
+        {
+          "name": "爱晚亭",
+          "type": "历史古迹",
+          "time": "11:00",
+          "estimated_duration_minutes": 30,
+          "comfortable_duration_minutes": 30,
+          "must_do": ["参观中国四大名亭之一", "感受毛泽东青年时代聚会之地"],
+          "reservation_required": false,
+          "queue_or_friction": ["无需排队，全天免费开放"],
+          "cost": "免费",
+          "coordinates": {"longitude": "112.937564", "latitude": "28.180437"},
+          "source": "FlyAI semantic reference"
+        },
+        {
+          "name": "岳麓山国家重点风景名胜区（徒步登顶）",
+          "type": "自然风光",
+          "time": "11:30",
+          "estimated_duration_minutes": 180,
+          "comfortable_duration_minutes": 210,
+          "must_do": ["古麓山寺", "蔡锷墓/黄兴墓", "山顶观光长廊俯瞰长沙城"],
+          "reservation_required": true,
+          "queue_or_friction": ["需在「岳麓山橘子洲旅游区」公众号提前3天预约", "5月多雨路滑注意安全"],
+          "cost": "免费（索道¥40上行/¥30下行，滑道¥35，可选）",
+          "coordinates": {"longitude": "112.936104", "latitude": "28.183601"},
+          "source": "FlyAI semantic reference + Web-Rooter cited"
+        },
+        {
+          "name": "橘子洲景区",
+          "type": "自然风光",
+          "time": "16:00",
+          "estimated_duration_minutes": 120,
+          "comfortable_duration_minutes": 150,
+          "must_do": ["毛主席青年艺术雕塑打卡", "百米高喷", "湘江步道日落"],
+          "reservation_required": true,
+          "queue_or_friction": ["需提前3天在「岳麓山橘子洲旅游区」公众号预约", "观光小火车可在「龙骧橘子洲」小程序提前购票"],
+          "cost": "免费（观光小火车另收费）",
+          "coordinates": {"longitude": "112.962904", "latitude": "28.196554"},
+          "source": "FlyAI semantic reference + Web-Rooter cited"
+        }
+      ],
+      "meals": {
+        "breakfast": "住宿附近米粉店（¥15-20）",
+        "lunch": "湖南大学小吃街（¥30-40）",
+        "dinner": "五一广场附近湘菜馆（¥50-80）"
+      },
+      "budget_estimate": "¥170（地铁¥10+书院¥40+餐饮¥100+其他¥20）",
+      "reservation_reminder": "橘子洲需提前3天预约（5月12日前）；岳麓书院提前预约购票",
+      "backup_plan": "岳麓山索道（¥40上行）；橘子洲观光小火车；雨天路滑注意安全"
+    },
+    {
+      "day": 3,
+      "date": "2026-05-16",
+      "theme": "湖南博物院+返程",
+      "area": "湖南博物院/五一广场",
+      "intensity": "中",
+      "pois": [
+        {
+          "name": "湖南博物院",
+          "type": "博物馆",
+          "time": "09:30",
+          "estimated_duration_minutes": 210,
+          "comfortable_duration_minutes": 240,
+          "must_do": ["马王堆汉墓陈列（辛追夫人、素纱单衣、彩绘帛画）", "湖南人·三湘历史文化陈列"],
+          "reservation_required": true,
+          "queue_or_friction": ["需提前7天在「湖南博物院」微信公众号20:00抢票（极难）", "若抢不到可购买含代约服务的讲解套餐", "周一闭馆（法定节假日除外）", "旺季上午排队较长，建议预约最早时段"],
+          "cost": "免费（基本陈列）；特展可能收费",
+          "coordinates": {"longitude": "112.9935", "latitude": "28.211872"},
+          "source": "FlyAI semantic reference + Web-Rooter cited"
+        },
+        {
+          "name": "五一广场/IFS国金中心",
+          "type": "地标建筑",
+          "time": "14:00",
+          "estimated_duration_minutes": 60,
+          "comfortable_duration_minutes": 90,
+          "must_do": ["最后打卡", "购买伴手礼（茶颜悦色茶包建议在超市购买更划算）"],
+          "reservation_required": false,
+          "queue_or_friction": ["无需排队，开放式广场"],
+          "cost": "¥50-100（伴手礼）",
+          "coordinates": {"longitude": "112.97734", "latitude": "28.1965"},
+          "source": "Estimated"
+        },
+        {
+          "name": "长沙南站",
+          "type": "station",
+          "time": "16:30",
+          "estimated_duration_minutes": 30,
+          "comfortable_duration_minutes": 30,
+          "must_do": ["提前1小时到站候车"],
+          "reservation_required": false,
+          "queue_or_friction": [],
+          "cost": "¥5（地铁）",
+          "source": "FlyAI booking reference"
+        }
+      ],
+      "meals": {
+        "breakfast": "住宿附近米粉或包子铺（¥15-20）",
+        "lunch": "烈士公园附近餐饮（¥30-50）",
+        "dinner": "广州解决"
+      },
+      "budget_estimate": "¥447（地铁¥13+餐饮¥70+伴手礼¥50+返程高铁¥314）",
+      "reservation_reminder": "湖南博物院需提前7天20:00抢票；若未抢到可购买含代约讲解套餐",
+      "backup_plan": "若博物院票未抢到，可改游长沙IFS国金中心、湘江风光带"
+    }
+  ],
+  "budget_summary": {
+    "outbound_train": "¥283",
+    "return_train": "¥283-314",
+    "accommodation_2nights": "¥114-360",
+    "meals_3days": "¥300-400",
+    "attractions": "¥40（岳麓书院）",
+    "local_transport": "¥40-50",
+    "souvenirs_misc": "¥50-100",
+    "total_estimate": "¥1,110-1,547",
+    "note": "穷游模式，高铁价格为代表性样例数据"
+  }
+}

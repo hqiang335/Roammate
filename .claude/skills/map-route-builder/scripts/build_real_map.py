@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""Build real Amap POIs/routes and FlyAI hotel results into reusable map data."""
+"""Build Amap POIs/routes and FlyAI hotel results into map-data.json."""
 
 from __future__ import annotations
 
@@ -478,7 +478,7 @@ def write_json(path: Path, payload: dict[str, Any]) -> None:
 
 def main() -> int:
     load_codex_env()
-    parser = argparse.ArgumentParser(description="Build real Amap/FlyAI route map artifacts.")
+    parser = argparse.ArgumentParser(description="Build Amap/FlyAI route data for guidebook rendering.")
     parser.add_argument("--destination", required=True, help="Destination city, e.g. 杭州")
     parser.add_argument("--city", help="Amap city hint; defaults to destination")
     parser.add_argument("--locations", help="Comma/newline separated POI names")
@@ -529,8 +529,7 @@ def main() -> int:
         "generated_at": date.today().isoformat(),
     }
     write_json(output_dir / "map-data.json", payload)
-    write_json(output_dir / "pois.json", payload)
-    print(json.dumps({"map_data_json": str(output_dir / "map-data.json"), "legacy_pois_json": str(output_dir / "pois.json"), "poi_count": len(pois), "route_count": len(routes), "hotel_count": len([h for h in hotels if not h.get("error")])}, ensure_ascii=False))
+    print(json.dumps({"map_data_json": str(output_dir / "map-data.json"), "poi_count": len(pois), "route_count": len(routes), "hotel_count": len([h for h in hotels if not h.get("error")])}, ensure_ascii=False))
     return 0
 
 

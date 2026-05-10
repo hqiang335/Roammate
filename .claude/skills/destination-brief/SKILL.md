@@ -1,6 +1,6 @@
 ---
 name: destination-brief
-description: Create concise mainland China destination briefs covering overview, best season, weather risks, transport gateways, traveler fit, core experiences, cautions, and cited sources.
+description: Create concise mainland China destination briefs covering overview, best season, weather risks, transport gateways, traveler fit, core experiences, cautions, and freshness notes.
 ---
 
 # Destination Brief
@@ -10,13 +10,13 @@ Use this nested skill for quick destination research before deeper itinerary wor
 ## Workflow
 
 1. Parse destination, date/season, origin city, traveler type, and interests.
-2. Read `references/source-priority.md`, `../roammate-travel-concierge/references/tool-priority.md`, `../roammate-travel-concierge/references/ai-search-playbook.md`, `../roammate-travel-concierge/references/web-rooter-playbook.md`, `../roammate-travel-concierge/references/research-ledger-schema.md`, and `../roammate-travel-concierge/references/data-flow.md`.
+2. Read `references/source-priority.md`. In a full-package run, reuse any shared concierge references already loaded by the router; only open `tool-priority.md`, `ai-search-playbook.md`, `web-rooter-playbook.md`, `research-ledger-schema.md`, or `data-flow.md` if they have not been read yet or a validator failure requires the exact contract.
 3. Use Amap first for weather windows, POI/transport gateways, and local movement facts when applicable.
-4. Use FlyAI first for origin-destination flights/trains and travel-market references. If the user gives only a month/season/vague window, choose a reasonable representative date range that matches the requested duration, query normally, and mark flights, trains, hotels, tickets, packages, and prices as representative-date sample data.
+4. Use FlyAI first for origin-destination flights/trains and travel-market references. Preserve returned booking/query links (`url`, `bookingUrl`, `booking_url`, `ticketUrl`, `ticket_url`, `detailUrl`, `jumpUrl`) alongside flight/train number, time, duration, and price; do not reduce transport facts to plain text if a link exists. If the user gives only a month/season/vague window, choose a reasonable representative date range that matches the requested duration, query normally, and mark flights, trains, hotels, tickets, packages, and prices as representative-date sample data.
 5. Use FlyAI `ai-search` for scenic highlights, seasonal fit, preparation, must-play projects, family tips, likely queue/reservation friction, and package-style ideas; treat it as semantic reference.
 6. Use Web-Rooter + Quark before Claude Code built-in Web Search for official pages, policy, opening, construction, festival dates, public web conflicts, and real-experience signals that affect the trip. For hotel-heavy, restaurant-heavy, amusement-park, family, or older-adult trips, Quark evidence should shape the initial stay-area/experience judgment even when Amap/FlyAI returned data.
 7. Record accepted destination-level facts, assumptions, and discarded weak searches in `research-ledger.json`.
-8. Summarize for a Chinese traveler. Keep it practical, decision-oriented, and source-labeled.
+8. Summarize for a Chinese traveler. Keep it practical, decision-oriented, and compact; put uncertainty beside the affected fact instead of adding a long source section.
 
 ## Output
 
@@ -58,10 +58,6 @@ Write simplified Chinese unless the user asks otherwise.
 ## 风险与注意
 - 天气、闭园、预约、限流、交通、体力风险
 
-## 来源与可信度
-- 已核实：
-- 可能波动：
-- Research conducted: {YYYY-MM-DD}
 ```
 
 ## Rules
@@ -74,4 +70,5 @@ Write simplified Chinese unless the user asks otherwise.
 - If the destination is a scenic area, include nearest city and transport gateway.
 - If information conflicts, prefer official notices and mention the conflict.
 - Do not re-query a destination fact already present in `research-ledger.json` unless it is stale, low-confidence, or missing a field needed for the brief.
-- Do not store whole tool outputs in `research-ledger.json`; store concise facts and source labels.
+- Do not store whole tool outputs in `research-ledger.json`; store concise facts and only the source metadata needed for later validation.
+- For FlyAI flight/train facts, store the booking/query URL when returned so itinerary and guidebook can display it later.

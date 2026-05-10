@@ -1,26 +1,26 @@
 ---
 name: map-route-builder
-description: Convert mainland China place lists or itinerary POIs into normalized POI JSON, route summaries, transport/hotel/ticket references, reusable map data, and Amap/FlyAI/Quark-backed travel data.
+description: Convert mainland China place lists or itinerary POIs into normalized map-data JSON, route summaries, transport/hotel/ticket references, and Amap/FlyAI/Quark-backed travel data for guidebook rendering.
 ---
 
 # Map Route Builder
 
-Use this nested skill for POI normalization, route mapping, Amap data, FlyAI transport/hotel/ticket/package support, and Quark-backed hotel/route experience checks.
+Use this nested skill for POI normalization, route data, Amap data, FlyAI transport/hotel/ticket/package support, and Quark-backed hotel/route experience checks.
 
 ## Workflow
 
 1. Parse input: comma-separated locations, itinerary markdown, or standard JSON.
-2. Read `../roammate-travel-concierge/references/tool-priority.md`, `../roammate-travel-concierge/references/web-rooter-playbook.md`, `../roammate-travel-concierge/references/research-ledger-schema.md`, `../roammate-travel-concierge/references/data-flow.md`, `references/amap-mcp.md`, and `references/flyai-cli.md`.
+2. Read `references/amap-mcp.md` and `references/flyai-cli.md`. In a full-package run, reuse any shared concierge references already loaded by the router; only reopen `tool-priority.md`, `web-rooter-playbook.md`, `research-ledger-schema.md`, or `data-flow.md` if they have not been read yet or a validator failure requires the exact contract.
 3. Prefer `itinerary-data.json` as the POI source for full packages. Run `scripts/normalize_pois.py` only when text or JSON needs normalization.
 4. For full-package map data, **must run** `scripts/build_real_map.py`. It uses Amap Web Service API for POIs/routes and FlyAI CLI for hotel inventory results.
-5. Validate the generated map data with `scripts/validate_map.mjs`.
+5. Validate the generated `map-data.json` with `scripts/validate_map.mjs`.
 6. Update `research-ledger.json` with Amap verified POI/route facts, FlyAI hotel inventory facts, and Quark hotel-area/hotel-tier facts that should be reused by the guidebook.
 7. Use Amap MCP directly for weather, details, around search, route modes, and distance when richer data is needed than the script provides.
 8. Use FlyAI CLI directly for flights, trains, hotels, attraction listings, tickets/packages, semantic scenic tips, and Marriott preferences. If exact dates are missing but a month/season/vague window is present, choose representative dates and run date-specific booking commands normally, labeling results as sample data.
 9. For hotels, compare FlyAI inventory with Quark-cited stay-area and hotel-tier evidence from `research-ledger.json`. If missing and hotel advice matters, run Quark hotel queries before finalizing hotel candidates. Re-query/filter FlyAI by area, POI, star, hotel type, price band, or rating when Quark evidence shows the first FlyAI list is low-quality or too cheap-biased.
-10. Generate `map-data.json`, legacy `pois.json`, route summary, hotel candidates, and transport/ticket notes for the guidebook.
+10. Generate `map-data.json` with route summary, hotel candidates, transport/ticket notes, and guidebook-ready map facts. Do not generate a standalone map page.
 
-## Real Map Data Command
+## Real Map Command
 
 ```bash
 .claude/skills/map-route-builder/scripts/build_real_map.py \
@@ -30,7 +30,7 @@ Use this nested skill for POI normalization, route mapping, Amap data, FlyAI tra
   --check-out-date 2026-06-07 \
   --hotel-bed-types twin,multi \
   --hotel-poi 西湖 \
-  --output-dir "TRAVEL/杭州-2026-06"
+  --output-dir "TRAVEL/杭州-2026-06-05"
 ```
 
 When exact hotel dates are unknown, infer representative check-in/check-out dates from the trip assumptions and pass them to the command. Add `--skip-hotels` only if no plausible date range can be inferred or the user explicitly asks not to query hotel inventory.
@@ -39,7 +39,7 @@ Then validate:
 
 ```bash
 node .claude/skills/map-route-builder/scripts/validate_map.mjs \
-  TRAVEL/杭州-2026-06/map-data.json
+  TRAVEL/杭州-2026-06-05/map-data.json
 ```
 
 Required local secrets are read from environment or `~/.codex/.env`:
@@ -76,10 +76,10 @@ Required local secrets are read from environment or `~/.codex/.env`:
 ## Rules
 
 - Amap and FlyAI are first-choice sources for covered structured facts. Quark is required for hotel-area/tier fit and real traveler route tactics when those choices affect recommendations. Continue without a tool only after noting failure/timeout/unavailable dates.
-- Do not hand-write map HTML. `map-route-builder` should produce validated `map-data.json`; `guidebook-maker` is responsible for the final interactive map UI inside `guidebook.html`.
-- If the real map data script fails because keys, network, Amap, or FlyAI are unavailable, write `map-error.md` plus route text instead of creating placeholder visual artifacts.
-- `map-data.json` is the authoritative map data file. `pois.json` is a V1 legacy alias for compatibility only. `guidebook-maker` also reads `map-data.json` to build the main dashboard-style Travel Atlas.
-- Do not use `pois.json` as itinerary data. If an itinerary handoff is needed, read `itinerary-data.json`.
+- Do not generate standalone map pages. The guidebook is the only visual map surface.
+- If the real map data script fails because keys, network, Amap, or FlyAI are unavailable, write `map-error.md` plus route text instead of creating placeholder artifacts.
+- `map-data.json` is the authoritative map data file. `guidebook-maker` reads `map-data.json` to build the main dashboard-style Travel Atlas.
+- If an itinerary handoff is needed, read `itinerary-data.json`.
 - Do not re-query Amap/FlyAI for POIs, routes, or hotels already fresh in `map-data.json` unless the itinerary changed, a validator fails, or Quark experience evidence indicates the existing hotel area/tier/candidates are a poor fit.
 - If dates are month-only/season-only, run the map with the assumed representative check-in/check-out dates and label FlyAI hotel candidates/prices as representative-date sample data. Skip FlyAI hotel inventory only when no plausible date range can be inferred or the user explicitly asks not to query it.
 - Do not present FlyAI hotel output as final hotel advice until Quark area/tier evidence has been considered for trips where lodging affects comfort, commute, family suitability, or budget tradeoffs.
@@ -90,4 +90,4 @@ Required local secrets are read from environment or `~/.codex/.env`:
 - Never submit bookings or payment.
 - Coordinates must be marked as verified or estimated.
 - Booking-market prices and availability must be marked as volatile.
-- If map data cannot be generated, still output normalized POIs and route text. The final visual experience is the generated `guidebook.html` Travel Atlas, which merges map data with itinerary and reputation dossiers.
+- If map data cannot be fully verified, still output normalized POIs and route text with clear `estimated` markers so the generated `guidebook.html` Travel Atlas can degrade gracefully.

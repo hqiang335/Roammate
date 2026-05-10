@@ -1,0 +1,417 @@
+{
+  "schema_version": "1.1",
+  "artifact_type": "map-data",
+  "destination": "长沙",
+  "city": "长沙",
+  "locations": [
+    "湖南博物院",
+    "橘子洲景区",
+    "岳麓山国家重点风景名胜区",
+    "岳麓书院",
+    "爱晚亭",
+    "太平老街历史文化街区",
+    "坡子街",
+    "超级文和友剧场",
+    "五一广场",
+    "长沙南站"
+  ],
+  "pois": [
+    {
+      "name": "湖南博物院(南院)",
+      "original_name": "湖南博物院",
+      "type": "科教文化服务;博物馆;博物馆",
+      "address": "五一大道与韭菜园路交叉口西南60米",
+      "location": [
+        112.988362,
+        28.194818
+      ],
+      "tel": "0731-84415833",
+      "rating": "4.2",
+      "source": "amap_place_text",
+      "confidence": "verified",
+      "order": 1
+    },
+    {
+      "name": "橘子洲景区-音乐喷泉",
+      "original_name": "橘子洲景区",
+      "type": "风景名胜;风景名胜相关;旅游景点",
+      "address": "橘洲路橘子洲大桥南",
+      "location": [
+        112.962594,
+        28.192004
+      ],
+      "tel": "0731-88614640",
+      "rating": "3.6",
+      "source": "amap_place_text",
+      "confidence": "verified",
+      "order": 2
+    },
+    {
+      "name": "岳麓山国家重点风景名胜区-清风峡",
+      "original_name": "岳麓山国家重点风景名胜区",
+      "type": "风景名胜;风景名胜相关;旅游景点",
+      "address": "登高路58号岳麓山国家重点风景名胜区内",
+      "location": [
+        112.937149,
+        28.180454
+      ],
+      "tel": "0731-88825011",
+      "rating": "3.7",
+      "source": "amap_place_text",
+      "confidence": "verified",
+      "order": 3
+    },
+    {
+      "name": "岳麓书院",
+      "original_name": "岳麓书院",
+      "type": "风景名胜;风景名胜;国家级景点",
+      "address": "麓山路273号",
+      "location": [
+        112.94197,
+        28.180272
+      ],
+      "tel": "0731-88823764",
+      "rating": "4.8",
+      "source": "amap_place_text",
+      "confidence": "verified",
+      "order": 4
+    },
+    {
+      "name": "爱晚亭",
+      "original_name": "爱晚亭",
+      "type": "风景名胜;风景名胜;红色景区",
+      "address": "桔子洲街道桔子洲街道登高路58号岳麓山风景区内",
+      "location": [
+        112.944436,
+        28.179354
+      ],
+      "tel": "0731-88825011",
+      "rating": "4.4",
+      "source": "amap_place_text",
+      "confidence": "verified",
+      "order": 5
+    },
+    {
+      "name": "太平老街历史文化街区",
+      "original_name": "太平老街历史文化街区",
+      "type": "风景名胜;风景名胜相关;旅游景点",
+      "address": "解放西路449号",
+      "location": [
+        112.971912,
+        28.195292
+      ],
+      "tel": "",
+      "rating": "4.8",
+      "source": "amap_place_text",
+      "confidence": "verified",
+      "order": 6
+    },
+    {
+      "name": "坡子街",
+      "original_name": "坡子街",
+      "type": "地名地址信息;交通地名;道路名",
+      "address": "天心区",
+      "location": [
+        112.97258,
+        28.190339
+      ],
+      "tel": "",
+      "rating": "4.4",
+      "source": "amap_place_text",
+      "confidence": "verified",
+      "order": 7
+    },
+    {
+      "name": "恰同学少年青春剧场",
+      "original_name": "超级文和友剧场",
+      "type": "体育休闲服务;影剧院;剧场",
+      "address": "橘洲路2号(橘子洲·青莲地铁站入口步行180米)",
+      "location": [
+        112.962378,
+        28.19405
+      ],
+      "tel": "16670157268",
+      "rating": "4.6",
+      "source": "amap_place_text",
+      "confidence": "verified",
+      "order": 8
+    },
+    {
+      "name": "五一广场",
+      "original_name": "五一广场",
+      "type": "风景名胜;公园广场;城市广场",
+      "address": "黄兴中路88号",
+      "location": [
+        112.976415,
+        28.195509
+      ],
+      "tel": "",
+      "rating": "4.9",
+      "source": "amap_place_text",
+      "confidence": "verified",
+      "order": 9
+    },
+    {
+      "name": "长沙南站",
+      "original_name": "长沙南站",
+      "type": "交通设施服务;火车站;火车站",
+      "address": "花侯路",
+      "location": [
+        113.06327,
+        28.146657
+      ],
+      "tel": "",
+      "rating": "2.5",
+      "source": "amap_place_text",
+      "confidence": "verified",
+      "order": 10
+    }
+  ],
+  "routes": [
+    {
+      "mode": "driving",
+      "distance_m": 6338,
+      "duration_min": 18,
+      "source": "amap_direction_driving",
+      "from": "湖南博物院(南院)",
+      "to": "橘子洲景区-音乐喷泉"
+    },
+    {
+      "mode": "driving",
+      "distance_m": 8701,
+      "duration_min": 28,
+      "source": "amap_direction_driving",
+      "from": "橘子洲景区-音乐喷泉",
+      "to": "岳麓山国家重点风景名胜区-清风峡"
+    },
+    {
+      "mode": "walking",
+      "distance_m": 906,
+      "duration_min": 12,
+      "source": "amap_direction_walking",
+      "from": "岳麓山国家重点风景名胜区-清风峡",
+      "to": "岳麓书院"
+    },
+    {
+      "mode": "walking",
+      "distance_m": 304,
+      "duration_min": 4,
+      "source": "amap_direction_walking",
+      "from": "岳麓书院",
+      "to": "爱晚亭"
+    },
+    {
+      "mode": "driving",
+      "distance_m": 4111,
+      "duration_min": 12,
+      "source": "amap_direction_driving",
+      "from": "爱晚亭",
+      "to": "太平老街历史文化街区"
+    },
+    {
+      "mode": "walking",
+      "distance_m": 623,
+      "duration_min": 8,
+      "source": "amap_direction_walking",
+      "from": "太平老街历史文化街区",
+      "to": "坡子街"
+    },
+    {
+      "mode": "walking",
+      "distance_m": 1818,
+      "duration_min": 24,
+      "source": "amap_direction_walking",
+      "from": "坡子街",
+      "to": "恰同学少年青春剧场"
+    },
+    {
+      "mode": "walking",
+      "distance_m": 1829,
+      "duration_min": 24,
+      "source": "amap_direction_walking",
+      "from": "恰同学少年青春剧场",
+      "to": "五一广场"
+    },
+    {
+      "mode": "driving",
+      "distance_m": 17993,
+      "duration_min": 42,
+      "source": "amap_direction_driving",
+      "from": "五一广场",
+      "to": "长沙南站"
+    }
+  ],
+  "hotels": [
+    {
+      "address": "湖南省长沙市芙蓉区远大一路691号",
+      "brandName": null,
+      "decorationTime": "2022-08-31",
+      "detailUrl": "https://a.feizhu.com/1CTKgv",
+      "interestsPoi": "近长沙站",
+      "latitude": "28.198056",
+      "longitude": "113.03154",
+      "mainPic": "https://img.alicdn.com/imgextra/i1/6000000006912/O1CN01GXJk2b20vkLpxYgls_!!6000000006912-2-hotel.png",
+      "name": "朵兰达V酒店(长沙万家丽广场地铁站店)",
+      "price": "¥231",
+      "shId": "70236079",
+      "star": "高档型",
+      "tier": "舒适/亲子优先",
+      "query_profile": "comfort_family",
+      "area": "近长沙站",
+      "booking_url": "https://a.feizhu.com/1CTKgv",
+      "room_type": "FlyAI未返回具体房型",
+      "room_type_status": "not_returned_by_flyai",
+      "room_type_note": "FlyAI search-hotel 仅返回酒店级价格，未返回具体房型；不得编造，需点击飞猪链接确认可订房型。",
+      "source": "FlyAI booking reference",
+      "fit": "带孩子、希望房间和早餐更稳妥、降低通勤和休息成本。",
+      "tradeoffs": "价格通常高于经济型，热门日期需尽早确认房型。"
+    },
+    {
+      "address": "长沙市芙蓉区五一东路79号大楼西座第一层",
+      "brandName": null,
+      "decorationTime": "2024-12-18",
+      "detailUrl": "https://a.feizhu.com/2gQnJv",
+      "interestsPoi": "近长沙站",
+      "latitude": "28.193913",
+      "longitude": "113.004897",
+      "mainPic": "https://img.alicdn.com/imgextra/i3/6000000002883/O1CN01qiWPb71XASzQhYAvZ_!!6000000002883-2-hotel.png",
+      "name": "趣柯里酒店(长沙五一广场袁家岭地铁站店)",
+      "price": "¥219",
+      "shId": "63393139",
+      "star": "高档型",
+      "tier": "舒适/亲子优先",
+      "query_profile": "comfort_family",
+      "area": "近长沙站",
+      "booking_url": "https://a.feizhu.com/2gQnJv",
+      "room_type": "FlyAI未返回具体房型",
+      "room_type_status": "not_returned_by_flyai",
+      "room_type_note": "FlyAI search-hotel 仅返回酒店级价格，未返回具体房型；不得编造，需点击飞猪链接确认可订房型。",
+      "source": "FlyAI booking reference",
+      "fit": "带孩子、希望房间和早餐更稳妥、降低通勤和休息成本。",
+      "tradeoffs": "价格通常高于经济型，热门日期需尽早确认房型。"
+    },
+    {
+      "address": "芙蓉区韶山北路81号",
+      "brandName": "慧友酒店集团",
+      "decorationTime": "2025-01-01",
+      "detailUrl": "https://a.feizhu.com/2a0ICo",
+      "interestsPoi": "近君临天厦小区",
+      "latitude": "28.192711",
+      "longitude": "112.997166",
+      "mainPic": "https://img.alicdn.com/imgextra/i2/6000000001620/O1CN01eaTJzD1Nq0isZPBAe_!!6000000001620-0-hotel.jpg",
+      "name": "FunGee欢致酒店（长沙五一广场袁家岭地铁站店）",
+      "price": "¥314",
+      "shId": "88252822",
+      "star": "高档型",
+      "tier": "舒适/亲子优先",
+      "query_profile": "comfort_family",
+      "area": "近君临天厦小区",
+      "booking_url": "https://a.feizhu.com/2a0ICo",
+      "room_type": "FlyAI未返回具体房型",
+      "room_type_status": "not_returned_by_flyai",
+      "room_type_note": "FlyAI search-hotel 仅返回酒店级价格，未返回具体房型；不得编造，需点击飞猪链接确认可订房型。",
+      "source": "FlyAI booking reference",
+      "fit": "带孩子、希望房间和早餐更稳妥、降低通勤和休息成本。",
+      "tradeoffs": "价格通常高于经济型，热门日期需尽早确认房型。"
+    },
+    {
+      "address": "岳麓区枫林一路737号共和世家",
+      "brandName": "东呈",
+      "decorationTime": "2022",
+      "detailUrl": "https://a.feizhu.com/1pVm4X",
+      "interestsPoi": "近西湖公园(地铁站)",
+      "latitude": "28.202215",
+      "longitude": "112.933215",
+      "mainPic": "https://img.alicdn.com/imgextra/i4/6000000003838/O1CN01fT30gT1eDrEB0ckaH_!!6000000003838-0-hotel.jpg",
+      "name": "宜尚酒店长沙岳麓山橘子洲店",
+      "price": "¥227",
+      "shId": "72178088",
+      "star": "高档型",
+      "tier": "舒适/亲子优先",
+      "query_profile": "comfort_family",
+      "area": "近西湖公园(地铁站)",
+      "booking_url": "https://a.feizhu.com/1pVm4X",
+      "room_type": "FlyAI未返回具体房型",
+      "room_type_status": "not_returned_by_flyai",
+      "room_type_note": "FlyAI search-hotel 仅返回酒店级价格，未返回具体房型；不得编造，需点击飞猪链接确认可订房型。",
+      "source": "FlyAI booking reference",
+      "fit": "带孩子、希望房间和早餐更稳妥、降低通勤和休息成本。",
+      "tradeoffs": "价格通常高于经济型，热门日期需尽早确认房型。"
+    },
+    {
+      "address": "五一大道775号",
+      "brandName": "锦江",
+      "decorationTime": "2023-12-31",
+      "detailUrl": "https://a.feizhu.com/1LPuQk",
+      "interestsPoi": "近五一广场",
+      "latitude": "28.195156",
+      "longitude": "112.97143",
+      "mainPic": "https://img.alicdn.com/imgextra/i1/6000000006256/O1CN01VucioZ1w5IoKuVi4w_!!6000000006256-0-hotel.jpg",
+      "name": "白玉兰酒店(长沙橘子洲景区五一广场地铁站店)",
+      "price": "¥232",
+      "shId": "10008194",
+      "star": "舒适型",
+      "tier": "位置优先",
+      "query_profile": "location_first",
+      "area": "近五一广场",
+      "booking_url": "https://a.feizhu.com/1LPuQk",
+      "room_type": "FlyAI未返回具体房型",
+      "room_type_status": "not_returned_by_flyai",
+      "room_type_note": "FlyAI search-hotel 仅返回酒店级价格，未返回具体房型；不得编造，需点击飞猪链接确认可订房型。",
+      "source": "FlyAI booking reference",
+      "fit": "晚间吃饭、返程、临时休息便利性优先。",
+      "tradeoffs": "核心区可能更贵或房间偏小。"
+    },
+    {
+      "address": "蔡锷中路48号永华大厦15楼",
+      "brandName": null,
+      "decorationTime": "2021-12-02",
+      "detailUrl": "https://a.feizhu.com/3ZaWhd",
+      "interestsPoi": "近五一广场",
+      "latitude": "28.193886",
+      "longitude": "112.981282",
+      "mainPic": "https://img.alicdn.com/imgextra/i3/6000000001411/O1CN012zUCeC1MIHXxxYDds_!!6000000001411-2-hotel.png",
+      "name": "朵兰达LAB酒店(长沙五一广场IFS国金中心店)",
+      "price": "¥218",
+      "shId": "65525012",
+      "star": "舒适型",
+      "tier": "位置优先",
+      "query_profile": "location_first",
+      "area": "近五一广场",
+      "booking_url": "https://a.feizhu.com/3ZaWhd",
+      "room_type": "FlyAI未返回具体房型",
+      "room_type_status": "not_returned_by_flyai",
+      "room_type_note": "FlyAI search-hotel 仅返回酒店级价格，未返回具体房型；不得编造，需点击飞猪链接确认可订房型。",
+      "source": "FlyAI booking reference",
+      "fit": "晚间吃饭、返程、临时休息便利性优先。",
+      "tradeoffs": "核心区可能更贵或房间偏小。"
+    },
+    {
+      "address": "桔子洲街道麓山路21号",
+      "brandName": null,
+      "decorationTime": "2023",
+      "detailUrl": "https://a.feizhu.com/1Z4RiO",
+      "interestsPoi": "近橘子洲风景名胜区",
+      "latitude": "28.19440308978254",
+      "longitude": "112.95144822077907",
+      "mainPic": "https://img.alicdn.com/imgextra/i2/6000000007730/O1CN01xOz2KO26yOU4LMur2_!!6000000007730-0-hotel.jpg",
+      "name": "趣柯里酒店(长沙岳麓山溁湾镇地铁站店)",
+      "price": "¥259",
+      "shId": "75592625",
+      "star": "舒适型",
+      "tier": "特色/民宿备选",
+      "query_profile": "special_stay",
+      "area": "近橘子洲风景名胜区",
+      "booking_url": "https://a.feizhu.com/1Z4RiO",
+      "room_type": "FlyAI未返回具体房型",
+      "room_type_status": "not_returned_by_flyai",
+      "room_type_note": "FlyAI search-hotel 仅返回酒店级价格，未返回具体房型；不得编造，需点击飞猪链接确认可订房型。",
+      "source": "FlyAI booking reference",
+      "fit": "想要公寓、民宿、客栈等不同住宿体验时备选。",
+      "tradeoffs": "服务稳定性、前台、早餐和亲子设施需逐项核实。"
+    }
+  ],
+  "check_in_date": "2026-05-14",
+  "check_out_date": "2026-05-16",
+  "generated_at": "2026-05-10"
+}

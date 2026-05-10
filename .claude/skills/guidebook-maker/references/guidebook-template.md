@@ -17,7 +17,7 @@ Use this structure for the Travel Atlas guidebook. This file describes structure
       <p class="eyebrow">Roammate Travel Concierge</p>
       <h1>{目的地}旅行路书</h1>
       <p>{日期} · {天数} · {同行人}</p>
-      <nav>{地图工作台 / 地点档案 / 酒店组合 / 来源}</nav>
+      <nav>{地图工作台 / 地点档案 / 酒店组合 / 完整资料}</nav>
     </header>
 
     <main class="content">
@@ -60,11 +60,6 @@ Use this structure for the Travel Atlas guidebook. This file describes structure
     <section>
       <h2>行前检查</h2>
       {checklist}
-    </section>
-
-    <section>
-      <h2>来源与可信度</h2>
-      {sources and confidence}
     </section>
 
     <aside class="drawer">{clicked POI/hotel detail}</aside>

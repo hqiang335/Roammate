@@ -1,0 +1,1411 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>长沙旅行地图册</title>
+  <style>
+    :root {
+      --bg: #f4efe6;
+      --paper: #fffdf8;
+      --panel: #ffffff;
+      --ink: #202823;
+      --muted: #69736d;
+      --line: #e7dccd;
+      --accent: #1d766f;
+      --accent-2: #c7563b;
+      --amber: #b7791f;
+      --blue: #2f6f9f;
+      --rose: #a43e57;
+      --shadow: 0 18px 50px rgba(38, 30, 20, 0.11);
+      --radius: 8px;
+      --day-1: #c7563b;
+      --day-2: #2f8f5b;
+      --day-3: #5276b7;
+      --day-4: #b7791f;
+      --day-5: #8461a8;
+      --day-6: #1d766f;
+    }
+    * { box-sizing: border-box; }
+    html { max-width: 100%; overflow-x: hidden; background: var(--bg); color: var(--ink); scroll-behavior: smooth; }
+    body { max-width: 100%; overflow-x: hidden; margin: 0; font-family: "PingFang SC", "Hiragino Sans GB", "Microsoft YaHei", sans-serif; font-size: 15px; line-height: 1.6; letter-spacing: 0; }
+    a { color: var(--accent); text-decoration: none; font-weight: 700; }
+    a:hover { text-decoration: underline; }
+    h1, h2, h3, h4, p { margin-top: 0; }
+    h1 { max-width: 760px; margin-bottom: 14px; font-size: 40px; line-height: 1.12; }
+    h2 { margin-bottom: 12px; font-size: 22px; line-height: 1.25; }
+    h3 { margin-bottom: 8px; font-size: 16px; line-height: 1.35; }
+    h4 { margin: 14px 0 6px; font-size: 13px; color: var(--accent); }
+    button, input { font: inherit; }
+    .atlas { min-height: 100vh; }
+    .hero { position: relative; display: grid; grid-template-columns: minmax(0, 1fr) auto; gap: 24px; align-items: end; padding: 34px clamp(18px, 4vw, 52px) 28px; background: #233029; color: #fff8ed; overflow: hidden; }
+    .hero::after { content: ""; position: absolute; inset: auto -8% -42% 35%; height: 280px; background: linear-gradient(90deg, rgba(199,86,59,0.42), rgba(29,118,111,0.38)); transform: rotate(-6deg); opacity: .45; }
+    .hero-copy { position: relative; z-index: 1; }
+    .eyebrow, .section-kicker { margin: 0 0 10px; font-size: 12px; font-weight: 800; letter-spacing: .08em; text-transform: uppercase; color: var(--accent-2); }
+    .hero .eyebrow { color: #f3c287; }
+    .hero-meta, .assumption { margin: 0; color: #e7dccd; }
+    .assumption { margin-top: 8px; color: #f3c287; font-weight: 700; }
+    .mode-nav { position: relative; z-index: 30; display: flex; flex-wrap: wrap; gap: 8px; justify-content: flex-end; }
+    .mode-nav a { display: inline-flex; min-height: 36px; align-items: center; padding: 7px 12px; border: 1px solid rgba(255,255,255,.25); border-radius: 999px; color: #fff8ed; background: rgba(255,255,255,.08); }
+    img, canvas, svg, video { max-width: 100%; }
+    .content { display: grid; gap: 18px; min-width: 0; padding: 18px clamp(14px, 3vw, 36px) 40px; }
+    .content > * { min-width: 0; }
+    .panel, .map-panel { background: rgba(255,253,248,.94); border: 1px solid var(--line); border-radius: var(--radius); box-shadow: var(--shadow); }
+    .panel { padding: 22px; }
+    .overview-grid { display: grid; grid-template-columns: minmax(0, 1.1fr) minmax(280px, .9fr); gap: 22px; align-items: start; min-width: 0; }
+    .lead { color: #3d4842; font-size: 16px; }
+    .quick-facts, .hotel-meta { display: flex; flex-wrap: wrap; gap: 8px; }
+    .chip { display: inline-flex; min-height: 26px; align-items: center; padding: 3px 9px; border-radius: 999px; background: #eef7f4; color: var(--accent); font-size: 12px; font-weight: 800; }
+    .chip.amber { background: #fff4da; color: var(--amber); }
+    .chip.blue { background: #e8f1fb; color: var(--blue); }
+    .chip.rose { background: #fdecef; color: var(--rose); }
+    .metric-grid { display: grid; grid-template-columns: repeat(5, minmax(0, 1fr)); gap: 9px; }
+    .metric { padding: 12px; border: 1px solid var(--line); border-radius: var(--radius); background: #fff; }
+    .metric span { display: block; color: var(--muted); font-size: 12px; }
+    .metric strong { display: block; margin-top: 2px; font-size: 22px; line-height: 1; }
+    .metric.warning strong { color: var(--accent-2); }
+    .insight-strip { display: flex; flex-wrap: wrap; gap: 8px; margin-top: 18px; }
+    .insight-strip span { padding: 8px 10px; border-radius: var(--radius); background: #f7efe2; color: #4b4034; }
+    .alert-block { margin-top: 18px; padding: 14px 16px; border-left: 4px solid var(--accent-2); border-radius: 0 var(--radius) var(--radius) 0; background: #fff1e9; }
+    .plan-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 10px; }
+    .plan-card { border: 1px solid var(--line); border-radius: var(--radius); background: #fff; padding: 12px; }
+    .plan-card span, .plan-card em { display: block; color: var(--accent-2); font-size: 12px; font-style: normal; font-weight: 800; }
+    .plan-card p { margin: 0 0 6px; color: var(--muted); font-size: 13px; }
+    .plan-card strong { display: block; }
+    .dashboard-grid { display: grid; grid-template-columns: minmax(0, .86fr) minmax(0, 1.14fr); gap: 18px; align-items: start; min-width: 0; }
+    .timeline-panel { position: sticky; top: 14px; max-height: calc(100vh - 28px); overflow: auto; }
+    .day-tabs { position: sticky; top: -22px; z-index: 3; display: flex; gap: 8px; margin: 12px -4px 14px; padding: 8px 4px; background: rgba(255,253,248,.96); border-bottom: 1px solid var(--line); }
+    .day-tabs button { min-height: 34px; border: 1px solid var(--line); border-radius: 999px; padding: 6px 12px; background: #fff; color: var(--muted); cursor: pointer; }
+    .day-tabs button.active { border-color: var(--accent); background: var(--accent); color: #fff; }
+    .day-stack { display: grid; gap: 12px; }
+    .day-card { border: 1px solid var(--line); border-radius: var(--radius); background: #fff; overflow: hidden; transition: transform .18s ease, box-shadow .18s ease, opacity .18s ease; }
+    .day-card:hover { transform: translateY(-1px); box-shadow: 0 10px 28px rgba(31, 24, 17, .1); }
+    .day-card.is-dimmed { display: none; }
+    .day-card-head { padding: 14px; background: #f7f3ea; border-bottom: 1px solid var(--line); }
+    .day-card-head p { margin: 2px 0 0; color: var(--muted); font-size: 13px; }
+    .day-badge { display: inline-flex; margin-bottom: 8px; padding: 3px 8px; border-radius: 999px; background: var(--accent-2); color: #fff; font-size: 12px; font-weight: 800; }
+    .activity-list { display: grid; gap: 0; }
+    .activity-card { display: grid; grid-template-columns: 74px minmax(0, 1fr) auto; gap: 10px; width: 100%; padding: 12px 14px; border: 0; border-bottom: 1px solid var(--line); background: #fff; text-align: left; cursor: pointer; }
+    .activity-card:hover, .activity-card.active { background: #eef7f4; }
+    .activity-card .time { color: var(--accent); font-weight: 800; font-size: 13px; }
+    .activity-main strong, .activity-main span { display: block; }
+    .activity-main span { color: var(--muted); font-size: 13px; }
+    .cost { color: var(--amber); font-weight: 800; white-space: nowrap; }
+    .day-notes { padding: 12px 14px; background: #fffdf8; color: var(--muted); font-size: 13px; }
+    .day-notes p { margin: 5px 0; }
+    .day-notes strong { margin-right: 8px; color: var(--ink); }
+    .map-panel { position: sticky; top: 14px; min-width: 0; max-width: 100%; overflow: hidden; }
+    .map-toolbar { display: flex; justify-content: space-between; gap: 16px; padding: 16px 16px 10px; align-items: start; }
+    .map-toolbar h2 { margin-bottom: 0; }
+    .map-legend { display: flex; flex-wrap: wrap; justify-content: flex-end; gap: 7px; color: var(--muted); font-size: 12px; }
+    .map-legend span { display: inline-flex; align-items: center; gap: 5px; }
+    .map-legend i { display: inline-grid; width: 22px; height: 22px; place-items: center; border-radius: 999px; background: var(--ink); color: #fff; font-style: normal; font-size: 12px; }
+    .map-canvas { position: relative; width: 100%; min-width: 0; min-height: 540px; overflow: hidden; background: #dfe7df; }
+    #atlasMap, #atlasMap .amap-container { max-width: 100%; overflow: hidden; }
+    #atlasMap .amap-container { background: #dfe7df; }
+    .map-empty, .fallback-map { position: absolute; inset: 0; display: grid; place-items: center; padding: 24px; color: var(--muted); text-align: center; }
+    .map-empty strong { display: block; color: var(--ink); font-size: 18px; }
+    .fallback-map { display: block; background: linear-gradient(135deg, #e4eadf, #f6efe2); overflow: hidden; }
+    .fallback-route-line { position: absolute; left: 10%; right: 10%; top: 50%; height: 4px; background: rgba(29,118,111,.42); transform: rotate(-8deg); }
+    .fallback-node { position: absolute; transform: translate(-50%, -50%); display: grid; gap: 6px; justify-items: center; max-width: 150px; }
+    .fallback-node i, .atlas-marker { display: grid; width: 34px; height: 34px; place-items: center; border: 2px solid #fff; border-radius: 999px; background: var(--accent); color: #fff; box-shadow: 0 8px 20px rgba(0,0,0,.18); font-style: normal; font-weight: 900; }
+    .fallback-node span { padding: 4px 7px; border-radius: 999px; background: rgba(255,255,255,.88); color: var(--ink); font-size: 12px; white-space: nowrap; }
+    .atlas-marker.hotel { background: var(--amber); }
+    .atlas-marker.transport { background: var(--blue); }
+    .atlas-marker.food { background: var(--rose); }
+    .atlas-marker.culture { background: #8461a8; }
+    .atlas-marker.city { background: var(--accent-2); }
+    .route-summary { display: flex; gap: 8px; max-width: 100%; min-width: 0; padding: 12px 16px 16px; overflow-x: auto; border-top: 1px solid var(--line); background: #fffdf8; }
+    .route-pill { flex: 0 0 auto; max-width: 300px; display: grid; gap: 2px; padding: 8px 10px; border: 1px solid var(--line); border-radius: var(--radius); background: #fff; text-align: left; cursor: pointer; }
+    .route-pill span { overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+    .route-pill strong { color: var(--accent); font-size: 12px; }
+    .transport-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(230px, 1fr)); gap: 12px; }
+    .transport-card { padding: 14px; border: 1px solid var(--line); border-radius: var(--radius); background: #fff; }
+    .transport-card span { color: var(--accent-2); font-size: 12px; font-weight: 900; }
+    .transport-card h3 { margin: 4px 0 6px; }
+    .transport-card p { margin: 0; color: var(--accent); font-weight: 800; }
+    .transport-card small { display: block; margin-top: 8px; color: var(--muted); }
+    .dossier-grid, .hotel-grid, .check-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(260px, 1fr)); gap: 14px; }
+    .dossier-card, .hotel-card, .check-card, .split-card { border: 1px solid var(--line); border-radius: var(--radius); background: #fff; overflow: hidden; }
+    .dossier-button { width: 100%; min-height: 148px; display: grid; gap: 4px; align-content: start; padding: 14px; text-align: left; cursor: pointer; color: inherit; transition: transform .18s ease, box-shadow .18s ease, border-color .18s ease; }
+    .dossier-button:hover, .dossier-button:focus-visible { transform: translateY(-2px); border-color: rgba(29,118,111,.38); box-shadow: 0 12px 28px rgba(31, 24, 17, .12); outline: none; }
+    .dossier-button span { color: var(--accent-2); font-size: 12px; font-weight: 800; }
+    .dossier-button em { color: var(--muted); font-size: 12px; font-style: normal; }
+    .dossier-button p { margin: 2px 0 0; color: #3d4842; font-size: 13px; }
+    .dossier-button small { color: var(--accent-2); font-size: 12px; }
+    ul { margin: 6px 0 0; padding-left: 19px; }
+    li { margin: 3px 0; }
+    .source-note, .muted { color: var(--muted); font-size: 13px; }
+    .hotel-card { transition: transform .18s ease, box-shadow .18s ease; }
+    .hotel-card:hover { transform: translateY(-2px); box-shadow: 0 12px 28px rgba(31, 24, 17, .12); }
+    .hotel-card img, .hotel-image-fallback { width: 100%; height: 160px; object-fit: cover; background: #efe4d5; display: grid; place-items: center; color: var(--amber); font-weight: 900; }
+    .hotel-card-body { padding: 14px; }
+    .tier { color: var(--accent-2); font-size: 12px; font-weight: 900; }
+    .tradeoff { color: var(--muted); }
+    .card-actions { margin-top: 10px; }
+    .split-panel { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 14px; background: transparent; border: 0; box-shadow: none; padding: 0; }
+    .split-card { padding: 20px; box-shadow: var(--shadow); }
+    .mini-row { padding: 10px 0; border-bottom: 1px solid var(--line); }
+    .mini-row:last-child { border-bottom: 0; }
+    .mini-row strong, .mini-row span { display: block; }
+    .mini-row span { color: var(--muted); font-size: 13px; }
+    .total { margin: 14px 0 0; color: var(--amber); font-weight: 900; }
+    .check-card { padding: 14px; }
+    .check-card label { display: flex; gap: 8px; align-items: flex-start; padding: 6px 0; color: #3d4842; }
+    .docs-intro { scroll-margin-top: 18px; }
+    .doc-jump { display: flex; flex-wrap: wrap; gap: 8px; margin-top: 14px; }
+    .doc-jump a { display: inline-flex; min-height: 34px; align-items: center; padding: 6px 10px; border: 1px solid var(--line); border-radius: 999px; background: #fff; }
+    .source-doc { scroll-margin-top: 18px; }
+    .source-doc-summary { display: grid; gap: 4px; cursor: pointer; list-style: none; }
+    .source-doc-summary::-webkit-details-marker { display: none; }
+    .source-doc-summary strong { font-size: 20px; }
+    .source-doc-summary em { color: var(--muted); font-style: normal; }
+    .source-doc .markdown-body { max-width: 1080px; margin-top: 18px; }
+    .markdown-body h3 { margin-top: 22px; font-size: 22px; line-height: 1.28; color: var(--ink); }
+    .markdown-body h4 { margin-top: 20px; font-size: 18px; color: var(--accent); }
+    .markdown-body h5 { margin: 18px 0 8px; font-size: 16px; color: var(--accent-2); }
+    .markdown-body h6 { margin: 16px 0 7px; font-size: 14px; color: var(--muted); }
+    .markdown-body p { margin: 8px 0; }
+    .markdown-body strong { color: #17221d; }
+    .markdown-body code { padding: 1px 5px; border-radius: 6px; background: #f1eadf; font-size: .92em; }
+    .markdown-body pre { overflow: auto; padding: 12px; border-radius: var(--radius); background: #233029; color: #fff8ed; }
+    .markdown-body blockquote { margin: 12px 0; padding: 10px 14px; border-left: 4px solid var(--accent); background: #eef7f4; color: #3d4842; }
+    .markdown-body hr { border: 0; border-top: 1px solid var(--line); margin: 20px 0; }
+    .markdown-body .md-table-wrap { overflow-x: auto; margin: 12px 0 16px; border: 1px solid var(--line); border-radius: var(--radius); background: #fff; }
+    .markdown-body table { width: 100%; border-collapse: collapse; min-width: 680px; }
+    .markdown-body th, .markdown-body td { padding: 9px 10px; border-bottom: 1px solid var(--line); vertical-align: top; text-align: left; }
+    .markdown-body th { background: #f7f3ea; color: #3d4842; font-weight: 900; }
+    .markdown-body tr:last-child td { border-bottom: 0; }
+    .raw-markdown { margin-top: 18px; border-top: 1px solid var(--line); padding-top: 12px; }
+    .raw-markdown summary { cursor: pointer; color: var(--accent); font-weight: 900; }
+    .raw-markdown pre { max-height: 420px; overflow: auto; padding: 12px; border-radius: var(--radius); background: #233029; color: #fff8ed; white-space: pre-wrap; }
+    .drawer-backdrop { position: fixed; inset: 0; z-index: 19; background: rgba(32,40,35,.28); opacity: 0; pointer-events: none; transition: opacity .18s ease; }
+    .drawer-backdrop.open { opacity: 1; pointer-events: auto; }
+    .drawer { position: fixed; top: 0; right: 0; z-index: 20; width: min(420px, 100vw); height: 100vh; background: var(--paper); border-left: 1px solid var(--line); box-shadow: -20px 0 60px rgba(0,0,0,.16); transform: translateX(105%); transition: transform .22s ease; overflow: auto; }
+    .drawer.open { transform: translateX(0); }
+    .drawer-head { display: flex; align-items: center; justify-content: space-between; gap: 12px; padding: 18px; border-bottom: 1px solid var(--line); background: #233029; color: #fff8ed; }
+    .drawer-head h2 { margin: 0; font-size: 20px; }
+    .drawer-close { width: 34px; height: 34px; border: 1px solid rgba(255,255,255,.28); border-radius: 999px; background: rgba(255,255,255,.1); color: #fff; cursor: pointer; }
+    .drawer-body { padding: 18px; }
+    .drawer-body img { width: 100%; max-height: 220px; object-fit: cover; border-radius: var(--radius); margin-bottom: 12px; }
+    .drawer-field { padding: 10px 0; border-bottom: 1px solid var(--line); }
+    .drawer-field strong { display: block; color: var(--accent); font-size: 12px; }
+    @page { size: A4; margin: 12mm; }
+    @media print {
+      html, body { background: #fff; }
+      .hero, .panel, .map-panel, .split-card { box-shadow: none; }
+      .mode-nav, .map-canvas, .drawer, .day-tabs, .doc-jump { display: none !important; }
+      .content, .dashboard-grid, .overview-grid, .split-panel { display: block; padding: 0; }
+      .panel, .map-panel, .day-card, .dossier-card, .hotel-card, .check-card { break-inside: avoid; margin-bottom: 12px; }
+      .timeline-panel, .map-panel { position: static; max-height: none; overflow: visible; }
+    }
+    @media (max-width: 1100px) {
+      .hero, .overview-grid, .dashboard-grid, .split-panel { grid-template-columns: 1fr; }
+      .mode-nav { justify-content: flex-start; }
+      .timeline-panel, .map-panel { position: static; max-height: none; }
+      .map-canvas { min-height: 420px; }
+    }
+    @media (max-width: 680px) {
+      h1 { font-size: 28px; overflow-wrap: anywhere; }
+      h2 { font-size: 20px; }
+      .hero { display: block; padding: 28px 18px 22px; }
+      .mode-nav { justify-content: flex-start; margin-top: 22px; }
+      .mode-nav a { min-height: 34px; padding: 6px 10px; }
+      .content { padding: 12px; }
+      .panel { padding: 16px; }
+      .metric-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+      .plan-grid, .dossier-grid, .hotel-grid, .check-grid { grid-template-columns: 1fr; }
+      .day-tabs { overflow-x: auto; padding-bottom: 9px; }
+      .day-tabs button { flex: 0 0 auto; }
+      .activity-card { grid-template-columns: 62px minmax(0, 1fr); }
+      .cost { grid-column: 2; }
+      .map-toolbar { display: block; }
+      .map-legend { justify-content: flex-start; margin-top: 10px; }
+      .map-canvas { min-height: 360px; }
+      .route-pill { max-width: min(280px, calc(100vw - 58px)); }
+      .markdown-body table { min-width: 560px; }
+      .drawer { top: auto; bottom: 0; width: 100%; height: auto; max-height: 86vh; border-left: 0; border-top: 1px solid var(--line); border-radius: 12px 12px 0 0; transform: translateY(105%); }
+      .drawer.open { transform: translateY(0); }
+    }
+  </style>
+
+  <script src="https://webapi.amap.com/maps?v=2.0&key=02aa8f0b547054d8687c08ae3ec875c7"></script>
+</head>
+<body>
+  <div class="atlas">
+
+    <header class="hero">
+      <div class="hero-copy">
+        <p class="eyebrow">Roammate Travel Atlas</p>
+        <h1>长沙旅行地图册</h1>
+        <p class="hero-meta">2026-05-14 至 2026-05-16 · 3天2夜 · 1人，穷游特种兵 · 广州出发</p>
+
+      </div>
+      <nav class="mode-nav" aria-label="页面导航">
+        <a href="#plan-overview">行程总览</a>
+        <a href="#transport-board">交通参考</a>
+        <a href="#dashboard">地图工作台</a>
+        <a href="#poi-dossier">地点档案</a>
+        <a href="#hotel-board">酒店组合</a>
+        <a href="#full-docs">完整资料</a>
+      </nav>
+    </header>
+<main class="content">
+
+    <section class="panel overview-panel" id="overview">
+      <div class="section-kicker">行程总览</div>
+      <div class="overview-grid">
+        <div>
+          <h2>长沙怎么轻松玩</h2>
+          <p class="lead">适合穷游特种兵，3天2夜可覆盖核心景点；5月中旬多雨，需备雨具。</p>
+          <div class="quick-facts">
+            <span class="chip emerald">节奏待定</span>
+
+            <span class="chip blue">高铁+地铁</span>
+
+          </div>
+        </div>
+
+    <div class="metric-grid" aria-label="行程总览指标">
+      <div class="metric"><span>天数</span><strong>3</strong></div>
+      <div class="metric"><span>地图点位</span><strong>10</strong></div>
+      <div class="metric"><span>路线段</span><strong>9</strong></div>
+      <div class="metric"><span>酒店候选</span><strong>6</strong></div>
+      <div class="metric warning"><span>重点提醒</span><strong>5</strong></div>
+    </div>
+      </div>
+      <div class="insight-strip"><span>橘子洲景区：毛主席青年艺术雕塑、湘江江景、日落夜景（免费，需预约）</span><span>岳麓山+岳麓书院+爱晚亭：千年书院、古树名木、徒步登山（书院¥40，其余免费）</span><span>湖南博物院：马王堆汉墓文物、辛追夫人（免费，需提前7天抢票）</span><span>太平老街/坡子街：臭豆腐、糖油粑粑、茶颜悦色（免费逛，小吃人均30-50元）</span><span>超级文和友：80年代老长沙复古场景打卡（免费参观，用餐需排队）</span></div>
+      <div class="alert-block"><strong>重点提醒</strong><ul><li>预约风险：湖南博物院票极难抢，出发前务必提前7天20:00准时抢；若抢不到可考虑购买含代约服务的讲解套餐</li><li>天气风险：5月多雨，岳麓山徒步遇雨路滑，索道雨天可能停运</li><li>人流风险：周末景区人多，建议工作日游览或错峰入园</li><li>消费陷阱：太平街主街小吃价格偏高，建议深入小巷；火宫殿名气大于口味，可仅打卡不用餐</li><li>体力风险：特种兵模式每日步行1.5-2万步，注意补水休息</li></ul></div>
+    </section>
+
+    <section class="panel plan-overview" id="plan-overview">
+      <div class="section-kicker">总体安排</div>
+      <h2>每天的主题、强度和关键提醒</h2>
+      <div class="plan-grid">
+
+          <article class="plan-card">
+            <span>Day 1</span>
+            <h3>抵达+文化美食</h3>
+            <p>五一广场/太平老街/坡子街 · 强度：中</p>
+            <strong>太平老街小吃、坡子街夜游、超级文和友打卡</strong>
+            <em>早班高铁出发，下午抵达后直接游览</em>
+          </article>
+          <article class="plan-card">
+            <span>Day 2</span>
+            <h3>山水洲城</h3>
+            <p>岳麓山/橘子洲/湘江 · 强度：高</p>
+            <strong>岳麓书院+爱晚亭徒步、橘子洲夜景</strong>
+            <em>全天最重体力日，备好雨具和干粮</em>
+          </article>
+          <article class="plan-card">
+            <span>Day 3</span>
+            <h3>博物院+返程</h3>
+            <p>湖南博物院/五一广场 · 强度：中</p>
+            <strong>马王堆汉墓文物、辛追夫人</strong>
+            <em>博物院需提前7天抢票；下午返程</em>
+          </article>
+      </div>
+    </section>
+
+    <section class="panel transport-panel" id="transport-board">
+      <div class="section-kicker">交通参考</div>
+      <h2>城际航班/车次与市内移动</h2>
+      <div class="transport-grid">
+
+          <article class="transport-card">
+            <span>市内交通</span>
+            <h3>全程地铁：1号线（五一广场/黄兴广场）、2号线（橘子洲/长沙南站）、4号线（湖南大学/岳麓山）、6号线（湖南博物院）；约¥3-5/次</h3>
+            <p></p>
+
+
+          </article>
+      </div>
+    </section>
+    <div class="dashboard-grid">
+
+    <section class="panel timeline-panel" aria-label="每日安排">
+      <div class="section-kicker">每日安排</div>
+      <h2>按天切换，地图同步看路线</h2>
+
+    <div class="day-tabs" role="tablist" aria-label="每日行程">
+      <button class="active" type="button" data-day-tab="all">全部</button>
+      <button type="button" data-day-tab="1">Day 1</button><button type="button" data-day-tab="2">Day 2</button><button type="button" data-day-tab="3">Day 3</button>
+    </div>
+      <div class="day-stack">
+
+          <article class="day-card" data-day-card="1">
+            <div class="day-card-head">
+              <div>
+                <span class="day-badge">Day 1</span>
+                <h3>抵达长沙，文化美食夜</h3>
+                <p>2026-05-14 · 五一广场/太平老街/坡子街 · 强度：中</p>
+              </div>
+            </div>
+            <div class="activity-list">
+
+    <button class="activity-card has-detail" type="button" data-focus-poi="长沙南站" data-day="1">
+      <span class="time">10:54</span>
+      <span class="activity-main">
+        <strong>长沙南站</strong>
+        <span>停留 约30分钟 · </span>
+      </span>
+      <span class="cost">¥5（地铁）</span>
+    </button>
+    <button class="activity-card has-detail" type="button" data-focus-poi="太平老街历史文化街区" data-day="1">
+      <span class="time">12:30</span>
+      <span class="activity-main">
+        <strong>太平老街历史文化街区</strong>
+        <span>停留 约90分钟 · 主街小吃店常需排队,建议深入小巷避开高价摊</span>
+      </span>
+      <span class="cost">¥30-50（小吃）</span>
+    </button>
+    <button class="activity-card has-detail" type="button" data-focus-poi="坡子街" data-day="1">
+      <span class="time">14:30</span>
+      <span class="activity-main">
+        <strong>坡子街</strong>
+        <span>停留 约60分钟 · 火宫殿名气大于口味，仅打卡不用餐</span>
+      </span>
+      <span class="cost">免费</span>
+    </button>
+    <button class="activity-card has-detail" type="button" data-focus-poi="超级文和友剧场（海信广场长沙店）" data-day="1">
+      <span class="time">16:00</span>
+      <span class="activity-main">
+        <strong>超级文和友剧场（海信广场长沙店）</strong>
+        <span>停留 约60分钟 · 饭点用餐排队极长（可能等数百桌）,建议非饭点前往仅拍照</span>
+      </span>
+      <span class="cost">免费参观</span>
+    </button>
+    <button class="activity-card has-detail" type="button" data-focus-poi="东瓜山美食街/坡子街大排档" data-day="1">
+      <span class="time">19:00</span>
+      <span class="activity-main">
+        <strong>东瓜山美食街/坡子街大排档</strong>
+        <span>停留 约60分钟 · </span>
+      </span>
+      <span class="cost">¥50-70</span>
+    </button>
+            </div>
+            <div class="day-notes">
+
+              <p><strong>餐食</strong>广州出发，车上/到达后解决；太平老街小吃（¥30-50）；茶颜悦色（¥16）；东瓜山美食街大排档（¥50-70）</p>
+
+
+
+
+
+            </div>
+          </article>
+          <article class="day-card" data-day-card="2">
+            <div class="day-card-head">
+              <div>
+                <span class="day-badge">Day 2</span>
+                <h3>岳麓山+橘子洲，山水洲城全打卡</h3>
+                <p>2026-05-15 · 岳麓山/橘子洲/湘江 · 强度：高</p>
+              </div>
+            </div>
+            <div class="activity-list">
+
+    <button class="activity-card has-detail" type="button" data-focus-poi="岳麓书院" data-day="2">
+      <span class="time">09:00</span>
+      <span class="activity-main">
+        <strong>岳麓书院</strong>
+        <span>停留 约120分钟 · 需提前在官方公众号预约购票,旺季排队入场</span>
+      </span>
+      <span class="cost">¥40（学生¥20）</span>
+    </button>
+    <button class="activity-card has-detail" type="button" data-focus-poi="爱晚亭" data-day="2">
+      <span class="time">11:00</span>
+      <span class="activity-main">
+        <strong>爱晚亭</strong>
+        <span>停留 约30分钟 · 无需排队，全天免费开放</span>
+      </span>
+      <span class="cost">免费</span>
+    </button>
+    <button class="activity-card has-detail" type="button" data-focus-poi="岳麓山国家重点风景名胜区（徒步登顶）" data-day="2">
+      <span class="time">11:30</span>
+      <span class="activity-main">
+        <strong>岳麓山国家重点风景名胜区（徒步登顶）</strong>
+        <span>停留 约180分钟 · 需在「岳麓山橘子洲旅游区」公众号提前3天预约,5月多雨路滑注意安全</span>
+      </span>
+      <span class="cost">免费（索道¥40上行/¥30下行，滑道¥35，可选）</span>
+    </button>
+    <button class="activity-card has-detail" type="button" data-focus-poi="橘子洲景区" data-day="2">
+      <span class="time">16:00</span>
+      <span class="activity-main">
+        <strong>橘子洲景区</strong>
+        <span>停留 约120分钟 · 需提前3天在「岳麓山橘子洲旅游区」公众号预约,观光小火车可在「龙骧橘子洲」小程序提前购票</span>
+      </span>
+      <span class="cost">免费（观光小火车另收费）</span>
+    </button>
+            </div>
+            <div class="day-notes">
+
+              <p><strong>餐食</strong>住宿附近米粉店（¥15-20）；湖南大学小吃街（¥30-40）；五一广场附近湘菜馆（¥50-80）</p>
+
+
+
+
+
+            </div>
+          </article>
+          <article class="day-card" data-day-card="3">
+            <div class="day-card-head">
+              <div>
+                <span class="day-badge">Day 3</span>
+                <h3>湖南博物院+返程</h3>
+                <p>2026-05-16 · 湖南博物院/五一广场 · 强度：中</p>
+              </div>
+            </div>
+            <div class="activity-list">
+
+    <button class="activity-card has-detail" type="button" data-focus-poi="湖南博物院" data-day="3">
+      <span class="time">09:30</span>
+      <span class="activity-main">
+        <strong>湖南博物院</strong>
+        <span>停留 约210分钟 · 需提前7天在「湖南博物院」微信公众号20:00抢票（极难）,若抢不到可购买含代约服务的讲解套餐,周一闭馆（法定节假日除外）,旺季上午排队较长，建议预约最早时段</span>
+      </span>
+      <span class="cost">免费（基本陈列）；特展可能收费</span>
+    </button>
+    <button class="activity-card has-detail" type="button" data-focus-poi="五一广场/IFS国金中心" data-day="3">
+      <span class="time">14:00</span>
+      <span class="activity-main">
+        <strong>五一广场/IFS国金中心</strong>
+        <span>停留 约60分钟 · 无需排队，开放式广场</span>
+      </span>
+      <span class="cost">¥50-100（伴手礼）</span>
+    </button>
+    <button class="activity-card has-detail" type="button" data-focus-poi="长沙南站" data-day="3">
+      <span class="time">16:30</span>
+      <span class="activity-main">
+        <strong>长沙南站</strong>
+        <span>停留 约30分钟 · </span>
+      </span>
+      <span class="cost">¥5（地铁）</span>
+    </button>
+            </div>
+            <div class="day-notes">
+
+              <p><strong>餐食</strong>住宿附近米粉或包子铺（¥15-20）；烈士公园附近餐饮（¥30-50）；广州解决</p>
+
+
+
+
+
+            </div>
+          </article>
+      </div>
+    </section>
+
+    <section class="map-panel" id="dashboard" aria-label="地图与交通">
+      <div class="map-toolbar">
+        <div>
+          <div class="section-kicker">地图与交通</div>
+          <h2>每日点位、交通和酒店位置</h2>
+        </div>
+        <div class="map-legend">
+          <span><i>景</i>景点</span><span><i>文</i>文化</span><span><i>街</i>街区</span><span><i>食</i>餐饮</span><span><i>住</i>住宿</span><span><i>交</i>交通</span>
+        </div>
+      </div>
+      <div class="map-canvas" id="atlasMap">
+        <div class="map-empty">
+          <strong>地图加载中</strong>
+          <span>地图线用于点位方位示意，真实交通以每日交通提示为准。</span>
+        </div>
+      </div>
+      <div class="route-summary">
+
+          <button class="route-pill" type="button" data-focus-poi="橘子洲景区-音乐喷泉" data-route-day="">
+            <span>湖南博物院(南院) → 橘子洲景区-音乐喷泉</span>
+            <strong>driving · 18 分钟</strong>
+          </button>
+          <button class="route-pill" type="button" data-focus-poi="岳麓山国家重点风景名胜区-清风峡" data-route-day="">
+            <span>橘子洲景区-音乐喷泉 → 岳麓山国家重点风景名胜区-清风峡</span>
+            <strong>driving · 28 分钟</strong>
+          </button>
+          <button class="route-pill" type="button" data-focus-poi="岳麓书院" data-route-day="">
+            <span>岳麓山国家重点风景名胜区-清风峡 → 岳麓书院</span>
+            <strong>walking · 12 分钟</strong>
+          </button>
+          <button class="route-pill" type="button" data-focus-poi="爱晚亭" data-route-day="">
+            <span>岳麓书院 → 爱晚亭</span>
+            <strong>walking · 4 分钟</strong>
+          </button>
+          <button class="route-pill" type="button" data-focus-poi="太平老街历史文化街区" data-route-day="">
+            <span>爱晚亭 → 太平老街历史文化街区</span>
+            <strong>driving · 12 分钟</strong>
+          </button>
+          <button class="route-pill" type="button" data-focus-poi="坡子街" data-route-day="">
+            <span>太平老街历史文化街区 → 坡子街</span>
+            <strong>walking · 8 分钟</strong>
+          </button>
+          <button class="route-pill" type="button" data-focus-poi="恰同学少年青春剧场" data-route-day="">
+            <span>坡子街 → 恰同学少年青春剧场</span>
+            <strong>walking · 24 分钟</strong>
+          </button>
+          <button class="route-pill" type="button" data-focus-poi="五一广场" data-route-day="">
+            <span>恰同学少年青春剧场 → 五一广场</span>
+            <strong>walking · 24 分钟</strong>
+          </button>
+          <button class="route-pill" type="button" data-focus-poi="长沙南站" data-route-day="">
+            <span>五一广场 → 长沙南站</span>
+            <strong>driving · 42 分钟</strong>
+          </button>
+      </div>
+    </section>
+    </div>
+
+    <section class="panel dossier-panel" id="poi-dossier">
+      <div class="section-kicker">重点景点怎么玩</div>
+      <h2>地点档案：点击卡片查看完整攻略</h2>
+      <div class="dossier-grid">
+
+          <button class="dossier-card dossier-button" type="button" data-focus-poi="长沙南站" data-dossier="长沙南站">
+            <span>Day 3</span>
+            <strong>长沙南站</strong>
+            <em>约30分钟</em>
+
+
+          </button>
+          <button class="dossier-card dossier-button" type="button" data-focus-poi="太平老街历史文化街区" data-dossier="太平老街历史文化街区">
+            <span>Day 1</span>
+            <strong>太平老街历史文化街区</strong>
+            <em>约120分钟</em>
+
+            <small>主街小吃店常需排队</small>
+          </button>
+          <button class="dossier-card dossier-button" type="button" data-focus-poi="坡子街" data-dossier="坡子街">
+            <span>Day 1</span>
+            <strong>坡子街</strong>
+            <em>约60分钟</em>
+            <p>首推体验：黑色经典臭豆腐、李公庙糖油粑粑、茶颜悦色（任意门店）</p>
+            <small>火宫殿名气大于口味，仅打卡不用餐</small>
+          </button>
+          <button class="dossier-card dossier-button" type="button" data-focus-poi="超级文和友剧场（海信广场长沙店）" data-dossier="超级文和友剧场（海信广场长沙店）">
+            <span>Day 1</span>
+            <strong>超级文和友剧场（海信广场长沙店）</strong>
+            <em>约90分钟</em>
+
+            <small>饭点用餐排队极长（可能等数百桌）</small>
+          </button>
+          <button class="dossier-card dossier-button" type="button" data-focus-poi="东瓜山美食街/坡子街大排档" data-dossier="东瓜山美食街/坡子街大排档">
+            <span>Day 1</span>
+            <strong>东瓜山美食街/坡子街大排档</strong>
+            <em>约60分钟</em>
+
+
+          </button>
+          <button class="dossier-card dossier-button" type="button" data-focus-poi="岳麓书院" data-dossier="岳麓书院">
+            <span>Day 2</span>
+            <strong>岳麓书院</strong>
+            <em>约120分钟</em>
+            <p>首推体验：讲堂、御书楼、文庙、碑廊</p>
+            <small>需提前在官方公众号预约购票</small>
+          </button>
+          <button class="dossier-card dossier-button" type="button" data-focus-poi="爱晚亭" data-dossier="爱晚亭">
+            <span>Day 2</span>
+            <strong>爱晚亭</strong>
+            <em>约30分钟</em>
+            <p>首推体验：爱晚亭（免费）→ 古麓山寺 → 山顶观光长廊俯瞰长沙城</p>
+            <small>无需排队，全天免费开放</small>
+          </button>
+          <button class="dossier-card dossier-button" type="button" data-focus-poi="岳麓山国家重点风景名胜区（徒步登顶）" data-dossier="岳麓山国家重点风景名胜区（徒步登顶）">
+            <span>Day 2</span>
+            <strong>岳麓山国家重点风景名胜区（徒步登顶）</strong>
+            <em>约210分钟</em>
+
+            <small>需在「岳麓山橘子洲旅游区」公众号提前3天预约</small>
+          </button>
+          <button class="dossier-card dossier-button" type="button" data-focus-poi="橘子洲景区" data-dossier="橘子洲景区">
+            <span>Day 2</span>
+            <strong>橘子洲景区</strong>
+            <em>约150分钟</em>
+            <p>首推体验：毛主席青年艺术雕塑打卡、百米高喷、湘江江景步道</p>
+            <small>需提前3天在「岳麓山橘子洲旅游区」公众号预约</small>
+          </button>
+          <button class="dossier-card dossier-button" type="button" data-focus-poi="湖南博物院" data-dossier="湖南博物院">
+            <span>Day 3</span>
+            <strong>湖南博物院</strong>
+            <em>约240分钟</em>
+            <p>首推体验：马王堆汉墓陈列（辛追夫人、素纱单衣）、湖南人·三湘历史文化陈列</p>
+            <small>需提前7天在「湖南博物院」微信公众号20:00抢票（极难）</small>
+          </button>
+          <button class="dossier-card dossier-button" type="button" data-focus-poi="五一广场/IFS国金中心" data-dossier="五一广场/IFS国金中心">
+            <span>Day 3</span>
+            <strong>五一广场/IFS国金中心</strong>
+            <em>约90分钟</em>
+
+            <small>无需排队，开放式广场</small>
+          </button>
+      </div>
+    </section>
+
+    <section class="panel hotel-panel" id="hotel-board">
+      <div class="section-kicker">住宿决策</div>
+      <h2>酒店组合：不同档次、位置和取舍</h2>
+      <p class="lead">以行程核心区域和晚间补给便利为主，优先选择交通清楚、价格和房型可在飞猪复核的候选。</p>
+      <div class="hotel-grid">
+
+          <article class="hotel-card" data-focus-hotel="朵兰达V酒店(长沙万家丽广场地铁站店)">
+            <img src="https://img.alicdn.com/imgextra/i1/6000000006912/O1CN01GXJk2b20vkLpxYgls_!!6000000006912-2-hotel.png" alt="朵兰达V酒店(长沙万家丽广场地铁站店)">
+            <div class="hotel-card-body">
+              <span class="tier">舒适/亲子优先</span>
+              <h3>朵兰达V酒店(长沙万家丽广场地铁站店)</h3>
+              <p>近长沙站</p>
+              <div class="hotel-meta">
+                <span class="chip amber">¥231</span>
+                <span class="chip blue">FlyAI未返回具体房型</span>
+              </div>
+              <p>带孩子、希望房间和早餐更稳妥、降低通勤和休息成本。</p>
+              <p class="tradeoff">价格通常高于经济型，热门日期需尽早确认房型。</p>
+              <div class="card-actions"><a href="https://a.feizhu.com/1CTKgv" target="_blank" rel="noopener noreferrer">飞猪查看</a></div>
+            </div>
+          </article>
+          <article class="hotel-card" data-focus-hotel="趣柯里酒店(长沙五一广场袁家岭地铁站店)">
+            <img src="https://img.alicdn.com/imgextra/i3/6000000002883/O1CN01qiWPb71XASzQhYAvZ_!!6000000002883-2-hotel.png" alt="趣柯里酒店(长沙五一广场袁家岭地铁站店)">
+            <div class="hotel-card-body">
+              <span class="tier">舒适/亲子优先</span>
+              <h3>趣柯里酒店(长沙五一广场袁家岭地铁站店)</h3>
+              <p>近长沙站</p>
+              <div class="hotel-meta">
+                <span class="chip amber">¥219</span>
+                <span class="chip blue">FlyAI未返回具体房型</span>
+              </div>
+              <p>带孩子、希望房间和早餐更稳妥、降低通勤和休息成本。</p>
+              <p class="tradeoff">价格通常高于经济型，热门日期需尽早确认房型。</p>
+              <div class="card-actions"><a href="https://a.feizhu.com/2gQnJv" target="_blank" rel="noopener noreferrer">飞猪查看</a></div>
+            </div>
+          </article>
+          <article class="hotel-card" data-focus-hotel="FunGee欢致酒店（长沙五一广场袁家岭地铁站店）">
+            <img src="https://img.alicdn.com/imgextra/i2/6000000001620/O1CN01eaTJzD1Nq0isZPBAe_!!6000000001620-0-hotel.jpg" alt="FunGee欢致酒店（长沙五一广场袁家岭地铁站店）">
+            <div class="hotel-card-body">
+              <span class="tier">舒适/亲子优先</span>
+              <h3>FunGee欢致酒店（长沙五一广场袁家岭地铁站店）</h3>
+              <p>近君临天厦小区</p>
+              <div class="hotel-meta">
+                <span class="chip amber">¥314</span>
+                <span class="chip blue">FlyAI未返回具体房型</span>
+              </div>
+              <p>带孩子、希望房间和早餐更稳妥、降低通勤和休息成本。</p>
+              <p class="tradeoff">价格通常高于经济型，热门日期需尽早确认房型。</p>
+              <div class="card-actions"><a href="https://a.feizhu.com/2a0ICo" target="_blank" rel="noopener noreferrer">飞猪查看</a></div>
+            </div>
+          </article>
+          <article class="hotel-card" data-focus-hotel="宜尚酒店长沙岳麓山橘子洲店">
+            <img src="https://img.alicdn.com/imgextra/i4/6000000003838/O1CN01fT30gT1eDrEB0ckaH_!!6000000003838-0-hotel.jpg" alt="宜尚酒店长沙岳麓山橘子洲店">
+            <div class="hotel-card-body">
+              <span class="tier">舒适/亲子优先</span>
+              <h3>宜尚酒店长沙岳麓山橘子洲店</h3>
+              <p>近西湖公园(地铁站)</p>
+              <div class="hotel-meta">
+                <span class="chip amber">¥227</span>
+                <span class="chip blue">FlyAI未返回具体房型</span>
+              </div>
+              <p>带孩子、希望房间和早餐更稳妥、降低通勤和休息成本。</p>
+              <p class="tradeoff">价格通常高于经济型，热门日期需尽早确认房型。</p>
+              <div class="card-actions"><a href="https://a.feizhu.com/1pVm4X" target="_blank" rel="noopener noreferrer">飞猪查看</a></div>
+            </div>
+          </article>
+          <article class="hotel-card" data-focus-hotel="白玉兰酒店(长沙橘子洲景区五一广场地铁站店)">
+            <img src="https://img.alicdn.com/imgextra/i1/6000000006256/O1CN01VucioZ1w5IoKuVi4w_!!6000000006256-0-hotel.jpg" alt="白玉兰酒店(长沙橘子洲景区五一广场地铁站店)">
+            <div class="hotel-card-body">
+              <span class="tier">位置优先</span>
+              <h3>白玉兰酒店(长沙橘子洲景区五一广场地铁站店)</h3>
+              <p>近五一广场</p>
+              <div class="hotel-meta">
+                <span class="chip amber">¥232</span>
+                <span class="chip blue">FlyAI未返回具体房型</span>
+              </div>
+              <p>晚间吃饭、返程、临时休息便利性优先。</p>
+              <p class="tradeoff">核心区可能更贵或房间偏小。</p>
+              <div class="card-actions"><a href="https://a.feizhu.com/1LPuQk" target="_blank" rel="noopener noreferrer">飞猪查看</a></div>
+            </div>
+          </article>
+          <article class="hotel-card" data-focus-hotel="朵兰达LAB酒店(长沙五一广场IFS国金中心店)">
+            <img src="https://img.alicdn.com/imgextra/i3/6000000001411/O1CN012zUCeC1MIHXxxYDds_!!6000000001411-2-hotel.png" alt="朵兰达LAB酒店(长沙五一广场IFS国金中心店)">
+            <div class="hotel-card-body">
+              <span class="tier">位置优先</span>
+              <h3>朵兰达LAB酒店(长沙五一广场IFS国金中心店)</h3>
+              <p>近五一广场</p>
+              <div class="hotel-meta">
+                <span class="chip amber">¥218</span>
+                <span class="chip blue">FlyAI未返回具体房型</span>
+              </div>
+              <p>晚间吃饭、返程、临时休息便利性优先。</p>
+              <p class="tradeoff">核心区可能更贵或房间偏小。</p>
+              <div class="card-actions"><a href="https://a.feizhu.com/3ZaWhd" target="_blank" rel="noopener noreferrer">飞猪查看</a></div>
+            </div>
+          </article>
+      </div>
+      <p class="source-note">map-data.json + FlyAI booking reference</p>
+    </section>
+
+    <section class="panel split-panel">
+      <div class="split-card">
+        <div class="section-kicker">美食与口碑避雷</div>
+        <h2>吃什么、哪里谨慎</h2>
+
+          <div class="mini-row">
+            <strong>住宿附近米粉店</strong>
+            <span>¥15-20</span>
+          </div>
+          <div class="mini-row">
+            <strong>住宿附近米粉或包子铺</strong>
+            <span>¥15-20） · ¥15-20</span>
+          </div>
+      </div>
+      <div class="split-card">
+        <div class="section-kicker">预算</div>
+        <h2>费用参考</h2>
+
+          <div class="mini-row">
+            <strong>outbound_train</strong>
+            <span>¥283</span>
+          </div>
+          <div class="mini-row">
+            <strong>return_train</strong>
+            <span>¥283-314</span>
+          </div>
+          <div class="mini-row">
+            <strong>accommodation_2nights</strong>
+            <span>¥114-360</span>
+          </div>
+          <div class="mini-row">
+            <strong>meals_3days</strong>
+            <span>¥300-400</span>
+          </div>
+          <div class="mini-row">
+            <strong>门票/体验</strong>
+            <span>¥40（岳麓书院）</span>
+          </div>
+          <div class="mini-row">
+            <strong>local_transport</strong>
+            <span>¥40-50</span>
+          </div>
+          <div class="mini-row">
+            <strong>souvenirs_misc</strong>
+            <span>¥50-100</span>
+          </div>
+          <div class="mini-row">
+            <strong>total_estimate</strong>
+            <span>¥1,110-1,547</span>
+          </div>
+        <p class="total">合计参考：穷游模式，高铁价格为代表性样例数据</p>
+      </div>
+    </section>
+
+
+    <section class="panel docs-intro" id="full-docs">
+      <div class="section-kicker">完整资料库</div>
+      <h2>原文归档：需要核对时再展开</h2>
+      <p class="lead">主页面优先呈现可执行信息；原始简报、行程和口碑保留为折叠归档，避免把网页变成长文堆叠。</p>
+      <div class="doc-jump">
+        <a href="#doc-destination-brief">完整目的地简报</a><a href="#doc-itinerary">完整行程原文</a><a href="#doc-reputation">完整口碑与避雷原文</a>
+      </div>
+    </section>
+
+      <details class="panel source-doc" id="doc-destination-brief">
+        <summary class="source-doc-summary">
+          <span class="section-kicker">destination-brief.md</span>
+          <strong>完整目的地简报</strong>
+          <em>长沙旅行简报</em>
+        </summary>
+        <div class="markdown-body">
+          <h3>长沙旅行简报</h3>
+<h4>一句话判断</h4>
+<p>适合穷游特种兵，3天2夜可覆盖核心景点；5月中旬多雨，需备雨具。</p>
+<h4>目的地概览</h4>
+<ul><li><strong>城市定位</strong>：湖南省会，湖湘文化核心，网红美食之都，历史与现代并存</li><li><strong>适合人群</strong>：穷游背包客、美食爱好者、历史文化爱好者、特种兵打卡族</li><li><strong>旅行强度</strong>：高（特种兵模式，每日步行量大）</li></ul>
+<h4>最佳旅行时间</h4>
+<ul><li><strong>推荐月份</strong>：3-5月（春季）、9-11月（秋季）</li><li><strong>5月中旬提醒</strong>：气温约20-28°C，进入雨季初期，降雨概率较高，空气湿度大；建议随身携带雨伞/雨衣，穿防滑运动鞋</li><li><strong>旺季风险</strong>：五一假期后人流稍减，但周末景区仍较拥挤</li></ul>
+<h4>怎么到达</h4>
+<h5>广州→长沙高铁（2026-05-14，代表性样例数据）</h5>
+<div class="md-table-wrap"><table><thead><tr><th>车次</th><th>出发</th><th>到达</th><th>历时</th><th>价格</th><th>订票</th></tr></thead><tbody><tr><td>G2056</td><td>广州南 07:58</td><td>长沙南 10:54</td><td>2h56m</td><td>¥283</td><td><a href="https://a.feizhu.com/09ZZDN" target="_blank" rel="noopener noreferrer">飞猪查询</a></td></tr><tr><td>G1192</td><td>广州南 17:03</td><td>长沙南 19:44</td><td>2h41m</td><td>¥283</td><td><a href="https://a.feizhu.com/1ZRNlc" target="_blank" rel="noopener noreferrer">飞猪查询</a></td></tr><tr><td>G6014</td><td>广州南 19:15</td><td>长沙南 21:46</td><td>2h31m</td><td>¥283</td><td><a href="https://a.feizhu.com/1BlvGX" target="_blank" rel="noopener noreferrer">飞猪查询</a></td></tr></tbody></table></div>
+<p><strong>穷游建议</strong>：乘早班 G2056（07:58出发），10:54抵达长沙南，当天下午即可开始游览。</p>
+<h5>长沙→广州返程（2026-05-16，代表性样例数据）</h5>
+<div class="md-table-wrap"><table><thead><tr><th>车次</th><th>出发</th><th>到达</th><th>历时</th><th>价格</th><th>订票</th></tr></thead><tbody><tr><td>G6013</td><td>长沙南 07:38</td><td>广州南 10:15</td><td>2h37m</td><td>¥320</td><td><a href="https://a.feizhu.com/0oYnA7" target="_blank" rel="noopener noreferrer">飞猪查询</a></td></tr><tr><td>G913</td><td>长沙南 17:38</td><td>广州南 20:07</td><td>2h29m</td><td>¥314</td><td><a href="https://a.feizhu.com/43Bzym" target="_blank" rel="noopener noreferrer">飞猪查询</a></td></tr><tr><td>G6129</td><td>长沙南 20:44</td><td>广州南 23:28</td><td>2h44m</td><td>¥283</td><td><a href="https://a.feizhu.com/3V3Sw2" target="_blank" rel="noopener noreferrer">飞猪查询</a></td></tr></tbody></table></div>
+<h5>市内交通</h5>
+<ul><li><strong>地铁为主</strong>：1号线（五一广场/黄兴广场）、2号线（橘子洲）、4号线（湖南大学/岳麓山）、6号线（湖南博物院）</li><li>长沙南站→市区：地铁2号线直达五一广场，约30分钟，¥4-5</li><li>建议购买长沙地铁APP或使用支付宝/微信乘车码</li></ul>
+<h4>核心体验</h4>
+<ol><li><strong>橘子洲景区</strong>：毛主席青年艺术雕塑、湘江江景、日落夜景（免费，需预约）</li><li><strong>岳麓山+岳麓书院+爱晚亭</strong>：千年书院、古树名木、徒步登山（书院¥40，其余免费）</li><li><strong>湖南博物院</strong>：马王堆汉墓文物、辛追夫人（免费，需提前7天抢票）</li><li><strong>太平老街/坡子街</strong>：臭豆腐、糖油粑粑、茶颜悦色（免费逛，小吃人均30-50元）</li><li><strong>超级文和友</strong>：80年代老长沙复古场景打卡（免费参观，用餐需排队）</li></ol>
+<h4>体验情报初筛</h4>
+<ul><li><strong>重点景点</strong>：橘子洲、岳麓山、湖南博物院、太平老街</li><li><strong>首推项目</strong>：博物院马王堆陈列（3-4h）、岳麓山徒步全程（4-5h）、橘子洲夜景</li><li><strong>预计体验时长</strong>：博物院3-4h，岳麓山4-5h，橘子洲2h，太平老街1-2h</li><li><strong>准备材料</strong>：身份证（预约入园必须）、雨具、防晒、运动鞋、充电宝</li><li><strong>预约/排队风险</strong>：湖南博物院需提前7天20:00抢票（极难）；岳麓山+橘子洲需提前3天在「岳麓山橘子洲旅游区」公众号预约</li></ul>
+<h4>风险与注意</h4>
+<ul><li><strong>预约风险</strong>：湖南博物院票极难抢，出发前务必提前7天20:00准时抢；若抢不到可考虑购买含代约服务的讲解套餐</li><li><strong>天气风险</strong>：5月多雨，岳麓山徒步遇雨路滑，索道雨天可能停运</li><li><strong>人流风险</strong>：周末景区人多，建议工作日游览或错峰入园</li><li><strong>消费陷阱</strong>：太平街主街小吃价格偏高，建议深入小巷；火宫殿名气大于口味，可仅打卡不用餐</li><li><strong>体力风险</strong>：特种兵模式每日步行1.5-2万步，注意补水休息</li></ul>
+<p>*数据新鲜度：2026-05-10。高铁票价/班次为代表性样例数据，以12306实时为准。*</p>
+        </div>
+        <details class="raw-markdown">
+          <summary>查看原始 Markdown</summary>
+          <pre><code># 长沙旅行简报
+
+## 一句话判断
+适合穷游特种兵，3天2夜可覆盖核心景点；5月中旬多雨，需备雨具。
+
+## 目的地概览
+- **城市定位**：湖南省会，湖湘文化核心，网红美食之都，历史与现代并存
+- **适合人群**：穷游背包客、美食爱好者、历史文化爱好者、特种兵打卡族
+- **旅行强度**：高（特种兵模式，每日步行量大）
+
+## 最佳旅行时间
+- **推荐月份**：3-5月（春季）、9-11月（秋季）
+- **5月中旬提醒**：气温约20-28°C，进入雨季初期，降雨概率较高，空气湿度大；建议随身携带雨伞/雨衣，穿防滑运动鞋
+- **旺季风险**：五一假期后人流稍减，但周末景区仍较拥挤
+
+## 怎么到达
+
+### 广州→长沙高铁（2026-05-14，代表性样例数据）
+| 车次 | 出发 | 到达 | 历时 | 价格 | 订票 |
+|------|------|------|------|------|------|
+| G2056 | 广州南 07:58 | 长沙南 10:54 | 2h56m | ¥283 | [飞猪查询](https://a.feizhu.com/09ZZDN) |
+| G1192 | 广州南 17:03 | 长沙南 19:44 | 2h41m | ¥283 | [飞猪查询](https://a.feizhu.com/1ZRNlc) |
+| G6014 | 广州南 19:15 | 长沙南 21:46 | 2h31m | ¥283 | [飞猪查询](https://a.feizhu.com/1BlvGX) |
+
+**穷游建议**：乘早班 G2056（07:58出发），10:54抵达长沙南，当天下午即可开始游览。
+
+### 长沙→广州返程（2026-05-16，代表性样例数据）
+| 车次 | 出发 | 到达 | 历时 | 价格 | 订票 |
+|------|------|------|------|------|------|
+| G6013 | 长沙南 07:38 | 广州南 10:15 | 2h37m | ¥320 | [飞猪查询](https://a.feizhu.com/0oYnA7) |
+| G913 | 长沙南 17:38 | 广州南 20:07 | 2h29m | ¥314 | [飞猪查询](https://a.feizhu.com/43Bzym) |
+| G6129 | 长沙南 20:44 | 广州南 23:28 | 2h44m | ¥283 | [飞猪查询](https://a.feizhu.com/3V3Sw2) |
+
+### 市内交通
+- **地铁为主**：1号线（五一广场/黄兴广场）、2号线（橘子洲）、4号线（湖南大学/岳麓山）、6号线（湖南博物院）
+- 长沙南站→市区：地铁2号线直达五一广场，约30分钟，¥4-5
+- 建议购买长沙地铁APP或使用支付宝/微信乘车码
+
+## 核心体验
+1. **橘子洲景区**：毛主席青年艺术雕塑、湘江江景、日落夜景（免费，需预约）
+2. **岳麓山+岳麓书院+爱晚亭**：千年书院、古树名木、徒步登山（书院¥40，其余免费）
+3. **湖南博物院**：马王堆汉墓文物、辛追夫人（免费，需提前7天抢票）
+4. **太平老街/坡子街**：臭豆腐、糖油粑粑、茶颜悦色（免费逛，小吃人均30-50元）
+5. **超级文和友**：80年代老长沙复古场景打卡（免费参观，用餐需排队）
+
+## 体验情报初筛
+- **重点景点**：橘子洲、岳麓山、湖南博物院、太平老街
+- **首推项目**：博物院马王堆陈列（3-4h）、岳麓山徒步全程（4-5h）、橘子洲夜景
+- **预计体验时长**：博物院3-4h，岳麓山4-5h，橘子洲2h，太平老街1-2h
+- **准备材料**：身份证（预约入园必须）、雨具、防晒、运动鞋、充电宝
+- **预约/排队风险**：湖南博物院需提前7天20:00抢票（极难）；岳麓山+橘子洲需提前3天在「岳麓山橘子洲旅游区」公众号预约
+
+## 风险与注意
+- **预约风险**：湖南博物院票极难抢，出发前务必提前7天20:00准时抢；若抢不到可考虑购买含代约服务的讲解套餐
+- **天气风险**：5月多雨，岳麓山徒步遇雨路滑，索道雨天可能停运
+- **人流风险**：周末景区人多，建议工作日游览或错峰入园
+- **消费陷阱**：太平街主街小吃价格偏高，建议深入小巷；火宫殿名气大于口味，可仅打卡不用餐
+- **体力风险**：特种兵模式每日步行1.5-2万步，注意补水休息
+
+*数据新鲜度：2026-05-10。高铁票价/班次为代表性样例数据，以12306实时为准。*</code></pre>
+        </details>
+      </details>
+      <details class="panel source-doc" id="doc-itinerary">
+        <summary class="source-doc-summary">
+          <span class="section-kicker">itinerary.md</span>
+          <strong>完整行程原文</strong>
+          <em>长沙3天2夜特种兵穷游行程</em>
+        </summary>
+        <div class="markdown-body">
+          <h3>长沙3天2夜特种兵穷游行程</h3>
+<h4>行程参数</h4>
+<ul><li><strong>日期</strong>：2026-05-14（周四）至 2026-05-16（周六）</li><li><strong>出发地</strong>：广州</li><li><strong>同行人</strong>：1人</li><li><strong>交通方式</strong>：高铁+地铁</li><li><strong>预算</strong>：穷游（经济优先）</li><li><strong>节奏</strong>：特种兵（高强度打卡）</li></ul>
+<h4>总体安排</h4>
+<div class="md-table-wrap"><table><thead><tr><th>天数</th><th>主题</th><th>区域</th><th>强度</th><th>核心体验</th><th>重点提醒</th></tr></thead><tbody><tr><td>Day 1</td><td>抵达+文化美食</td><td>五一广场/太平老街/坡子街</td><td>中</td><td>太平老街小吃、坡子街夜游、超级文和友打卡</td><td>早班高铁出发，下午抵达后直接游览</td></tr><tr><td>Day 2</td><td>山水洲城</td><td>岳麓山/橘子洲/湘江</td><td>高</td><td>岳麓书院+爱晚亭徒步、橘子洲夜景</td><td>全天最重体力日，备好雨具和干粮</td></tr><tr><td>Day 3</td><td>博物院+返程</td><td>湖南博物院/五一广场</td><td>中</td><td>马王堆汉墓文物、辛追夫人</td><td>博物院需提前7天抢票；下午返程</td></tr></tbody></table></div>
+<hr>
+<h4>每日行程</h4>
+<h5>Day 1（5月14日）· 抵达长沙，文化美食夜</h5>
+<div class="md-table-wrap"><table><thead><tr><th>时间</th><th>安排</th><th>交通</th><th>费用</th><th>备注</th></tr></thead><tbody><tr><td>07:58</td><td>广州南站出发 G2056</td><td>高铁</td><td>¥283</td><td><a href="https://a.feizhu.com/09ZZDN" target="_blank" rel="noopener noreferrer">飞猪订票</a>，代表性样例价</td></tr><tr><td>10:54</td><td>抵达长沙南站</td><td>—</td><td>—</td><td>出站取行李</td></tr><tr><td>11:10</td><td>长沙南站→五一广场</td><td>地铁2号线</td><td>¥5</td><td>约30分钟</td></tr><tr><td>11:40</td><td>办理入住（青旅/经济酒店）</td><td>步行</td><td>¥57起</td><td>推荐长沙十一豆青旅（五一广场IFS店）<a href="https://a.feizhu.com/0M9q50" target="_blank" rel="noopener noreferrer">飞猪</a></td></tr><tr><td>12:30</td><td>太平老街午餐+逛吃</td><td>步行（地铁1号线黄兴广场站）</td><td>¥30-50</td><td>黑色经典臭豆腐、糖油粑粑、茶颜悦色；深入小巷避开主街高价摊</td></tr><tr><td>14:30</td><td>坡子街漫步+贾谊故居外观</td><td>步行</td><td>免费</td><td>坡子街与太平街相邻，步行串联</td></tr><tr><td>16:00</td><td>超级文和友（海信广场店）打卡拍照</td><td>步行/地铁1号线南门口站</td><td>免费参观</td><td>非饭点前往，仅拍照不用餐；避开排队</td></tr><tr><td>17:30</td><td>五一广场/IFS国金中心周边逛逛</td><td>步行</td><td>免费</td><td>茶颜悦色任意门店购买，无需排队</td></tr><tr><td>19:00</td><td>晚餐：东瓜山美食街或坡子街大排档</td><td>步行/地铁</td><td>¥50-70</td><td>本地人推荐，烟火气足，人均亲民</td></tr><tr><td>21:00</td><td>返回住宿休息</td><td>步行/地铁</td><td>—</td><td>明日全天高强度，早休息</td></tr></tbody></table></div>
+<p><strong>今日餐食</strong>：午餐太平老街小吃（¥30-50）+ 下午茶颜悦色（¥16）+ 晚餐大排档（¥50-70）<br><strong>核心体验</strong>：太平老街小吃文化、超级文和友复古场景打卡<br><strong>预算估算</strong>：高铁¥283 + 地铁¥5 + 住宿¥57 + 餐饮¥100 + 其他¥20 ≈ <strong>¥465</strong><br><strong>预约提醒</strong>：今晚20:00抢湖南博物院Day3门票（提前7天）！<br><strong>雨天/疲劳备用</strong>：IFS国金中心室内逛街、五一广场周边咖啡馆</p>
+<hr>
+<h5>Day 2（5月15日）· 岳麓山+橘子洲，山水洲城全打卡</h5>
+<div class="md-table-wrap"><table><thead><tr><th>时间</th><th>安排</th><th>交通</th><th>费用</th><th>备注</th></tr></thead><tbody><tr><td>07:30</td><td>早餐（住宿附近米粉店）</td><td>步行</td><td>¥15-20</td><td>长沙米粉是必吃，推荐猪脚粉/牛肉粉</td></tr><tr><td>08:30</td><td>出发→岳麓山南门</td><td>地铁4号线「湖南大学」站2号口</td><td>¥4</td><td>约30分钟</td></tr><tr><td>09:00</td><td>岳麓书院参观</td><td>步行</td><td>¥40</td><td>建议游览2小时；提前在官方公众号预约购票；讲堂、御书楼、文庙必看</td></tr><tr><td>11:00</td><td>爱晚亭</td><td>步行（书院后门上行10分钟）</td><td>免费</td><td>中国四大名亭之一，毛泽东青年时代常聚之地；游览30分钟</td></tr><tr><td>11:30</td><td>徒步登岳麓山</td><td>步行</td><td>免费</td><td>古麓山寺→蔡锷墓→黄兴墓→山顶观光长廊；全程约1.5-2小时</td></tr><tr><td>13:00</td><td>山顶观光长廊俯瞰长沙城</td><td>步行</td><td>免费</td><td>可俯瞰湘江、橘子洲、长沙城全景</td></tr><tr><td>13:30</td><td>下山（步行东门出）</td><td>步行</td><td>免费</td><td>穷游推荐步行下山（约40-60分钟）；省力可选索道¥40或滑道¥35</td></tr><tr><td>14:30</td><td>东门出→午餐（湖南大学小吃街）</td><td>步行</td><td>¥30-40</td><td>湖南大学周边物美价廉，推荐盖码饭/湘菜小炒</td></tr><tr><td>15:30</td><td>前往橘子洲</td><td>地铁2号线「橘子洲」站</td><td>¥3</td><td>约15分钟</td></tr><tr><td>16:00</td><td>橘子洲景区游览</td><td>步行/观光小火车</td><td>免费（小火车另收费）</td><td>毛主席青年艺术雕塑、百米高喷、湘江步道；建议游览2小时；提前在「岳麓山橘子洲旅游区」公众号预约</td></tr><tr><td>18:00</td><td>橘子洲看日落/夜景</td><td>步行</td><td>免费</td><td>日落时分湘江景色绝佳</td></tr><tr><td>19:30</td><td>返回市区晚餐</td><td>地铁2号线</td><td>¥3</td><td>推荐五一广场附近湘菜馆，人均¥50-80</td></tr><tr><td>21:00</td><td>返回住宿</td><td>步行/地铁</td><td>—</td><td>今日步行量约1.5-2万步，注意补水</td></tr></tbody></table></div>
+<p><strong>今日餐食</strong>：早餐米粉（¥15-20）+ 午餐湖大小吃街（¥30-40）+ 晚餐湘菜（¥50-80）<br><strong>核心体验/首推项目</strong>：岳麓书院讲堂、爱晚亭、山顶俯瞰、橘子洲毛主席雕塑+日落<br><strong>预算估算</strong>：地铁¥10 + 书院¥40 + 餐饮¥100 + 其他¥20 ≈ <strong>¥170</strong><br><strong>预约提醒</strong>：橘子洲需提前3天预约（今日游览需在5月12日前预约）；岳麓书院建议提前预约购票<br><strong>雨天/疲劳备用</strong>：岳麓山索道（¥40上行/¥30下行）；橘子洲观光小火车；雨天路滑注意安全</p>
+<hr>
+<h5>Day 3（5月16日）· 湖南博物院+返程</h5>
+<div class="md-table-wrap"><table><thead><tr><th>时间</th><th>安排</th><th>交通</th><th>费用</th><th>备注</th></tr></thead><tbody><tr><td>08:00</td><td>早餐</td><td>步行</td><td>¥15-20</td><td>住宿附近米粉或包子铺</td></tr><tr><td>09:00</td><td>前往湖南博物院</td><td>地铁6号线「烈士公园南」站</td><td>¥4</td><td>约20分钟；建议预约最早时段入场</td></tr><tr><td>09:30</td><td>湖南博物院参观</td><td>步行</td><td>免费</td><td>马王堆汉墓陈列（辛追夫人、素纱单衣）+ 湖南人·三湘历史文化陈列；建议游览3-4小时</td></tr><tr><td>13:00</td><td>博物院附近午餐</td><td>步行/地铁</td><td>¥30-50</td><td>烈士公园附近有餐饮选择</td></tr><tr><td>14:00</td><td>返回住宿取行李/退房</td><td>地铁</td><td>¥4</td><td>—</td></tr><tr><td>15:00</td><td>五一广场附近最后打卡/购买伴手礼</td><td>步行</td><td>—</td><td>茶颜悦色茶包（超市购买更划算）、辣条等</td></tr><tr><td>16:30</td><td>前往长沙南站</td><td>地铁2号线</td><td>¥5</td><td>约30分钟，提前1小时到站</td></tr><tr><td>17:38</td><td>长沙南站出发 G913</td><td>高铁</td><td>¥314</td><td><a href="https://a.feizhu.com/43Bzym" target="_blank" rel="noopener noreferrer">飞猪订票</a>，代表性样例价；或选G6129（20:44发，¥283）</td></tr><tr><td>20:07</td><td>抵达广州南站</td><td>—</td><td>—</td><td>行程结束</td></tr></tbody></table></div>
+<p><strong>今日餐食</strong>：早餐（¥15-20）+ 午餐（¥30-50）<br><strong>核心体验/首推项目</strong>：马王堆汉墓陈列（辛追夫人、素纱单衣、彩绘帛画）<br><strong>预算估算</strong>：地铁¥13 + 餐饮¥70 + 伴手礼¥50 + 返程高铁¥314 ≈ <strong>¥447</strong><br><strong>预约提醒</strong>：湖南博物院需提前7天20:00在「湖南博物院」微信公众号抢票；若抢不到可购买含代约服务的讲解套餐<br><strong>雨天/疲劳备用</strong>：博物院为室内，不受天气影响；若博物院票未抢到，可改游长沙IFS国金中心、湘江风光带</p>
+<hr>
+<h4>预算汇总</h4>
+<div class="md-table-wrap"><table><thead><tr><th>项目</th><th>经济（穷游）</th><th>备注</th></tr></thead><tbody><tr><td>去程高铁（广州→长沙）</td><td>¥283</td><td>G2056，代表性样例价</td></tr><tr><td>返程高铁（长沙→广州）</td><td>¥283-314</td><td>G6129/G913，代表性样例价</td></tr><tr><td>住宿（2晚）</td><td>¥114-360</td><td>青旅¥57/晚起，舒适型¥180/晚</td></tr><tr><td>餐饮（3天）</td><td>¥300-400</td><td>穷游吃法约¥100-130/天</td></tr><tr><td>景点门票</td><td>¥40</td><td>岳麓书院¥40，其余免费</td></tr><tr><td>市内交通</td><td>¥40-50</td><td>全程地铁</td></tr><tr><td>伴手礼/其他</td><td>¥50-100</td><td>茶颜悦色茶包等</td></tr><tr><td><strong>合计</strong></td><td><strong>¥1,110-1,507</strong></td><td>穷游模式，不含意外支出</td></tr></tbody></table></div>
+<hr>
+<h4>交通与住宿参考</h4>
+<h5>城际交通</h5>
+<ul><li><strong>去程</strong>：G2056 广州南07:58→长沙南10:54，¥283，<a href="https://a.feizhu.com/09ZZDN" target="_blank" rel="noopener noreferrer">飞猪查询</a>（代表性样例数据）</li><li><strong>返程</strong>：G913 长沙南17:38→广州南20:07，¥314，<a href="https://a.feizhu.com/43Bzym" target="_blank" rel="noopener noreferrer">飞猪查询</a>；或G6129 20:44发，¥283，<a href="https://a.feizhu.com/3V3Sw2" target="_blank" rel="noopener noreferrer">飞猪查询</a>（代表性样例数据）</li><li>以上价格为代表性样例数据，以12306/飞猪实时为准</li></ul>
+<h5>市内交通</h5>
+<ul><li>全程地铁：1号线（五一广场/黄兴广场）、2号线（橘子洲/长沙南站）、4号线（湖南大学/岳麓山）、6号线（湖南博物院）</li><li>约¥3-5/次，全程约¥40-50</li></ul>
+<h5>住宿区域</h5>
+<ul><li><strong>首选区域</strong>：五一广场/黄兴广场/芙蓉广场（地铁1+2号线交汇，步行可达太平老街、坡子街）</li><li><strong>穷游首选</strong>：长沙十一豆青旅（五一广场IFS店）¥57/晚，<a href="https://a.feizhu.com/0M9q50" target="_blank" rel="noopener noreferrer">飞猪</a></li><li><strong>舒适选项</strong>：三贵三六酒店（IFS国金中心潮宗古街店）¥181/晚，<a href="https://a.feizhu.com/2HplK8" target="_blank" rel="noopener noreferrer">飞猪</a></li><li>价格为代表性样例数据，FlyAI未返回具体房型，需点击链接确认</li></ul>
+<hr>
+<h4>出行前检查</h4>
+<ul><li><strong>预约（出发前必做）</strong>：</li><li>湖南博物院：出发前7天（5月9日）20:00在「湖南博物院」微信公众号抢票（已过，可购买含代约讲解套餐）</li><li>橘子洲：出发前3天（5月11日前）在「岳麓山橘子洲旅游区」公众号预约</li><li>岳麓山：同上公众号预约</li><li>岳麓书院：官方公众号预约购票</li><li><strong>证件</strong>：身份证（预约入园必须）</li><li><strong>装备</strong>：雨伞/雨衣（5月多雨）、防晒霜、防滑运动鞋、充电宝、小背包</li><li><strong>APP</strong>：支付宝/微信（乘车码）、地图导航、「岳麓山橘子洲旅游区」公众号、「湖南博物院」公众号</li></ul>
+        </div>
+        <details class="raw-markdown">
+          <summary>查看原始 Markdown</summary>
+          <pre><code># 长沙3天2夜特种兵穷游行程
+
+## 行程参数
+- **日期**：2026-05-14（周四）至 2026-05-16（周六）
+- **出发地**：广州
+- **同行人**：1人
+- **交通方式**：高铁+地铁
+- **预算**：穷游（经济优先）
+- **节奏**：特种兵（高强度打卡）
+
+## 总体安排
+| 天数 | 主题 | 区域 | 强度 | 核心体验 | 重点提醒 |
+|------|------|------|------|----------|----------|
+| Day 1 | 抵达+文化美食 | 五一广场/太平老街/坡子街 | 中 | 太平老街小吃、坡子街夜游、超级文和友打卡 | 早班高铁出发，下午抵达后直接游览 |
+| Day 2 | 山水洲城 | 岳麓山/橘子洲/湘江 | 高 | 岳麓书院+爱晚亭徒步、橘子洲夜景 | 全天最重体力日，备好雨具和干粮 |
+| Day 3 | 博物院+返程 | 湖南博物院/五一广场 | 中 | 马王堆汉墓文物、辛追夫人 | 博物院需提前7天抢票；下午返程 |
+
+---
+
+## 每日行程
+
+### Day 1（5月14日）· 抵达长沙，文化美食夜
+
+| 时间 | 安排 | 交通 | 费用 | 备注 |
+|------|------|------|------|------|
+| 07:58 | 广州南站出发 G2056 | 高铁 | ¥283 | [飞猪订票](https://a.feizhu.com/09ZZDN)，代表性样例价 |
+| 10:54 | 抵达长沙南站 | — | — | 出站取行李 |
+| 11:10 | 长沙南站→五一广场 | 地铁2号线 | ¥5 | 约30分钟 |
+| 11:40 | 办理入住（青旅/经济酒店） | 步行 | ¥57起 | 推荐长沙十一豆青旅（五一广场IFS店）[飞猪](https://a.feizhu.com/0M9q50) |
+| 12:30 | 太平老街午餐+逛吃 | 步行（地铁1号线黄兴广场站） | ¥30-50 | 黑色经典臭豆腐、糖油粑粑、茶颜悦色；深入小巷避开主街高价摊 |
+| 14:30 | 坡子街漫步+贾谊故居外观 | 步行 | 免费 | 坡子街与太平街相邻，步行串联 |
+| 16:00 | 超级文和友（海信广场店）打卡拍照 | 步行/地铁1号线南门口站 | 免费参观 | 非饭点前往，仅拍照不用餐；避开排队 |
+| 17:30 | 五一广场/IFS国金中心周边逛逛 | 步行 | 免费 | 茶颜悦色任意门店购买，无需排队 |
+| 19:00 | 晚餐：东瓜山美食街或坡子街大排档 | 步行/地铁 | ¥50-70 | 本地人推荐，烟火气足，人均亲民 |
+| 21:00 | 返回住宿休息 | 步行/地铁 | — | 明日全天高强度，早休息 |
+
+**今日餐食**：午餐太平老街小吃（¥30-50）+ 下午茶颜悦色（¥16）+ 晚餐大排档（¥50-70）
+**核心体验**：太平老街小吃文化、超级文和友复古场景打卡
+**预算估算**：高铁¥283 + 地铁¥5 + 住宿¥57 + 餐饮¥100 + 其他¥20 ≈ **¥465**
+**预约提醒**：今晚20:00抢湖南博物院Day3门票（提前7天）！
+**雨天/疲劳备用**：IFS国金中心室内逛街、五一广场周边咖啡馆
+
+---
+
+### Day 2（5月15日）· 岳麓山+橘子洲，山水洲城全打卡
+
+| 时间 | 安排 | 交通 | 费用 | 备注 |
+|------|------|------|------|------|
+| 07:30 | 早餐（住宿附近米粉店） | 步行 | ¥15-20 | 长沙米粉是必吃，推荐猪脚粉/牛肉粉 |
+| 08:30 | 出发→岳麓山南门 | 地铁4号线「湖南大学」站2号口 | ¥4 | 约30分钟 |
+| 09:00 | 岳麓书院参观 | 步行 | ¥40 | 建议游览2小时；提前在官方公众号预约购票；讲堂、御书楼、文庙必看 |
+| 11:00 | 爱晚亭 | 步行（书院后门上行10分钟） | 免费 | 中国四大名亭之一，毛泽东青年时代常聚之地；游览30分钟 |
+| 11:30 | 徒步登岳麓山 | 步行 | 免费 | 古麓山寺→蔡锷墓→黄兴墓→山顶观光长廊；全程约1.5-2小时 |
+| 13:00 | 山顶观光长廊俯瞰长沙城 | 步行 | 免费 | 可俯瞰湘江、橘子洲、长沙城全景 |
+| 13:30 | 下山（步行东门出） | 步行 | 免费 | 穷游推荐步行下山（约40-60分钟）；省力可选索道¥40或滑道¥35 |
+| 14:30 | 东门出→午餐（湖南大学小吃街） | 步行 | ¥30-40 | 湖南大学周边物美价廉，推荐盖码饭/湘菜小炒 |
+| 15:30 | 前往橘子洲 | 地铁2号线「橘子洲」站 | ¥3 | 约15分钟 |
+| 16:00 | 橘子洲景区游览 | 步行/观光小火车 | 免费（小火车另收费） | 毛主席青年艺术雕塑、百米高喷、湘江步道；建议游览2小时；提前在「岳麓山橘子洲旅游区」公众号预约 |
+| 18:00 | 橘子洲看日落/夜景 | 步行 | 免费 | 日落时分湘江景色绝佳 |
+| 19:30 | 返回市区晚餐 | 地铁2号线 | ¥3 | 推荐五一广场附近湘菜馆，人均¥50-80 |
+| 21:00 | 返回住宿 | 步行/地铁 | — | 今日步行量约1.5-2万步，注意补水 |
+
+**今日餐食**：早餐米粉（¥15-20）+ 午餐湖大小吃街（¥30-40）+ 晚餐湘菜（¥50-80）
+**核心体验/首推项目**：岳麓书院讲堂、爱晚亭、山顶俯瞰、橘子洲毛主席雕塑+日落
+**预算估算**：地铁¥10 + 书院¥40 + 餐饮¥100 + 其他¥20 ≈ **¥170**
+**预约提醒**：橘子洲需提前3天预约（今日游览需在5月12日前预约）；岳麓书院建议提前预约购票
+**雨天/疲劳备用**：岳麓山索道（¥40上行/¥30下行）；橘子洲观光小火车；雨天路滑注意安全
+
+---
+
+### Day 3（5月16日）· 湖南博物院+返程
+
+| 时间 | 安排 | 交通 | 费用 | 备注 |
+|------|------|------|------|------|
+| 08:00 | 早餐 | 步行 | ¥15-20 | 住宿附近米粉或包子铺 |
+| 09:00 | 前往湖南博物院 | 地铁6号线「烈士公园南」站 | ¥4 | 约20分钟；建议预约最早时段入场 |
+| 09:30 | 湖南博物院参观 | 步行 | 免费 | 马王堆汉墓陈列（辛追夫人、素纱单衣）+ 湖南人·三湘历史文化陈列；建议游览3-4小时 |
+| 13:00 | 博物院附近午餐 | 步行/地铁 | ¥30-50 | 烈士公园附近有餐饮选择 |
+| 14:00 | 返回住宿取行李/退房 | 地铁 | ¥4 | — |
+| 15:00 | 五一广场附近最后打卡/购买伴手礼 | 步行 | — | 茶颜悦色茶包（超市购买更划算）、辣条等 |
+| 16:30 | 前往长沙南站 | 地铁2号线 | ¥5 | 约30分钟，提前1小时到站 |
+| 17:38 | 长沙南站出发 G913 | 高铁 | ¥314 | [飞猪订票](https://a.feizhu.com/43Bzym)，代表性样例价；或选G6129（20:44发，¥283） |
+| 20:07 | 抵达广州南站 | — | — | 行程结束 |
+
+**今日餐食**：早餐（¥15-20）+ 午餐（¥30-50）
+**核心体验/首推项目**：马王堆汉墓陈列（辛追夫人、素纱单衣、彩绘帛画）
+**预算估算**：地铁¥13 + 餐饮¥70 + 伴手礼¥50 + 返程高铁¥314 ≈ **¥447**
+**预约提醒**：湖南博物院需提前7天20:00在「湖南博物院」微信公众号抢票；若抢不到可购买含代约服务的讲解套餐
+**雨天/疲劳备用**：博物院为室内，不受天气影响；若博物院票未抢到，可改游长沙IFS国金中心、湘江风光带
+
+---
+
+## 预算汇总
+| 项目 | 经济（穷游） | 备注 |
+|------|-------------|------|
+| 去程高铁（广州→长沙） | ¥283 | G2056，代表性样例价 |
+| 返程高铁（长沙→广州） | ¥283-314 | G6129/G913，代表性样例价 |
+| 住宿（2晚） | ¥114-360 | 青旅¥57/晚起，舒适型¥180/晚 |
+| 餐饮（3天） | ¥300-400 | 穷游吃法约¥100-130/天 |
+| 景点门票 | ¥40 | 岳麓书院¥40，其余免费 |
+| 市内交通 | ¥40-50 | 全程地铁 |
+| 伴手礼/其他 | ¥50-100 | 茶颜悦色茶包等 |
+| **合计** | **¥1,110-1,507** | 穷游模式，不含意外支出 |
+
+---
+
+## 交通与住宿参考
+
+### 城际交通
+- **去程**：G2056 广州南07:58→长沙南10:54，¥283，[飞猪查询](https://a.feizhu.com/09ZZDN)（代表性样例数据）
+- **返程**：G913 长沙南17:38→广州南20:07，¥314，[飞猪查询](https://a.feizhu.com/43Bzym)；或G6129 20:44发，¥283，[飞猪查询](https://a.feizhu.com/3V3Sw2)（代表性样例数据）
+- 以上价格为代表性样例数据，以12306/飞猪实时为准
+
+### 市内交通
+- 全程地铁：1号线（五一广场/黄兴广场）、2号线（橘子洲/长沙南站）、4号线（湖南大学/岳麓山）、6号线（湖南博物院）
+- 约¥3-5/次，全程约¥40-50
+
+### 住宿区域
+- **首选区域**：五一广场/黄兴广场/芙蓉广场（地铁1+2号线交汇，步行可达太平老街、坡子街）
+- **穷游首选**：长沙十一豆青旅（五一广场IFS店）¥57/晚，[飞猪](https://a.feizhu.com/0M9q50)
+- **舒适选项**：三贵三六酒店（IFS国金中心潮宗古街店）¥181/晚，[飞猪](https://a.feizhu.com/2HplK8)
+- 价格为代表性样例数据，FlyAI未返回具体房型，需点击链接确认
+
+---
+
+## 出行前检查
+- **预约（出发前必做）**：
+  - 湖南博物院：出发前7天（5月9日）20:00在「湖南博物院」微信公众号抢票（已过，可购买含代约讲解套餐）
+  - 橘子洲：出发前3天（5月11日前）在「岳麓山橘子洲旅游区」公众号预约
+  - 岳麓山：同上公众号预约
+  - 岳麓书院：官方公众号预约购票
+- **证件**：身份证（预约入园必须）
+- **装备**：雨伞/雨衣（5月多雨）、防晒霜、防滑运动鞋、充电宝、小背包
+- **APP**：支付宝/微信（乘车码）、地图导航、「岳麓山橘子洲旅游区」公众号、「湖南博物院」公众号</code></pre>
+        </details>
+      </details>
+      <details class="panel source-doc" id="doc-reputation">
+        <summary class="source-doc-summary">
+          <span class="section-kicker">reputation.md</span>
+          <strong>完整口碑与避雷原文</strong>
+          <em>长沙口碑与避雷研究</em>
+        </summary>
+        <div class="markdown-body">
+          <h3>长沙口碑与避雷研究</h3>
+<h4>总体结论</h4>
+<div class="md-table-wrap"><table><thead><tr><th>对象</th><th>等级</th><th>适合谁</th><th>主要风险</th><th>可信度</th></tr></thead><tbody><tr><td>橘子洲景区</td><td>必去</td><td>所有人</td><td>需提前3天预约，节假日人多</td><td>多源一致</td></tr><tr><td>岳麓山+爱晚亭</td><td>必去</td><td>穷游徒步爱好者</td><td>5月多雨路滑，体力消耗大</td><td>多源一致</td></tr><tr><td>岳麓书院</td><td>必去</td><td>文化爱好者</td><td>需购票¥40，需预约</td><td>FlyAI semantic reference</td></tr><tr><td>湖南博物院</td><td>必去</td><td>历史文化爱好者</td><td>票极难抢，需提前7天20:00</td><td>多源一致</td></tr><tr><td>太平老街/坡子街</td><td>值得</td><td>美食打卡族</td><td>主街商业化，价格偏高</td><td>FlyAI semantic reference</td></tr><tr><td>超级文和友</td><td>可选</td><td>打卡拍照</td><td>用餐排队极长，消费高</td><td>FlyAI semantic reference</td></tr><tr><td>五一广场/IFS</td><td>可选</td><td>购物逛街</td><td>无特别风险</td><td>Estimated</td></tr></tbody></table></div>
+<h4>逐项分析</h4>
+<h5>橘子洲景区</h5>
+<ul><li><strong>推荐理由</strong>：湘江中的冲积沙洲，毛主席青年艺术雕塑所在地，免费开放，日落夜景绝佳</li><li><strong>首推体验</strong>：毛主席青年艺术雕塑打卡、百米高喷、湘江江景步道</li><li><strong>建议时长</strong>：2小时（白天）；若看夜景可延长至3小时</li><li><strong>常见差评</strong>：节假日人流极大，观光小火车排队长</li><li><strong>避雷点</strong>：不要购买黄牛票（景区有专用投诉邮箱，黄牛票无法入园）；观光小火车可提前在「龙骧橘子洲」小程序购票</li><li><strong>适合</strong>：所有人，穷游首选（免费）</li><li><strong>不适合</strong>：不喜欢人多的游客（节假日）</li><li><strong>预约/排队/价格提醒</strong>：必须提前3天在「岳麓山橘子洲旅游区」微信公众号预约，超时未入园需重新预约；开放时间07:00-22:00</li><li><strong>来源信号</strong>：Web-Rooter cited（搜狐官方预约攻略）+ FlyAI semantic reference</li></ul>
+<h5>岳麓山国家重点风景名胜区（含爱晚亭）</h5>
+<ul><li><strong>推荐理由</strong>：长沙地标，古迹众多，免费开放，5月绿意盎然，适合徒步</li><li><strong>首推体验</strong>：爱晚亭（免费）→ 古麓山寺 → 山顶观光长廊俯瞰长沙城</li><li><strong>建议时长</strong>：4-5小时（含岳麓书院）</li><li><strong>常见差评</strong>：山路较长，体力消耗大；节假日人多</li><li><strong>避雷点</strong>：5月多雨，建议穿防滑运动鞋；索道雨天可能停运；山上餐饮物价高，建议自备干粮</li><li><strong>适合</strong>：穷游徒步爱好者、体力好的年轻人</li><li><strong>不适合</strong>：老人、行动不便者（山路较陡）</li><li><strong>预约/排队/价格提醒</strong>：进山免费，需在「岳麓山橘子洲旅游区」公众号预约；可提前3天预约；地铁4号线「湖南大学」站2号口出步行可达南门</li><li><strong>来源信号</strong>：Web-Rooter cited（搜狐预约攻略）+ FlyAI semantic reference</li></ul>
+<h5>岳麓书院</h5>
+<ul><li><strong>推荐理由</strong>：中国古代四大书院之一，千年学府，建筑古朴，碑刻丰富</li><li><strong>首推体验</strong>：讲堂、御书楼、文庙、碑廊</li><li><strong>建议时长</strong>：2小时</li><li><strong>常见差评</strong>：需购票，部分游客觉得内容较学术</li><li><strong>避雷点</strong>：建议提前在官方公众号预约购票，避免现场排队</li><li><strong>适合</strong>：文化历史爱好者、穷游（¥40性价比高）</li><li><strong>不适合</strong>：只想拍照打卡不深入了解的游客</li><li><strong>预约/排队/价格提醒</strong>：门票¥40（学生¥20），需预约；地址：麓山路273号</li><li><strong>来源信号</strong>：FlyAI semantic reference</li></ul>
+<h5>湖南博物院（马王堆汉墓）</h5>
+<ul><li><strong>推荐理由</strong>：馆藏马王堆汉墓文物（素纱单衣、辛追夫人、彩绘帛画），免费开放，是长沙最顶级的文化地标</li><li><strong>首推体验</strong>：马王堆汉墓陈列（辛追夫人、素纱单衣）、湖南人·三湘历史文化陈列</li><li><strong>建议时长</strong>：3-4小时（深度游可达5小时）</li><li><strong>常见差评</strong>：票极难抢，周一闭馆</li><li><strong>避雷点</strong>：必须提前7天在「湖南博物院」微信公众号20:00准时抢票；若抢不到可考虑购买含代约服务的讲解套餐（FlyAI有售，价格约¥100-200含门票+讲解）；周一闭馆（法定节假日除外）</li><li><strong>适合</strong>：历史文化爱好者、穷游（免费）</li><li><strong>不适合</strong>：不喜欢博物馆的游客</li><li><strong>预约/排队/价格提醒</strong>：基本陈列免费，特展可能收费；地铁6号线「烈士公园南」站或1号线「文昌阁」站步行可达；旺季上午排队较长，建议预约最早时段</li><li><strong>来源信号</strong>：FlyAI semantic reference + Web-Rooter cited（百度移动搜索攻略）</li></ul>
+<h5>太平老街/坡子街</h5>
+<ul><li><strong>推荐理由</strong>：长沙最具代表性的历史街区，贾谊故居、长怀井等古迹，臭豆腐、糖油粑粑集中地</li><li><strong>首推体验</strong>：黑色经典臭豆腐、李公庙糖油粑粑、茶颜悦色（任意门店）</li><li><strong>建议时长</strong>：1-2小时（傍晚逛吃最佳）</li><li><strong>常见差评</strong>：主街商业化严重，价格偏高，部分小摊卫生一般</li><li><strong>避雷点</strong>：不要在主街不知名摊贩购买（价格虚高）；火宫殿名气大于口味，仅打卡不用餐；茶颜悦色不需要在总店排队，任意分店口味相同</li><li><strong>适合</strong>：美食打卡族、穷游（小吃人均30-50元）</li><li><strong>不适合</strong>：追求精致用餐环境的游客</li><li><strong>预约/排队/价格提醒</strong>：开放式街区，无需预约；地铁1号线「黄兴广场」站或「五一广场」站步行可达</li><li><strong>来源信号</strong>：FlyAI semantic reference</li></ul>
+<h5>超级文和友（海信广场店）</h5>
+<ul><li><strong>推荐理由</strong>：复古装修还原80年代老长沙社区场景，拍照极出片</li><li><strong>首推体验</strong>：免费参观内部场景拍照，感受氛围</li><li><strong>建议时长</strong>：1小时（仅拍照不用餐）</li><li><strong>常见差评</strong>：用餐排队极长（饭点可能等数百桌），消费较高</li><li><strong>避雷点</strong>：非饭点前往拍照打卡，不建议在此用餐；地铁1号线「南门口」站附近</li><li><strong>适合</strong>：打卡拍照族</li><li><strong>不适合</strong>：想在此用餐的穷游客（性价比低）</li><li><strong>预约/排队/价格提醒</strong>：可在小程序提前取号；地址：坡子街街道（海信广场）</li><li><strong>来源信号</strong>：FlyAI semantic reference</li></ul>
+<h4>住宿区域策略</h4>
+<h5>区域判断</h5>
+<p><strong>首选：五一广场/黄兴广场/芙蓉广场区域</strong></p>
+<ul><li>地铁1号线+2号线交汇，步行可达太平老街、坡子街、超级文和友</li><li>距橘子洲（地铁2号线）、岳麓山（地铁4号线换乘）均方便</li><li>夜生活丰富，便利店、小吃密集</li></ul>
+<h5>推荐档次/类型（穷游优先）</h5>
+<ul><li><strong>经济/交通优先</strong>：五一广场附近经济型酒店/青旅，¥50-180/晚</li><li><strong>舒适/位置优先</strong>：五一广场附近舒适型酒店，¥180-260/晚</li></ul>
+<h5>候选酒店（FlyAI 2026-05-14至05-16样例数据）</h5>
+<div class="md-table-wrap"><table><thead><tr><th>档次</th><th>酒店</th><th>价格参考</th><th>位置</th><th>订票</th></tr></thead><tbody><tr><td>经济/穷游</td><td>长沙十一豆青旅（五一广场IFS店）</td><td>¥57/晚</td><td>近五一广场</td><td><a href="https://a.feizhu.com/0M9q50" target="_blank" rel="noopener noreferrer">飞猪</a></td></tr><tr><td>经济/穷游</td><td>长沙小智民宿(五一广场店)</td><td>¥207/晚</td><td>近五一广场</td><td><a href="https://a.feizhu.com/3UHf0y" target="_blank" rel="noopener noreferrer">飞猪</a></td></tr><tr><td>舒适/位置</td><td>三贵三六酒店（长沙IFS国金中心潮宗古街店）</td><td>¥181/晚</td><td>近五一广场</td><td><a href="https://a.feizhu.com/2HplK8" target="_blank" rel="noopener noreferrer">飞猪</a></td></tr><tr><td>舒适/位置</td><td>轸驿云顶高空江景酒店（五一广场IFS店）</td><td>¥208/晚</td><td>近五一广场</td><td><a href="https://a.feizhu.com/0BTz8L" target="_blank" rel="noopener noreferrer">飞猪</a></td></tr></tbody></table></div>
+<p><strong>穷游首选</strong>：长沙十一豆青旅（¥57/晚），五一广场步行圈，交通最便利。价格为代表性样例数据，以飞猪实时为准。FlyAI未返回具体房型，需点击链接确认。</p>
+<h4>复核记录</h4>
+<ul><li>Research conducted: 2026-05-10</li><li>Key evidence:</li><li>FlyAI ai-search：橘子洲、岳麓山、岳麓书院、湖南博物院、太平老街、超级文和友游玩情报</li><li>Web-Rooter cited：搜狐「岳麓山橘子洲预约攻略」（https://www.sohu.com/a/939981200_121123874）</li><li>FlyAI search-hotel：五一广场附近酒店库存（2026-05-14至05-16样例数据）</li><li>Quark search：长沙旅游攻略、住宿区域、景点避坑</li></ul>
+        </div>
+        <details class="raw-markdown">
+          <summary>查看原始 Markdown</summary>
+          <pre><code># 长沙口碑与避雷研究
+
+## 总体结论
+| 对象 | 等级 | 适合谁 | 主要风险 | 可信度 |
+|------|------|--------|----------|--------|
+| 橘子洲景区 | 必去 | 所有人 | 需提前3天预约，节假日人多 | 多源一致 |
+| 岳麓山+爱晚亭 | 必去 | 穷游徒步爱好者 | 5月多雨路滑，体力消耗大 | 多源一致 |
+| 岳麓书院 | 必去 | 文化爱好者 | 需购票¥40，需预约 | FlyAI semantic reference |
+| 湖南博物院 | 必去 | 历史文化爱好者 | 票极难抢，需提前7天20:00 | 多源一致 |
+| 太平老街/坡子街 | 值得 | 美食打卡族 | 主街商业化，价格偏高 | FlyAI semantic reference |
+| 超级文和友 | 可选 | 打卡拍照 | 用餐排队极长，消费高 | FlyAI semantic reference |
+| 五一广场/IFS | 可选 | 购物逛街 | 无特别风险 | Estimated |
+
+## 逐项分析
+
+### 橘子洲景区
+- **推荐理由**：湘江中的冲积沙洲，毛主席青年艺术雕塑所在地，免费开放，日落夜景绝佳
+- **首推体验**：毛主席青年艺术雕塑打卡、百米高喷、湘江江景步道
+- **建议时长**：2小时（白天）；若看夜景可延长至3小时
+- **常见差评**：节假日人流极大，观光小火车排队长
+- **避雷点**：不要购买黄牛票（景区有专用投诉邮箱，黄牛票无法入园）；观光小火车可提前在「龙骧橘子洲」小程序购票
+- **适合**：所有人，穷游首选（免费）
+- **不适合**：不喜欢人多的游客（节假日）
+- **预约/排队/价格提醒**：必须提前3天在「岳麓山橘子洲旅游区」微信公众号预约，超时未入园需重新预约；开放时间07:00-22:00
+- **来源信号**：Web-Rooter cited（搜狐官方预约攻略）+ FlyAI semantic reference
+
+### 岳麓山国家重点风景名胜区（含爱晚亭）
+- **推荐理由**：长沙地标，古迹众多，免费开放，5月绿意盎然，适合徒步
+- **首推体验**：爱晚亭（免费）→ 古麓山寺 → 山顶观光长廊俯瞰长沙城
+- **建议时长**：4-5小时（含岳麓书院）
+- **常见差评**：山路较长，体力消耗大；节假日人多
+- **避雷点**：5月多雨，建议穿防滑运动鞋；索道雨天可能停运；山上餐饮物价高，建议自备干粮
+- **适合**：穷游徒步爱好者、体力好的年轻人
+- **不适合**：老人、行动不便者（山路较陡）
+- **预约/排队/价格提醒**：进山免费，需在「岳麓山橘子洲旅游区」公众号预约；可提前3天预约；地铁4号线「湖南大学」站2号口出步行可达南门
+- **来源信号**：Web-Rooter cited（搜狐预约攻略）+ FlyAI semantic reference
+
+### 岳麓书院
+- **推荐理由**：中国古代四大书院之一，千年学府，建筑古朴，碑刻丰富
+- **首推体验**：讲堂、御书楼、文庙、碑廊
+- **建议时长**：2小时
+- **常见差评**：需购票，部分游客觉得内容较学术
+- **避雷点**：建议提前在官方公众号预约购票，避免现场排队
+- **适合**：文化历史爱好者、穷游（¥40性价比高）
+- **不适合**：只想拍照打卡不深入了解的游客
+- **预约/排队/价格提醒**：门票¥40（学生¥20），需预约；地址：麓山路273号
+- **来源信号**：FlyAI semantic reference
+
+### 湖南博物院（马王堆汉墓）
+- **推荐理由**：馆藏马王堆汉墓文物（素纱单衣、辛追夫人、彩绘帛画），免费开放，是长沙最顶级的文化地标
+- **首推体验**：马王堆汉墓陈列（辛追夫人、素纱单衣）、湖南人·三湘历史文化陈列
+- **建议时长**：3-4小时（深度游可达5小时）
+- **常见差评**：票极难抢，周一闭馆
+- **避雷点**：必须提前7天在「湖南博物院」微信公众号20:00准时抢票；若抢不到可考虑购买含代约服务的讲解套餐（FlyAI有售，价格约¥100-200含门票+讲解）；周一闭馆（法定节假日除外）
+- **适合**：历史文化爱好者、穷游（免费）
+- **不适合**：不喜欢博物馆的游客
+- **预约/排队/价格提醒**：基本陈列免费，特展可能收费；地铁6号线「烈士公园南」站或1号线「文昌阁」站步行可达；旺季上午排队较长，建议预约最早时段
+- **来源信号**：FlyAI semantic reference + Web-Rooter cited（百度移动搜索攻略）
+
+### 太平老街/坡子街
+- **推荐理由**：长沙最具代表性的历史街区，贾谊故居、长怀井等古迹，臭豆腐、糖油粑粑集中地
+- **首推体验**：黑色经典臭豆腐、李公庙糖油粑粑、茶颜悦色（任意门店）
+- **建议时长**：1-2小时（傍晚逛吃最佳）
+- **常见差评**：主街商业化严重，价格偏高，部分小摊卫生一般
+- **避雷点**：不要在主街不知名摊贩购买（价格虚高）；火宫殿名气大于口味，仅打卡不用餐；茶颜悦色不需要在总店排队，任意分店口味相同
+- **适合**：美食打卡族、穷游（小吃人均30-50元）
+- **不适合**：追求精致用餐环境的游客
+- **预约/排队/价格提醒**：开放式街区，无需预约；地铁1号线「黄兴广场」站或「五一广场」站步行可达
+- **来源信号**：FlyAI semantic reference
+
+### 超级文和友（海信广场店）
+- **推荐理由**：复古装修还原80年代老长沙社区场景，拍照极出片
+- **首推体验**：免费参观内部场景拍照，感受氛围
+- **建议时长**：1小时（仅拍照不用餐）
+- **常见差评**：用餐排队极长（饭点可能等数百桌），消费较高
+- **避雷点**：非饭点前往拍照打卡，不建议在此用餐；地铁1号线「南门口」站附近
+- **适合**：打卡拍照族
+- **不适合**：想在此用餐的穷游客（性价比低）
+- **预约/排队/价格提醒**：可在小程序提前取号；地址：坡子街街道（海信广场）
+- **来源信号**：FlyAI semantic reference
+
+## 住宿区域策略
+
+### 区域判断
+**首选：五一广场/黄兴广场/芙蓉广场区域**
+- 地铁1号线+2号线交汇，步行可达太平老街、坡子街、超级文和友
+- 距橘子洲（地铁2号线）、岳麓山（地铁4号线换乘）均方便
+- 夜生活丰富，便利店、小吃密集
+
+### 推荐档次/类型（穷游优先）
+- **经济/交通优先**：五一广场附近经济型酒店/青旅，¥50-180/晚
+- **舒适/位置优先**：五一广场附近舒适型酒店，¥180-260/晚
+
+### 候选酒店（FlyAI 2026-05-14至05-16样例数据）
+| 档次 | 酒店 | 价格参考 | 位置 | 订票 |
+|------|------|----------|------|------|
+| 经济/穷游 | 长沙十一豆青旅（五一广场IFS店） | ¥57/晚 | 近五一广场 | [飞猪](https://a.feizhu.com/0M9q50) |
+| 经济/穷游 | 长沙小智民宿(五一广场店) | ¥207/晚 | 近五一广场 | [飞猪](https://a.feizhu.com/3UHf0y) |
+| 舒适/位置 | 三贵三六酒店（长沙IFS国金中心潮宗古街店） | ¥181/晚 | 近五一广场 | [飞猪](https://a.feizhu.com/2HplK8) |
+| 舒适/位置 | 轸驿云顶高空江景酒店（五一广场IFS店） | ¥208/晚 | 近五一广场 | [飞猪](https://a.feizhu.com/0BTz8L) |
+
+**穷游首选**：长沙十一豆青旅（¥57/晚），五一广场步行圈，交通最便利。价格为代表性样例数据，以飞猪实时为准。FlyAI未返回具体房型，需点击链接确认。
+
+## 复核记录
+- Research conducted: 2026-05-10
+- Key evidence:
+  - FlyAI ai-search：橘子洲、岳麓山、岳麓书院、湖南博物院、太平老街、超级文和友游玩情报
+  - Web-Rooter cited：搜狐「岳麓山橘子洲预约攻略」（https://www.sohu.com/a/939981200_121123874）
+  - FlyAI search-hotel：五一广场附近酒店库存（2026-05-14至05-16样例数据）
+  - Quark search：长沙旅游攻略、住宿区域、景点避坑</code></pre>
+        </details>
+      </details>
+  </main>
+<div class="drawer-backdrop" id="drawerBackdrop"></div>
+<aside class="drawer" id="atlasDrawer" aria-label="地点详情">
+    <div class="drawer-head"><h2 id="drawerTitle">地点详情</h2><button class="drawer-close" id="drawerClose" type="button" aria-label="关闭">×</button></div>
+    <div class="drawer-body" id="drawerBody"></div>
+  </aside>
+  </div>
+  <script>window.__ROAMMATE_ATLAS__ = {"trip":{"destination":"长沙","dateRange":"2026-05-14 至 2026-05-16","duration":"3天2夜","travelers":"1人，穷游特种兵","origin":"广州","generatedAt":"2026-05-10"},"days":[{"day":1,"date":"2026-05-14","theme":"抵达长沙，文化美食夜","area":"五一广场/太平老街/坡子街","intensity":"中","highlights":[],"meals":{"breakfast":"广州出发，车上/到达后解决","lunch":"太平老街小吃（¥30-50）","afternoon_tea":"茶颜悦色（¥16）","dinner":"东瓜山美食街大排档（¥50-70）"},"reminders":[],"activities":[{"time":"10:54","title":"长沙南站","poiName":"长沙南站","cost":"¥5（地铁）","notes":[],"duration":"约30分钟","source":"FlyAI booking reference","tags":[],"type":"station"},{"time":"12:30","title":"太平老街历史文化街区","poiName":"太平老街历史文化街区","cost":"¥30-50（小吃）","notes":["主街小吃店常需排队","建议深入小巷避开高价摊"],"duration":"约90分钟","source":"FlyAI semantic reference","tags":[],"type":"文创街区"},{"time":"14:30","title":"坡子街","poiName":"坡子街","cost":"免费","notes":["火宫殿名气大于口味，仅打卡不用餐"],"duration":"约60分钟","source":"FlyAI semantic reference","tags":[],"type":"文创街区"},{"time":"16:00","title":"超级文和友剧场（海信广场长沙店）","poiName":"超级文和友剧场（海信广场长沙店）","cost":"免费参观","notes":["饭点用餐排队极长（可能等数百桌）","建议非饭点前往仅拍照"],"duration":"约60分钟","source":"FlyAI semantic reference","tags":[],"type":"打卡景点"},{"time":"19:00","title":"东瓜山美食街/坡子街大排档","poiName":"东瓜山美食街/坡子街大排档","cost":"¥50-70","notes":[],"duration":"约60分钟","source":"FlyAI semantic reference","tags":[],"type":"restaurant"}]},{"day":2,"date":"2026-05-15","theme":"岳麓山+橘子洲，山水洲城全打卡","area":"岳麓山/橘子洲/湘江","intensity":"高","highlights":[],"meals":{"breakfast":"住宿附近米粉店（¥15-20）","lunch":"湖南大学小吃街（¥30-40）","dinner":"五一广场附近湘菜馆（¥50-80）"},"reminders":[],"activities":[{"time":"09:00","title":"岳麓书院","poiName":"岳麓书院","cost":"¥40（学生¥20）","notes":["需提前在官方公众号预约购票","旺季排队入场"],"duration":"约120分钟","source":"FlyAI semantic reference","tags":[],"type":"历史古迹"},{"time":"11:00","title":"爱晚亭","poiName":"爱晚亭","cost":"免费","notes":["无需排队，全天免费开放"],"duration":"约30分钟","source":"FlyAI semantic reference","tags":[],"type":"历史古迹"},{"time":"11:30","title":"岳麓山国家重点风景名胜区（徒步登顶）","poiName":"岳麓山国家重点风景名胜区（徒步登顶）","cost":"免费（索道¥40上行/¥30下行，滑道¥35，可选）","notes":["需在「岳麓山橘子洲旅游区」公众号提前3天预约","5月多雨路滑注意安全"],"duration":"约180分钟","source":"FlyAI semantic reference + Web-Rooter cited","tags":[],"type":"自然风光"},{"time":"16:00","title":"橘子洲景区","poiName":"橘子洲景区","cost":"免费（观光小火车另收费）","notes":["需提前3天在「岳麓山橘子洲旅游区」公众号预约","观光小火车可在「龙骧橘子洲」小程序提前购票"],"duration":"约120分钟","source":"FlyAI semantic reference + Web-Rooter cited","tags":[],"type":"自然风光"}]},{"day":3,"date":"2026-05-16","theme":"湖南博物院+返程","area":"湖南博物院/五一广场","intensity":"中","highlights":[],"meals":{"breakfast":"住宿附近米粉或包子铺（¥15-20）","lunch":"烈士公园附近餐饮（¥30-50）","dinner":"广州解决"},"reminders":[],"activities":[{"time":"09:30","title":"湖南博物院","poiName":"湖南博物院","cost":"免费（基本陈列）；特展可能收费","notes":["需提前7天在「湖南博物院」微信公众号20:00抢票（极难）","若抢不到可购买含代约服务的讲解套餐","周一闭馆（法定节假日除外）","旺季上午排队较长，建议预约最早时段"],"duration":"约210分钟","source":"FlyAI semantic reference + Web-Rooter cited","tags":[],"type":"博物馆"},{"time":"14:00","title":"五一广场/IFS国金中心","poiName":"五一广场/IFS国金中心","cost":"¥50-100（伴手礼）","notes":["无需排队，开放式广场"],"duration":"约60分钟","source":"Estimated","tags":[],"type":"地标建筑"},{"time":"16:30","title":"长沙南站","poiName":"长沙南站","cost":"¥5（地铁）","notes":[],"duration":"约30分钟","source":"FlyAI booking reference","tags":[],"type":"station"}]}],"poiExperiences":[{"name":"长沙南站","day":3,"whyGo":[],"recommendedDuration":"约30分钟","mustDo":["取行李","地铁2号线前往五一广场"],"queueAndReservation":[],"preparation":[],"familyNotes":[],"avoid":[],"commonComplaints":[],"source":"FlyAI booking reference"},{"name":"太平老街历史文化街区","day":1,"whyGo":[],"recommendedDuration":"约120分钟","mustDo":["黑色经典臭豆腐","糖油粑粑","茶颜悦色（任意门店）","贾谊故居外观"],"queueAndReservation":["主街小吃店常需排队","建议深入小巷避开高价摊"],"preparation":[],"familyNotes":[],"avoid":[],"commonComplaints":[],"source":"FlyAI semantic reference"},{"name":"坡子街","day":1,"whyGo":["首推体验：黑色经典臭豆腐、李公庙糖油粑粑、茶颜悦色（任意门店）","建议时长：1-2小时（傍晚逛吃最佳）","常见差评：主街商业化严重，价格偏高，部分小摊卫生一般","避雷点：不要在主街不知名摊贩购买（价格虚高）；火宫殿名气大于口味，仅打卡不用餐；茶颜悦色不需要在总店排队，任意分店口味相同","适合：美食打卡族、穷游（小吃人均30-50元）","不适合：追求精致用餐环境的游客","预约/排队/价格提醒：开放式街区，无需预约；地铁1号线「黄兴广场」站或「五一广场」站步行可达","来源信号：FlyAI semantic reference"],"recommendedDuration":"约60分钟","mustDo":["步行串联太平街","感受湖湘美食文化氛围"],"tips":"首推体验：黑色经典臭豆腐、李公庙糖油粑粑、茶颜悦色（任意门店）","queueAndReservation":["火宫殿名气大于口味，仅打卡不用餐"],"preparation":[],"familyNotes":[],"avoid":[],"commonComplaints":["避雷点：不要在主街不知名摊贩购买（价格虚高）；火宫殿名气大于口味，仅打卡不用餐；茶颜悦色不需要在总店排队，任意分店口味相同","适合：美食打卡族、穷游（小吃人均30-50元）","不适合：追求精致用餐环境的游客","预约/排队/价格提醒：开放式街区，无需预约；地铁1号线「黄兴广场」站或「五一广场」站步行可达","来源信号：FlyAI semantic reference"],"source":"FlyAI semantic reference"},{"name":"超级文和友剧场（海信广场长沙店）","day":1,"whyGo":[],"recommendedDuration":"约90分钟","mustDo":["免费参观80年代老长沙复古场景","拍照打卡"],"queueAndReservation":["饭点用餐排队极长（可能等数百桌）","建议非饭点前往仅拍照"],"preparation":[],"familyNotes":[],"avoid":[],"commonComplaints":[],"source":"FlyAI semantic reference"},{"name":"东瓜山美食街/坡子街大排档","day":1,"whyGo":[],"recommendedDuration":"约60分钟","mustDo":["本地烟火气晚餐","冬瓜山肉肠/麻辣烫/小龙虾"],"queueAndReservation":[],"preparation":[],"familyNotes":[],"avoid":[],"commonComplaints":[],"source":"FlyAI semantic reference"},{"name":"岳麓书院","day":2,"whyGo":["首推体验：讲堂、御书楼、文庙、碑廊","建议时长：2小时","常见差评：需购票，部分游客觉得内容较学术","避雷点：建议提前在官方公众号预约购票，避免现场排队","适合：文化历史爱好者、穷游（¥40性价比高）","不适合：只想拍照打卡不深入了解的游客","预约/排队/价格提醒：门票¥40（学生¥20），需预约；地址：麓山路273号","来源信号：FlyAI semantic reference"],"recommendedDuration":"约120分钟","mustDo":["讲堂","御书楼","文庙","碑廊"],"tips":"首推体验：讲堂、御书楼、文庙、碑廊","queueAndReservation":["需提前在官方公众号预约购票","旺季排队入场"],"preparation":[],"familyNotes":[],"avoid":[],"commonComplaints":["避雷点：建议提前在官方公众号预约购票，避免现场排队","适合：文化历史爱好者、穷游（¥40性价比高）","不适合：只想拍照打卡不深入了解的游客","预约/排队/价格提醒：门票¥40（学生¥20），需预约；地址：麓山路273号","来源信号：FlyAI semantic reference"],"source":"FlyAI semantic reference"},{"name":"爱晚亭","day":2,"whyGo":["首推体验：爱晚亭（免费）→ 古麓山寺 → 山顶观光长廊俯瞰长沙城","建议时长：4-5小时（含岳麓书院）","常见差评：山路较长，体力消耗大；节假日人多","避雷点：5月多雨，建议穿防滑运动鞋；索道雨天可能停运；山上餐饮物价高，建议自备干粮","适合：穷游徒步爱好者、体力好的年轻人","不适合：老人、行动不便者（山路较陡）","预约/排队/价格提醒：进山免费，需在「岳麓山橘子洲旅游区」公众号预约；可提前3天预约；地铁4号线「湖南大学」站2号口出步行可达南门","来源信号：Web-Rooter cited（搜狐预约攻略）+ FlyAI semantic reference"],"recommendedDuration":"约30分钟","mustDo":["参观中国四大名亭之一","感受毛泽东青年时代聚会之地"],"tips":"首推体验：爱晚亭（免费）→ 古麓山寺 → 山顶观光长廊俯瞰长沙城","queueAndReservation":["无需排队，全天免费开放"],"preparation":[],"familyNotes":[],"avoid":[],"commonComplaints":["避雷点：5月多雨，建议穿防滑运动鞋；索道雨天可能停运；山上餐饮物价高，建议自备干粮","适合：穷游徒步爱好者、体力好的年轻人","不适合：老人、行动不便者（山路较陡）","预约/排队/价格提醒：进山免费，需在「岳麓山橘子洲旅游区」公众号预约；可提前3天预约；地铁4号线「湖南大学」站2号口出步行可达南门","来源信号：Web-Rooter cited（搜狐预约攻略）+ FlyAI semantic reference"],"source":"FlyAI semantic reference"},{"name":"岳麓山国家重点风景名胜区（徒步登顶）","day":2,"whyGo":[],"recommendedDuration":"约210分钟","mustDo":["古麓山寺","蔡锷墓/黄兴墓","山顶观光长廊俯瞰长沙城"],"queueAndReservation":["需在「岳麓山橘子洲旅游区」公众号提前3天预约","5月多雨路滑注意安全"],"preparation":[],"familyNotes":[],"avoid":[],"commonComplaints":[],"source":"FlyAI semantic reference + Web-Rooter cited"},{"name":"橘子洲景区","day":2,"whyGo":["首推体验：毛主席青年艺术雕塑打卡、百米高喷、湘江江景步道","建议时长：2小时（白天）；若看夜景可延长至3小时","常见差评：节假日人流极大，观光小火车排队长","避雷点：不要购买黄牛票（景区有专用投诉邮箱，黄牛票无法入园）；观光小火车可提前在「龙骧橘子洲」小程序购票","适合：所有人，穷游首选（免费）","不适合：不喜欢人多的游客（节假日）","预约/排队/价格提醒：必须提前3天在「岳麓山橘子洲旅游区」微信公众号预约，超时未入园需重新预约；开放时间07:00-22:00","来源信号：Web-Rooter cited（搜狐官方预约攻略）+ FlyAI semantic reference"],"recommendedDuration":"约150分钟","mustDo":["毛主席青年艺术雕塑打卡","百米高喷","湘江步道日落"],"tips":"首推体验：毛主席青年艺术雕塑打卡、百米高喷、湘江江景步道","queueAndReservation":["需提前3天在「岳麓山橘子洲旅游区」公众号预约","观光小火车可在「龙骧橘子洲」小程序提前购票"],"preparation":[],"familyNotes":[],"avoid":[],"commonComplaints":["避雷点：不要购买黄牛票（景区有专用投诉邮箱，黄牛票无法入园）；观光小火车可提前在「龙骧橘子洲」小程序购票","适合：所有人，穷游首选（免费）","不适合：不喜欢人多的游客（节假日）","预约/排队/价格提醒：必须提前3天在「岳麓山橘子洲旅游区」微信公众号预约，超时未入园需重新预约；开放时间07:00-22:00","来源信号：Web-Rooter cited（搜狐官方预约攻略）+ FlyAI semantic reference"],"source":"FlyAI semantic reference + Web-Rooter cited"},{"name":"湖南博物院","day":3,"whyGo":["首推体验：马王堆汉墓陈列（辛追夫人、素纱单衣）、湖南人·三湘历史文化陈列","建议时长：3-4小时（深度游可达5小时）","常见差评：票极难抢，周一闭馆","避雷点：必须提前7天在「湖南博物院」微信公众号20:00准时抢票；若抢不到可考虑购买含代约服务的讲解套餐（FlyAI有售，价格约¥100-200含门票+讲解）；周一闭馆（法定节假日除外）","适合：历史文化爱好者、穷游（免费）","不适合：不喜欢博物馆的游客","预约/排队/价格提醒：基本陈列免费，特展可能收费；地铁6号线「烈士公园南」站或1号线「文昌阁」站步行可达；旺季上午排队较长，建议预约最早时段","来源信号：FlyAI semantic reference + Web-Rooter cited（百度移动搜索攻略）"],"recommendedDuration":"约240分钟","mustDo":["马王堆汉墓陈列（辛追夫人、素纱单衣、彩绘帛画）","湖南人·三湘历史文化陈列"],"tips":"首推体验：马王堆汉墓陈列（辛追夫人、素纱单衣）、湖南人·三湘历史文化陈列","queueAndReservation":["需提前7天在「湖南博物院」微信公众号20:00抢票（极难）","若抢不到可购买含代约服务的讲解套餐","周一闭馆（法定节假日除外）","旺季上午排队较长，建议预约最早时段"],"preparation":[],"familyNotes":[],"avoid":[],"commonComplaints":["避雷点：必须提前7天在「湖南博物院」微信公众号20:00准时抢票；若抢不到可考虑购买含代约服务的讲解套餐（FlyAI有售，价格约¥100-200含门票+讲解）；周一闭馆（法定节假日除外）","适合：历史文化爱好者、穷游（免费）","不适合：不喜欢博物馆的游客","预约/排队/价格提醒：基本陈列免费，特展可能收费；地铁6号线「烈士公园南」站或1号线「文昌阁」站步行可达；旺季上午排队较长，建议预约最早时段","来源信号：FlyAI semantic reference + Web-Rooter cited（百度移动搜索攻略）"],"source":"FlyAI semantic reference + Web-Rooter cited"},{"name":"五一广场/IFS国金中心","day":3,"whyGo":[],"recommendedDuration":"约90分钟","mustDo":["最后打卡","购买伴手礼（茶颜悦色茶包建议在超市购买更划算）"],"queueAndReservation":["无需排队，开放式广场"],"preparation":[],"familyNotes":[],"avoid":[],"commonComplaints":[],"source":"Estimated"}],"hotels":[{"address":"湖南省长沙市芙蓉区远大一路691号","brandName":null,"decorationTime":"2022-08-31","detailUrl":"https://a.feizhu.com/1CTKgv","interestsPoi":"近长沙站","latitude":"28.198056","longitude":"113.03154","mainPic":"https://img.alicdn.com/imgextra/i1/6000000006912/O1CN01GXJk2b20vkLpxYgls_!!6000000006912-2-hotel.png","name":"朵兰达V酒店(长沙万家丽广场地铁站店)","price":"¥231","shId":"70236079","star":"高档型","tier":"舒适/亲子优先","query_profile":"comfort_family","area":"近长沙站","booking_url":"https://a.feizhu.com/1CTKgv","room_type":"FlyAI未返回具体房型","room_type_status":"not_returned_by_flyai","room_type_note":"FlyAI search-hotel 仅返回酒店级价格，未返回具体房型；不得编造，需点击飞猪链接确认可订房型。","source":"FlyAI booking reference","fit":"带孩子、希望房间和早餐更稳妥、降低通勤和休息成本。","tradeoffs":["价格通常高于经济型，热门日期需尽早确认房型。"],"priceReference":"¥231","roomType":"FlyAI未返回具体房型","bookingUrl":"https://a.feizhu.com/1CTKgv","url":"https://a.feizhu.com/1CTKgv","image":"https://img.alicdn.com/imgextra/i1/6000000006912/O1CN01GXJk2b20vkLpxYgls_!!6000000006912-2-hotel.png"},{"address":"长沙市芙蓉区五一东路79号大楼西座第一层","brandName":null,"decorationTime":"2024-12-18","detailUrl":"https://a.feizhu.com/2gQnJv","interestsPoi":"近长沙站","latitude":"28.193913","longitude":"113.004897","mainPic":"https://img.alicdn.com/imgextra/i3/6000000002883/O1CN01qiWPb71XASzQhYAvZ_!!6000000002883-2-hotel.png","name":"趣柯里酒店(长沙五一广场袁家岭地铁站店)","price":"¥219","shId":"63393139","star":"高档型","tier":"舒适/亲子优先","query_profile":"comfort_family","area":"近长沙站","booking_url":"https://a.feizhu.com/2gQnJv","room_type":"FlyAI未返回具体房型","room_type_status":"not_returned_by_flyai","room_type_note":"FlyAI search-hotel 仅返回酒店级价格，未返回具体房型；不得编造，需点击飞猪链接确认可订房型。","source":"FlyAI booking reference","fit":"带孩子、希望房间和早餐更稳妥、降低通勤和休息成本。","tradeoffs":["价格通常高于经济型，热门日期需尽早确认房型。"],"priceReference":"¥219","roomType":"FlyAI未返回具体房型","bookingUrl":"https://a.feizhu.com/2gQnJv","url":"https://a.feizhu.com/2gQnJv","image":"https://img.alicdn.com/imgextra/i3/6000000002883/O1CN01qiWPb71XASzQhYAvZ_!!6000000002883-2-hotel.png"},{"address":"芙蓉区韶山北路81号","brandName":"慧友酒店集团","decorationTime":"2025-01-01","detailUrl":"https://a.feizhu.com/2a0ICo","interestsPoi":"近君临天厦小区","latitude":"28.192711","longitude":"112.997166","mainPic":"https://img.alicdn.com/imgextra/i2/6000000001620/O1CN01eaTJzD1Nq0isZPBAe_!!6000000001620-0-hotel.jpg","name":"FunGee欢致酒店（长沙五一广场袁家岭地铁站店）","price":"¥314","shId":"88252822","star":"高档型","tier":"舒适/亲子优先","query_profile":"comfort_family","area":"近君临天厦小区","booking_url":"https://a.feizhu.com/2a0ICo","room_type":"FlyAI未返回具体房型","room_type_status":"not_returned_by_flyai","room_type_note":"FlyAI search-hotel 仅返回酒店级价格，未返回具体房型；不得编造，需点击飞猪链接确认可订房型。","source":"FlyAI booking reference","fit":"带孩子、希望房间和早餐更稳妥、降低通勤和休息成本。","tradeoffs":["价格通常高于经济型，热门日期需尽早确认房型。"],"priceReference":"¥314","roomType":"FlyAI未返回具体房型","bookingUrl":"https://a.feizhu.com/2a0ICo","url":"https://a.feizhu.com/2a0ICo","image":"https://img.alicdn.com/imgextra/i2/6000000001620/O1CN01eaTJzD1Nq0isZPBAe_!!6000000001620-0-hotel.jpg"},{"address":"岳麓区枫林一路737号共和世家","brandName":"东呈","decorationTime":"2022","detailUrl":"https://a.feizhu.com/1pVm4X","interestsPoi":"近西湖公园(地铁站)","latitude":"28.202215","longitude":"112.933215","mainPic":"https://img.alicdn.com/imgextra/i4/6000000003838/O1CN01fT30gT1eDrEB0ckaH_!!6000000003838-0-hotel.jpg","name":"宜尚酒店长沙岳麓山橘子洲店","price":"¥227","shId":"72178088","star":"高档型","tier":"舒适/亲子优先","query_profile":"comfort_family","area":"近西湖公园(地铁站)","booking_url":"https://a.feizhu.com/1pVm4X","room_type":"FlyAI未返回具体房型","room_type_status":"not_returned_by_flyai","room_type_note":"FlyAI search-hotel 仅返回酒店级价格，未返回具体房型；不得编造，需点击飞猪链接确认可订房型。","source":"FlyAI booking reference","fit":"带孩子、希望房间和早餐更稳妥、降低通勤和休息成本。","tradeoffs":["价格通常高于经济型，热门日期需尽早确认房型。"],"priceReference":"¥227","roomType":"FlyAI未返回具体房型","bookingUrl":"https://a.feizhu.com/1pVm4X","url":"https://a.feizhu.com/1pVm4X","image":"https://img.alicdn.com/imgextra/i4/6000000003838/O1CN01fT30gT1eDrEB0ckaH_!!6000000003838-0-hotel.jpg"},{"address":"五一大道775号","brandName":"锦江","decorationTime":"2023-12-31","detailUrl":"https://a.feizhu.com/1LPuQk","interestsPoi":"近五一广场","latitude":"28.195156","longitude":"112.97143","mainPic":"https://img.alicdn.com/imgextra/i1/6000000006256/O1CN01VucioZ1w5IoKuVi4w_!!6000000006256-0-hotel.jpg","name":"白玉兰酒店(长沙橘子洲景区五一广场地铁站店)","price":"¥232","shId":"10008194","star":"舒适型","tier":"位置优先","query_profile":"location_first","area":"近五一广场","booking_url":"https://a.feizhu.com/1LPuQk","room_type":"FlyAI未返回具体房型","room_type_status":"not_returned_by_flyai","room_type_note":"FlyAI search-hotel 仅返回酒店级价格，未返回具体房型；不得编造，需点击飞猪链接确认可订房型。","source":"FlyAI booking reference","fit":"晚间吃饭、返程、临时休息便利性优先。","tradeoffs":["核心区可能更贵或房间偏小。"],"priceReference":"¥232","roomType":"FlyAI未返回具体房型","bookingUrl":"https://a.feizhu.com/1LPuQk","url":"https://a.feizhu.com/1LPuQk","image":"https://img.alicdn.com/imgextra/i1/6000000006256/O1CN01VucioZ1w5IoKuVi4w_!!6000000006256-0-hotel.jpg"},{"address":"蔡锷中路48号永华大厦15楼","brandName":null,"decorationTime":"2021-12-02","detailUrl":"https://a.feizhu.com/3ZaWhd","interestsPoi":"近五一广场","latitude":"28.193886","longitude":"112.981282","mainPic":"https://img.alicdn.com/imgextra/i3/6000000001411/O1CN012zUCeC1MIHXxxYDds_!!6000000001411-2-hotel.png","name":"朵兰达LAB酒店(长沙五一广场IFS国金中心店)","price":"¥218","shId":"65525012","star":"舒适型","tier":"位置优先","query_profile":"location_first","area":"近五一广场","booking_url":"https://a.feizhu.com/3ZaWhd","room_type":"FlyAI未返回具体房型","room_type_status":"not_returned_by_flyai","room_type_note":"FlyAI search-hotel 仅返回酒店级价格，未返回具体房型；不得编造，需点击飞猪链接确认可订房型。","source":"FlyAI booking reference","fit":"晚间吃饭、返程、临时休息便利性优先。","tradeoffs":["核心区可能更贵或房间偏小。"],"priceReference":"¥218","roomType":"FlyAI未返回具体房型","bookingUrl":"https://a.feizhu.com/3ZaWhd","url":"https://a.feizhu.com/3ZaWhd","image":"https://img.alicdn.com/imgextra/i3/6000000001411/O1CN012zUCeC1MIHXxxYDds_!!6000000001411-2-hotel.png"}],"transport":[{"type":"市内交通","route":"全程地铁：1号线（五一广场/黄兴广场）、2号线（橘子洲/长沙南站）、4号线（湖南大学/岳麓山）、6号线（湖南博物院）；约¥3-5/次"}],"map":{"schemaVersion":"1.1","pois":[{"id":"poi-1","name":"湖南博物院(南院)","originalName":"湖南博物院","address":"五一大道与韭菜园路交叉口西南60米","location":[112.988362,28.194818],"day":3,"order":1,"category":"culture","marker":"文","confidence":"verified","source":"amap_place_text"},{"id":"poi-2","name":"橘子洲景区-音乐喷泉","originalName":"橘子洲景区","address":"橘洲路橘子洲大桥南","location":[112.962594,28.192004],"day":2,"order":2,"category":"attraction","marker":"景","confidence":"verified","source":"amap_place_text"},{"id":"poi-3","name":"岳麓山国家重点风景名胜区-清风峡","originalName":"岳麓山国家重点风景名胜区","address":"登高路58号岳麓山国家重点风景名胜区内","location":[112.937149,28.180454],"day":"","order":3,"category":"attraction","marker":"景","confidence":"verified","source":"amap_place_text"},{"id":"poi-4","name":"岳麓书院","originalName":"岳麓书院","address":"麓山路273号","location":[112.94197,28.180272],"day":2,"order":4,"category":"attraction","marker":"景","confidence":"verified","source":"amap_place_text"},{"id":"poi-5","name":"爱晚亭","originalName":"爱晚亭","address":"桔子洲街道桔子洲街道登高路58号岳麓山风景区内","location":[112.944436,28.179354],"day":2,"order":5,"category":"attraction","marker":"景","confidence":"verified","source":"amap_place_text"},{"id":"poi-6","name":"太平老街历史文化街区","originalName":"太平老街历史文化街区","address":"解放西路449号","location":[112.971912,28.195292],"day":1,"order":6,"category":"city","marker":"街","confidence":"verified","source":"amap_place_text"},{"id":"poi-7","name":"坡子街","originalName":"坡子街","address":"天心区","location":[112.97258,28.190339],"day":1,"order":7,"category":"city","marker":"街","confidence":"verified","source":"amap_place_text"},{"id":"poi-8","name":"恰同学少年青春剧场","originalName":"超级文和友剧场","address":"橘洲路2号(橘子洲·青莲地铁站入口步行180米)","location":[112.962378,28.19405],"day":"","order":8,"category":"attraction","marker":"景","confidence":"verified","source":"amap_place_text"},{"id":"poi-9","name":"五一广场","originalName":"五一广场","address":"黄兴中路88号","location":[112.976415,28.195509],"day":"","order":9,"category":"city","marker":"街","confidence":"verified","source":"amap_place_text"},{"id":"poi-10","name":"长沙南站","originalName":"长沙南站","address":"花侯路","location":[113.06327,28.146657],"day":3,"order":10,"category":"transport","marker":"交","confidence":"verified","source":"amap_place_text"}],"hotels":[{"id":"hotel-1","name":"朵兰达V酒店(长沙万家丽广场地铁站店)","address":"湖南省长沙市芙蓉区远大一路691号","location":[113.03154,28.198056],"day":"","order":1,"category":"hotel","marker":"住","confidence":"FlyAI booking reference","source":"FlyAI booking reference","price":"¥231","url":"https://a.feizhu.com/1CTKgv","image":"https://img.alicdn.com/imgextra/i1/6000000006912/O1CN01GXJk2b20vkLpxYgls_!!6000000006912-2-hotel.png"},{"id":"hotel-2","name":"趣柯里酒店(长沙五一广场袁家岭地铁站店)","address":"长沙市芙蓉区五一东路79号大楼西座第一层","location":[113.004897,28.193913],"day":"","order":2,"category":"hotel","marker":"住","confidence":"FlyAI booking reference","source":"FlyAI booking reference","price":"¥219","url":"https://a.feizhu.com/2gQnJv","image":"https://img.alicdn.com/imgextra/i3/6000000002883/O1CN01qiWPb71XASzQhYAvZ_!!6000000002883-2-hotel.png"},{"id":"hotel-3","name":"FunGee欢致酒店（长沙五一广场袁家岭地铁站店）","address":"芙蓉区韶山北路81号","location":[112.997166,28.192711],"day":"","order":3,"category":"hotel","marker":"住","confidence":"FlyAI booking reference","source":"FlyAI booking reference","price":"¥314","url":"https://a.feizhu.com/2a0ICo","image":"https://img.alicdn.com/imgextra/i2/6000000001620/O1CN01eaTJzD1Nq0isZPBAe_!!6000000001620-0-hotel.jpg"},{"id":"hotel-4","name":"宜尚酒店长沙岳麓山橘子洲店","address":"岳麓区枫林一路737号共和世家","location":[112.933215,28.202215],"day":"","order":4,"category":"hotel","marker":"住","confidence":"FlyAI booking reference","source":"FlyAI booking reference","price":"¥227","url":"https://a.feizhu.com/1pVm4X","image":"https://img.alicdn.com/imgextra/i4/6000000003838/O1CN01fT30gT1eDrEB0ckaH_!!6000000003838-0-hotel.jpg"},{"id":"hotel-5","name":"白玉兰酒店(长沙橘子洲景区五一广场地铁站店)","address":"五一大道775号","location":[112.97143,28.195156],"day":"","order":5,"category":"hotel","marker":"住","confidence":"FlyAI booking reference","source":"FlyAI booking reference","price":"¥232","url":"https://a.feizhu.com/1LPuQk","image":"https://img.alicdn.com/imgextra/i1/6000000006256/O1CN01VucioZ1w5IoKuVi4w_!!6000000006256-0-hotel.jpg"},{"id":"hotel-6","name":"朵兰达LAB酒店(长沙五一广场IFS国金中心店)","address":"蔡锷中路48号永华大厦15楼","location":[112.981282,28.193886],"day":"","order":6,"category":"hotel","marker":"住","confidence":"FlyAI booking reference","source":"FlyAI booking reference","price":"¥218","url":"https://a.feizhu.com/3ZaWhd","image":"https://img.alicdn.com/imgextra/i3/6000000001411/O1CN012zUCeC1MIHXxxYDds_!!6000000001411-2-hotel.png"}],"routes":[{"mode":"driving","distance_m":6338,"duration_min":18,"source":"amap_direction_driving","from":"湖南博物院(南院)","to":"橘子洲景区-音乐喷泉","duration":"18分钟"},{"mode":"driving","distance_m":8701,"duration_min":28,"source":"amap_direction_driving","from":"橘子洲景区-音乐喷泉","to":"岳麓山国家重点风景名胜区-清风峡","duration":"28分钟"},{"mode":"walking","distance_m":906,"duration_min":12,"source":"amap_direction_walking","from":"岳麓山国家重点风景名胜区-清风峡","to":"岳麓书院","duration":"12分钟"},{"mode":"walking","distance_m":304,"duration_min":4,"source":"amap_direction_walking","from":"岳麓书院","to":"爱晚亭","duration":"4分钟"},{"mode":"driving","distance_m":4111,"duration_min":12,"source":"amap_direction_driving","from":"爱晚亭","to":"太平老街历史文化街区","duration":"12分钟"},{"mode":"walking","distance_m":623,"duration_min":8,"source":"amap_direction_walking","from":"太平老街历史文化街区","to":"坡子街","duration":"8分钟"},{"mode":"walking","distance_m":1818,"duration_min":24,"source":"amap_direction_walking","from":"坡子街","to":"恰同学少年青春剧场","duration":"24分钟"},{"mode":"walking","distance_m":1829,"duration_min":24,"source":"amap_direction_walking","from":"恰同学少年青春剧场","to":"五一广场","duration":"24分钟"},{"mode":"driving","distance_m":17993,"duration_min":42,"source":"amap_direction_driving","from":"五一广场","to":"长沙南站","duration":"42分钟"}],"generatedAt":"2026-05-10"},"food":[{"name":"住宿附近米粉店","dishes":[],"note":"¥15-20","source":"itinerary.md"},{"name":"住宿附近米粉或包子铺","price":"¥15-20）","dishes":[],"note":"¥15-20","source":"itinerary.md"}],"budget":{"rows":[{"item":"outbound_train","amount":"¥283"},{"item":"return_train","amount":"¥283-314"},{"item":"accommodation_2nights","amount":"¥114-360"},{"item":"meals_3days","amount":"¥300-400"},{"item":"门票/体验","amount":"¥40（岳麓书院）"},{"item":"local_transport","amount":"¥40-50"},{"item":"souvenirs_misc","amount":"¥50-100"},{"item":"total_estimate","amount":"¥1,110-1,547"}],"total":"穷游模式，高铁价格为代表性样例数据"},"amapKey":"02aa8f0b547054d8687c08ae3ec875c7"};</script>
+  <script>
+    const data = window.__ROAMMATE_ATLAS__;
+    const $ = (selector, root = document) => root.querySelector(selector);
+    const $$ = (selector, root = document) => [...root.querySelectorAll(selector)];
+    const esc = (value) => String(value ?? '').replace(/[&<>"']/g, (ch) => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[ch]));
+    const byName = new Map();
+    [...data.map.pois, ...data.map.hotels].forEach((item) => {
+      if (item.name) byName.set(item.name, item);
+      if (item.originalName) byName.set(item.originalName, item);
+    });
+    const experiences = new Map(data.poiExperiences.map((item) => [item.name, item]));
+    let map = null;
+    const markers = new Map();
+    const markerEntries = [];
+    let routeLine = null;
+
+    function matchExperience(target) {
+      const names = [];
+      if (typeof target === 'object' && target) {
+        names.push(target.name, target.originalName);
+      } else if (target) {
+        names.push(target);
+      }
+      const expanded = [];
+      for (const name of names.filter(Boolean)) {
+        const mapped = byName.get(name);
+        expanded.push(name, mapped?.name, mapped?.originalName);
+      }
+      const aliases = [...new Set(expanded.filter(Boolean))];
+      for (const alias of aliases) {
+        if (experiences.has(alias)) return experiences.get(alias);
+      }
+      return [...experiences.values()].find((item) => aliases.some((alias) => alias.includes(item.name) || item.name.includes(alias))) || null;
+    }
+
+    function markerClass(item) {
+      return 'atlas-marker ' + esc(item.category || 'attraction');
+    }
+
+    function initMap() {
+      const allPoints = [...data.map.pois, ...data.map.hotels].filter((item) => Array.isArray(item.location));
+      if (window.AMap && data.amapKey && allPoints.length) {
+        map = new AMap.Map('atlasMap', { zoom: 12, center: allPoints[0].location, mapStyle: 'amap://styles/fresh' });
+        const path = data.map.pois.filter((item) => Array.isArray(item.location)).map((item) => item.location);
+        if (path.length > 1) {
+          routeLine = new AMap.Polyline({ path, strokeColor: '#1d766f', strokeWeight: 6, strokeOpacity: .82, lineJoin: 'round' });
+          routeLine.setMap(map);
+        }
+        for (const item of allPoints) {
+          const marker = new AMap.Marker({
+            position: item.location,
+            title: item.name,
+            content: '<button class="' + markerClass(item) + '" type="button">' + esc(item.marker || '点') + '</button>',
+            anchor: 'center',
+          });
+          marker.setMap(map);
+          marker.on('click', () => openDrawer(item.name));
+          markers.set(item.name, marker);
+          markerEntries.push({ item, marker });
+        }
+        map.setFitView(null, false, [70, 70, 70, 70]);
+      } else {
+        renderFallbackMap(allPoints);
+      }
+    }
+
+    function renderFallbackMap(points) {
+      const canvas = $('#atlasMap');
+      const usable = points.length ? points : data.map.pois;
+      canvas.innerHTML = '<div class="fallback-map"><div class="fallback-route-line"></div></div>';
+      const fallback = $('.fallback-map', canvas);
+      usable.slice(0, 12).forEach((item, index) => {
+        const left = 10 + (index % 6) * 16;
+        const top = 28 + Math.floor(index / 6) * 32 + (index % 2) * 7;
+        const node = document.createElement('button');
+        node.className = 'fallback-node';
+        node.type = 'button';
+        node.style.left = left + '%';
+        node.style.top = top + '%';
+        node.innerHTML = '<i>' + esc(item.marker || '点') + '</i><span>' + esc(item.name) + '</span>';
+        node.addEventListener('click', () => openDrawer(item.name));
+        fallback.appendChild(node);
+      });
+    }
+
+    function focusPoi(name) {
+      if (!name) return;
+      const item = byName.get(name) || [...byName.values()].find((candidate) => name.includes(candidate.name) || candidate.name.includes(name));
+      $$('.activity-card').forEach((card) => card.classList.toggle('active', card.dataset.focusPoi === name));
+      if (item && map && Array.isArray(item.location)) {
+        map.setZoomAndCenter(14, item.location, true, 500);
+        const marker = markers.get(item.name);
+        if (marker?.setAnimation) {
+          marker.setAnimation('AMAP_ANIMATION_BOUNCE');
+          window.setTimeout(() => marker.setAnimation(null), 900);
+        }
+      }
+      openDrawer(item?.name || name);
+    }
+
+    function field(label, value) {
+      if (!value || (Array.isArray(value) && !value.length)) return '';
+      const text = Array.isArray(value) ? '<ul>' + value.map((item) => '<li>' + esc(item) + '</li>').join('') + '</ul>' : esc(value);
+      return '<div class="drawer-field"><strong>' + esc(label) + '</strong>' + text + '</div>';
+    }
+
+    function openDrawer(name) {
+      const item = byName.get(name) || [...byName.values()].find((candidate) => name.includes(candidate.name) || candidate.name.includes(name)) || { name };
+      const exp = matchExperience(item);
+      const drawer = $('#atlasDrawer');
+      $('#drawerTitle').textContent = item.name || name;
+      $('#drawerBody').innerHTML = [
+        item.image ? '<img src="' + esc(item.image) + '" alt="' + esc(item.name) + '">' : '',
+        field('类型', [item.day ? 'Day ' + item.day : '', item.category, item.confidence].filter(Boolean).join(' · ')),
+        field('地址', item.address),
+        field('价格/链接', item.price ? item.price : ''),
+        item.url ? '<div class="drawer-field"><strong>跳转</strong><a href="' + esc(item.url) + '" target="_blank" rel="noopener noreferrer">飞猪查看</a></div>' : '',
+        exp ? field('口碑等级', exp.rating) : '',
+        exp ? field('推荐理由', exp.whyGo) : '',
+        exp ? field('核心判断', exp.tips) : '',
+        exp ? field('建议时长', exp.recommendedDuration) : '',
+        exp ? field('必玩/必看', exp.mustDo) : '',
+        exp ? field('排队与预约', exp.queueAndReservation) : '',
+        exp ? field('亲子提醒', exp.familyNotes) : '',
+        exp ? field('准备材料', exp.preparation) : '',
+        exp ? field('常见差评', exp.commonComplaints) : '',
+        exp ? field('避雷', exp.avoid) : '',
+        exp ? field('适合', exp.suitable) : '',
+        exp ? field('不适合', exp.notSuitable) : '',
+        field('来源', exp?.source || item.source),
+      ].filter(Boolean).join('');
+      drawer.classList.add('open');
+      $('#drawerBackdrop')?.classList.add('open');
+    }
+
+    function closeDrawer() {
+      $('#atlasDrawer')?.classList.remove('open');
+      $('#drawerBackdrop')?.classList.remove('open');
+    }
+
+    function setDay(day) {
+      $$('.day-tabs button').forEach((button) => button.classList.toggle('active', button.dataset.dayTab === day));
+      $$('.day-card').forEach((card) => card.classList.toggle('is-dimmed', day !== 'all' && card.dataset.dayCard !== day));
+      $$('.route-pill').forEach((pill) => pill.style.display = day === 'all' || !pill.dataset.routeDay || pill.dataset.routeDay === day ? '' : 'none');
+      if (map) {
+        const activePoints = day === 'all'
+          ? data.map.pois.filter((item) => Array.isArray(item.location))
+          : data.map.pois.filter((item) => String(item.day) === String(day) && Array.isArray(item.location));
+        markerEntries.forEach(({ item, marker }) => {
+          const visible = day === 'all' || String(item.day) === String(day) || item.category === 'hotel';
+          marker.setMap(visible ? map : null);
+        });
+        if (routeLine) {
+          if (activePoints.length > 1) {
+            routeLine.setPath(activePoints.map((item) => item.location));
+            routeLine.setMap(map);
+          } else {
+            routeLine.setMap(null);
+          }
+        }
+        const activeMarkers = activePoints.map((item) => markers.get(item.name)).filter(Boolean);
+        if (activeMarkers.length) map.setFitView(activeMarkers, false, [90, 90, 90, 90]);
+      }
+    }
+
+    $$('.day-tabs button').forEach((button) => button.addEventListener('click', () => setDay(button.dataset.dayTab)));
+    $$('[data-focus-poi]').forEach((button) => button.addEventListener('click', () => focusPoi(button.dataset.focusPoi)));
+    $$('[data-focus-hotel]').forEach((card) => card.addEventListener('click', () => focusPoi(card.dataset.focusHotel)));
+    $$('.mode-nav a, .doc-jump a').forEach((link) => link.addEventListener('click', closeDrawer));
+    $('#drawerClose')?.addEventListener('click', closeDrawer);
+    $('#drawerBackdrop')?.addEventListener('click', closeDrawer);
+    document.addEventListener('keydown', (event) => {
+      if (event.key === 'Escape') closeDrawer();
+    });
+    initMap();
+  </script>
+</body>
+</html>

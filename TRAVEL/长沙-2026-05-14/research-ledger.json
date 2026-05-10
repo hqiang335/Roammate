@@ -1,0 +1,301 @@
+{
+  "schema_version": "1.0",
+  "artifact_type": "research-ledger",
+  "trip": {
+    "destination": "长沙",
+    "date_range": "2026-05-14 至 2026-05-16",
+    "duration": "3天2夜",
+    "origin": "广州",
+    "travelers": "1人，穷游特种兵",
+    "assumptions": []
+  },
+  "generated_at": "2026-05-10",
+  "tool_runs": [
+    {
+      "id": "run_flyai_train_gz_cs_20260510",
+      "tool": "flyai search-train",
+      "query": "广州→长沙 2026-05-14",
+      "status": "success",
+      "ran_at": "2026-05-10",
+      "summary": "多班直达高铁，G2056 07:58发¥283最早；G6014 19:15发¥283最晚；全部二等座¥283",
+      "source_label": "FlyAI booking reference"
+    },
+    {
+      "id": "run_flyai_train_cs_gz_20260510",
+      "tool": "flyai search-train",
+      "query": "长沙→广州 2026-05-16",
+      "status": "success",
+      "ran_at": "2026-05-10",
+      "summary": "G913 17:38发¥314；G6129 20:44发¥283；G6013 07:38发¥320",
+      "source_label": "FlyAI booking reference"
+    },
+    {
+      "id": "run_flyai_ai_changsha_attractions_20260510",
+      "tool": "flyai ai-search",
+      "query": "长沙特种兵旅游 必去景点 橘子洲头 岳麓山 太平老街 文和友 游玩时长 排队 预约 穷游攻略",
+      "status": "success",
+      "ran_at": "2026-05-10",
+      "summary": "橘子洲2h免费需预约；岳麓山4h免费需预约；岳麓书院2h¥40；太平老街1-2h免费；超级文和友1-2h免费参观但用餐排队极长",
+      "source_label": "FlyAI semantic reference"
+    },
+    {
+      "id": "run_flyai_ai_museum_20260510",
+      "tool": "flyai ai-search",
+      "query": "长沙湖南省博物馆 马王堆 游玩时长 预约 排队 免费 穷游",
+      "status": "success",
+      "ran_at": "2026-05-10",
+      "summary": "湖南博物院免费，需提前7天20:00抢票，建议游览3-4小时，周一闭馆",
+      "source_label": "FlyAI semantic reference"
+    },
+    {
+      "id": "run_flyai_ai_yuelushan_20260510",
+      "tool": "flyai ai-search",
+      "query": "长沙岳麓山 爱晚亭 岳麓书院 5月游玩 徒步路线 时长 门票 穷游",
+      "status": "success",
+      "ran_at": "2026-05-10",
+      "summary": "岳麓山徒步路线：湖大东方红广场→岳麓书院→爱晚亭→古麓山寺→山顶观光长廊→东门出；全程4-5h；书院¥40",
+      "source_label": "FlyAI semantic reference"
+    },
+    {
+      "id": "run_flyai_ai_food_20260510",
+      "tool": "flyai ai-search",
+      "query": "长沙坡子街 太平老街 臭豆腐 糖油粑粑 茶颜悦色 穷游美食 人均消费 避坑",
+      "status": "success",
+      "ran_at": "2026-05-10",
+      "summary": "茶颜悦色遍地都是无需排队；黑色经典臭豆腐¥10-15；糖油粑粑¥5-10；穷游吃法约¥100-130/天；东瓜山美食街更本地化",
+      "source_label": "FlyAI semantic reference"
+    },
+    {
+      "id": "run_flyai_ai_weather_20260510",
+      "tool": "flyai ai-search",
+      "query": "长沙5月中旬天气 气温 降雨概率 穿衣 旅游注意",
+      "status": "success",
+      "ran_at": "2026-05-10",
+      "summary": "5月中旬气温20-28°C，雨季初期降雨概率较高，建议携带雨具和防滑运动鞋",
+      "source_label": "FlyAI semantic reference"
+    },
+    {
+      "id": "run_flyai_hotel_wuyi_20260510",
+      "tool": "flyai search-hotel",
+      "query": "长沙 五一广场 2026-05-14至05-16",
+      "status": "success",
+      "ran_at": "2026-05-10",
+      "summary": "长沙十一豆青旅¥57/晚；三贵三六酒店¥181/晚；轸驿云顶高空江景酒店¥208/晚；均近五一广场",
+      "source_label": "FlyAI booking reference"
+    },
+    {
+      "id": "run_flyai_poi_museum_20260510",
+      "tool": "flyai search-poi",
+      "query": "长沙 湖南博物院",
+      "status": "success",
+      "ran_at": "2026-05-10",
+      "summary": "湖南博物院：东风路50号，坐标(112.9935, 28.211872)，4A级",
+      "source_label": "FlyAI booking reference"
+    },
+    {
+      "id": "run_flyai_poi_juzizhou_20260510",
+      "tool": "flyai search-poi",
+      "query": "长沙 橘子洲",
+      "status": "success",
+      "ran_at": "2026-05-10",
+      "summary": "橘子洲景区：橘子洲头2号，坐标(112.962904, 28.196554)，5A级，免费",
+      "source_label": "FlyAI booking reference"
+    },
+    {
+      "id": "run_flyai_poi_yuelushan_20260510",
+      "tool": "flyai search-poi",
+      "query": "长沙 岳麓山",
+      "status": "success",
+      "ran_at": "2026-05-10",
+      "summary": "岳麓山：登高路58号，坐标(112.936104, 28.183601)，5A级，免费",
+      "source_label": "FlyAI booking reference"
+    },
+    {
+      "id": "run_wr_reservation_20260510",
+      "tool": "wr visit",
+      "query": "岳麓山橘子洲预约攻略",
+      "status": "success",
+      "ran_at": "2026-05-10",
+      "summary": "官方确认：岳麓山+橘子洲均需在「岳麓山橘子洲旅游区」微信公众号提前3天预约，分时段入园，超时需重新预约；黄牛票无效",
+      "source_label": "Web-Rooter cited",
+      "source_url": "https://www.sohu.com/a/939981200_121123874",
+      "citations": [{"id": "W1", "url": "https://www.sohu.com/a/939981200_121123874", "title": "请预约再入园！岳麓山橘子洲预约攻略来了"}]
+    },
+    {
+      "id": "run_wr_changsha_overview_20260510",
+      "tool": "wr web",
+      "query": "长沙旅游攻略2026 特种兵 穷游 必去景点 避坑",
+      "status": "discarded",
+      "ran_at": "2026-05-10",
+      "summary": "搜索结果返回8条，标题有效但snippet为空，无可用citations内容，已采用FlyAI semantic reference作为主要情报来源",
+      "source_label": "Web-Rooter cited",
+      "discard_reason": "results returned titles only with no usable snippet or crawled content; FlyAI semantic reference used instead"
+    }
+  ],
+  "facts": [
+    {
+      "id": "fact_train_gz_cs_g2056_20260510",
+      "subject": "广州→长沙 G2056",
+      "category": "transport",
+      "value": "G2056 广州南07:58→长沙南10:54，2h56m，¥283二等座",
+      "source_type": "FlyAI booking reference",
+      "source_run_id": "run_flyai_train_gz_cs_20260510",
+      "booking_url": "https://a.feizhu.com/09ZZDN",
+      "confidence": "high",
+      "freshness": "2026-05-10",
+      "applies_to": {"day": 1, "section": "transport"},
+      "used_by": ["itinerary-data.json", "itinerary.md", "destination-brief.md"],
+      "status": "accepted"
+    },
+    {
+      "id": "fact_train_cs_gz_g913_20260510",
+      "subject": "长沙→广州 G913",
+      "category": "transport",
+      "value": "G913 长沙南17:38→广州南20:07，2h29m，¥314二等座；备选G6129 20:44发¥283",
+      "source_type": "FlyAI booking reference",
+      "source_run_id": "run_flyai_train_cs_gz_20260510",
+      "booking_url": "https://a.feizhu.com/43Bzym",
+      "confidence": "high",
+      "freshness": "2026-05-10",
+      "applies_to": {"day": 3, "section": "transport"},
+      "used_by": ["itinerary-data.json", "itinerary.md", "destination-brief.md"],
+      "status": "accepted"
+    },
+    {
+      "id": "fact_juzizhou_reservation_20260510",
+      "subject": "橘子洲景区",
+      "category": "reservation",
+      "value": "需提前3天在「岳麓山橘子洲旅游区」微信公众号预约，分时段入园07:00-22:00，超时需重新预约，黄牛票无效",
+      "source_type": "Web-Rooter cited",
+      "source_run_id": "run_wr_reservation_20260510",
+      "source_url": "https://www.sohu.com/a/939981200_121123874",
+      "confidence": "high",
+      "freshness": "2026-05-10",
+      "applies_to": {"poi": "橘子洲景区", "day": 2, "section": "reservation"},
+      "used_by": ["itinerary-data.json", "itinerary.md", "reputation.md"],
+      "status": "accepted"
+    },
+    {
+      "id": "fact_yuelushan_reservation_20260510",
+      "subject": "岳麓山国家重点风景名胜区",
+      "category": "reservation",
+      "value": "需提前3天在「岳麓山橘子洲旅游区」微信公众号预约，开放时间06:00-22:00",
+      "source_type": "Web-Rooter cited",
+      "source_run_id": "run_wr_reservation_20260510",
+      "source_url": "https://www.sohu.com/a/939981200_121123874",
+      "confidence": "high",
+      "freshness": "2026-05-10",
+      "applies_to": {"poi": "岳麓山", "day": 2, "section": "reservation"},
+      "used_by": ["itinerary-data.json", "itinerary.md", "reputation.md"],
+      "status": "accepted"
+    },
+    {
+      "id": "fact_museum_reservation_20260510",
+      "subject": "湖南博物院",
+      "category": "reservation",
+      "value": "需提前7天在「湖南博物院」微信公众号20:00抢票，极难；若抢不到可购买含代约服务的讲解套餐；周一闭馆（法定节假日除外）",
+      "source_type": "FlyAI semantic reference",
+      "source_run_id": "run_flyai_ai_museum_20260510",
+      "confidence": "medium_high",
+      "freshness": "2026-05-10",
+      "applies_to": {"poi": "湖南博物院", "day": 3, "section": "reservation"},
+      "used_by": ["itinerary-data.json", "itinerary.md", "reputation.md"],
+      "status": "accepted"
+    },
+    {
+      "id": "fact_museum_duration_20260510",
+      "subject": "湖南博物院",
+      "category": "experience_duration",
+      "value": "建议游览3-4小时；马王堆汉墓陈列+湖南人·三湘历史文化陈列；基本陈列免费",
+      "source_type": "FlyAI semantic reference",
+      "source_run_id": "run_flyai_ai_museum_20260510",
+      "confidence": "medium_high",
+      "freshness": "2026-05-10",
+      "applies_to": {"poi": "湖南博物院", "day": 3, "section": "poi_experience"},
+      "used_by": ["itinerary-data.json", "itinerary.md"],
+      "status": "accepted"
+    },
+    {
+      "id": "fact_yuelushan_route_20260510",
+      "subject": "岳麓山国家重点风景名胜区",
+      "category": "experience_duration",
+      "value": "徒步全程4-5小时；路线：湖大东方红广场→岳麓书院(2h,¥40)→爱晚亭(30min,免费)→古麓山寺→山顶观光长廊→东门出；索道¥40上行/¥30下行",
+      "source_type": "FlyAI semantic reference",
+      "source_run_id": "run_flyai_ai_yuelushan_20260510",
+      "confidence": "medium_high",
+      "freshness": "2026-05-10",
+      "applies_to": {"poi": "岳麓山", "day": 2, "section": "poi_experience"},
+      "used_by": ["itinerary-data.json", "itinerary.md"],
+      "status": "accepted"
+    },
+    {
+      "id": "fact_juzizhou_duration_20260510",
+      "subject": "橘子洲景区",
+      "category": "experience_duration",
+      "value": "建议游览2小时；毛主席青年艺术雕塑、百米高喷、湘江步道；观光小火车可在「龙骧橘子洲」小程序提前购票",
+      "source_type": "FlyAI semantic reference",
+      "source_run_id": "run_flyai_ai_changsha_attractions_20260510",
+      "confidence": "medium_high",
+      "freshness": "2026-05-10",
+      "applies_to": {"poi": "橘子洲景区", "day": 2, "section": "poi_experience"},
+      "used_by": ["itinerary-data.json", "itinerary.md"],
+      "status": "accepted"
+    },
+    {
+      "id": "fact_food_changsha_20260510",
+      "subject": "长沙美食",
+      "category": "food",
+      "value": "茶颜悦色遍地都是无需排队；黑色经典臭豆腐¥10-15；糖油粑粑¥5-10；东瓜山美食街更本地化；穷游吃法约¥100-130/天；火宫殿名气大于口味",
+      "source_type": "FlyAI semantic reference",
+      "source_run_id": "run_flyai_ai_food_20260510",
+      "confidence": "medium_high",
+      "freshness": "2026-05-10",
+      "applies_to": {"section": "food"},
+      "used_by": ["itinerary.md", "reputation.md"],
+      "status": "accepted"
+    },
+    {
+      "id": "fact_weather_may_20260510",
+      "subject": "长沙5月天气",
+      "category": "weather",
+      "value": "5月中旬气温20-28°C，雨季初期降雨概率较高，建议携带雨具和防滑运动鞋，注意防晒",
+      "source_type": "FlyAI semantic reference",
+      "source_run_id": "run_flyai_ai_weather_20260510",
+      "confidence": "medium",
+      "freshness": "2026-05-10",
+      "applies_to": {"section": "weather"},
+      "used_by": ["destination-brief.md", "itinerary.md"],
+      "status": "accepted"
+    },
+    {
+      "id": "fact_hotel_qinglv_20260510",
+      "subject": "长沙十一豆青旅（五一广场IFS店）",
+      "category": "hotel_candidate",
+      "value": "经济/穷游优先候选，近五一广场，代表性日期样例价¥57/晚",
+      "source_type": "FlyAI booking reference",
+      "source_run_id": "run_flyai_hotel_wuyi_20260510",
+      "booking_url": "https://a.feizhu.com/0M9q50",
+      "price_reference": "¥57/晚",
+      "room_type": "FlyAI未返回具体房型，需点击飞猪链接确认",
+      "tier": "经济/穷游优先",
+      "confidence": "medium",
+      "freshness": "2026-05-10",
+      "applies_to": {"section": "accommodation"},
+      "used_by": ["itinerary-data.json", "itinerary.md", "reputation.md"],
+      "status": "accepted"
+    },
+    {
+      "id": "fact_hotel_area_strategy_20260510",
+      "subject": "长沙住宿区域策略",
+      "category": "hotel_area_strategy",
+      "value": "穷游首选五一广场/黄兴广场/芙蓉广场区域：地铁1+2号线交汇，步行可达太平老街、坡子街，距橘子洲（地铁2号线）和岳麓山（地铁4号线换乘）均方便",
+      "source_type": "FlyAI semantic reference",
+      "source_run_id": "run_flyai_ai_changsha_attractions_20260510",
+      "confidence": "medium_high",
+      "freshness": "2026-05-10",
+      "applies_to": {"section": "accommodation"},
+      "used_by": ["itinerary-data.json", "itinerary.md", "reputation.md"],
+      "status": "accepted"
+    }
+  ]
+}

@@ -47,10 +47,6 @@ function runValidator(label, command, args) {
   }
 }
 
-function sameJson(a, b) {
-  return JSON.stringify(a) === JSON.stringify(b);
-}
-
 function asArray(value) {
   return Array.isArray(value) ? value : [];
 }
@@ -70,6 +66,16 @@ function guideHotels(data) {
 const requiredReading = ["destination-brief.md", "reputation.md", "itinerary.md"];
 for (const file of requiredReading) {
   if (!exists(file)) issues.push(`Missing ${file}.`);
+}
+
+const obsoleteArtifacts = [
+  "map.html",
+  "pois.json",
+  "sources.md",
+  "guidebook.pdf",
+];
+for (const file of obsoleteArtifacts) {
+  if (exists(file)) issues.push(`Obsolete artifact should not be generated: ${file}.`);
 }
 
 let ledger = null;
@@ -99,14 +105,8 @@ if (exists("map-data.json")) {
     "node",
     [".claude/skills/map-route-builder/scripts/validate_map.mjs", path.join(tripDir, "map-data.json")],
   );
-  if (exists("pois.json")) {
-    const legacy = readJson("pois.json");
-    if (legacy && mapData && !sameJson(legacy, mapData)) {
-      issues.push("pois.json must match map-data.json while kept as V1 legacy alias.");
-    }
-  }
-} else if (!exists("map-error.md")) {
-  issues.push("Need either valid map-data.json or map-error.md.");
+} else {
+  issues.push("Missing map-data.json.");
 }
 
 const guidebookData = exists("guidebook-data.json") ? readJson("guidebook-data.json") : null;
@@ -126,10 +126,6 @@ if (exists("guidebook-data.json") && exists("guidebook.html")) {
   );
 } else {
   issues.push("Missing guidebook.html or guidebook-data.json.");
-}
-
-if (!exists("sources.md")) {
-  issues.push("Missing sources.md.");
 }
 
 if (exists("guidebook.html")) {
