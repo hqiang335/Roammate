@@ -1,0 +1,126 @@
+{
+  "destination": "新疆伊犁",
+  "start_date": "2026-05-27",
+  "end_date": "2026-05-29",
+  "duration": "3天2夜",
+  "travelers": "4人（两对情侣）",
+  "origin": "北京",
+  "transport_mode": "飞机往返+包车",
+  "days": [
+    {
+      "day": 1,
+      "date": "2026-05-27",
+      "theme": "初见伊犁·蓝色小镇",
+      "area": "伊宁市区",
+      "intensity": "低",
+      "pois": [
+        {
+          "name": "喀赞其民俗旅游区",
+          "type": "attraction",
+          "estimated_duration_minutes": 120,
+          "comfortable_duration_minutes": 180,
+          "must_do": [
+            "乘坐哈迪克马车穿梭蓝色街巷",
+            "拍摄伊犁蓝建筑",
+            "体验维吾尔族民俗文化"
+          ],
+          "reservation_required": false,
+          "queue_or_friction": "低",
+          "source": "FlyAI semantic reference + Web-Rooter cited",
+          "notes": "免费开放，马车体验约¥50-100/人，建议白天光线充足时拍照"
+        },
+        {
+          "name": "六星街美食街",
+          "type": "food",
+          "estimated_duration_minutes": 90,
+          "comfortable_duration_minutes": 120,
+          "must_do": [
+            "品尝烤包子",
+            "品尝手抓饭",
+            "品尝大盘鸡"
+          ],
+          "reservation_required": false,
+          "queue_or_friction": "低",
+          "source": "Web-Rooter cited",
+          "notes": "本地人聚集地，餐厅选择多，价格实惠"
+        }
+      ]
+    },
+    {
+      "day": 2,
+      "date": "2026-05-28",
+      "theme": "赛里木湖·大西洋最后一滴眼泪",
+      "area": "赛里木湖+果子沟",
+      "intensity": "中",
+      "pois": [
+        {
+          "name": "果子沟大桥",
+          "type": "attraction",
+          "estimated_duration_minutes": 30,
+          "comfortable_duration_minutes": 60,
+          "must_do": [
+            "观赏中国最美公路桥",
+            "拍摄峡谷景观"
+          ],
+          "reservation_required": false,
+          "queue_or_friction": "低",
+          "source": "Web-Rooter cited",
+          "notes": "前往赛里木湖必经之路，无需门票，注意选择安全停车点"
+        },
+        {
+          "name": "赛里木湖",
+          "type": "attraction",
+          "estimated_duration_minutes": 240,
+          "comfortable_duration_minutes": 360,
+          "must_do": [
+            "环湖自驾或乘区间车",
+            "雪山湖泊拍照",
+            "观赏日落（约20:00新疆时间）"
+          ],
+          "reservation_required": true,
+          "queue_or_friction": "中",
+          "source": "FlyAI semantic reference + Web-Rooter cited",
+          "notes": "门票+区间车约¥70-145，自驾套票约¥200+，环湖约90公里，海拔约2000米，早晚温差大需备厚外套，建议自备干粮和水"
+        }
+      ]
+    },
+    {
+      "day": 3,
+      "date": "2026-05-29",
+      "theme": "伊宁漫步·返程",
+      "area": "伊宁市区",
+      "intensity": "低",
+      "pois": [
+        {
+          "name": "伊犁河大桥",
+          "type": "attraction",
+          "estimated_duration_minutes": 60,
+          "comfortable_duration_minutes": 90,
+          "must_do": [
+            "伊宁地标拍照打卡",
+            "伊犁河畔漫步"
+          ],
+          "reservation_required": false,
+          "queue_or_friction": "低",
+          "source": "Estimated",
+          "notes": "伊宁地标，适合拍照"
+        },
+        {
+          "name": "六星街特产采购",
+          "type": "shopping",
+          "estimated_duration_minutes": 90,
+          "comfortable_duration_minutes": 120,
+          "must_do": [
+            "采购干果（核桃、巴旦木、葡萄干）",
+            "采购薰衣草制品",
+            "采购手工艺品"
+          ],
+          "reservation_required": false,
+          "queue_or_friction": "低",
+          "source": "Web-Rooter cited",
+          "notes": "注意行李重量限制，预算约¥200-500/人"
+        }
+      ]
+    }
+  ]
+}

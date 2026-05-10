@@ -1,0 +1,1771 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>新疆伊犁旅行地图册</title>
+  <style>
+    :root {
+      --bg: #f4efe6;
+      --paper: #fffdf8;
+      --panel: #ffffff;
+      --ink: #202823;
+      --muted: #69736d;
+      --line: #e7dccd;
+      --accent: #1d766f;
+      --accent-2: #c7563b;
+      --amber: #b7791f;
+      --blue: #2f6f9f;
+      --rose: #a43e57;
+      --shadow: 0 18px 50px rgba(38, 30, 20, 0.11);
+      --radius: 8px;
+      --day-1: #c7563b;
+      --day-2: #2f8f5b;
+      --day-3: #5276b7;
+      --day-4: #b7791f;
+      --day-5: #8461a8;
+      --day-6: #1d766f;
+    }
+    * { box-sizing: border-box; }
+    html { max-width: 100%; overflow-x: hidden; background: var(--bg); color: var(--ink); scroll-behavior: smooth; }
+    body { max-width: 100%; overflow-x: hidden; margin: 0; font-family: "PingFang SC", "Hiragino Sans GB", "Microsoft YaHei", sans-serif; font-size: 15px; line-height: 1.6; letter-spacing: 0; }
+    a { color: var(--accent); text-decoration: none; font-weight: 700; }
+    a:hover { text-decoration: underline; }
+    h1, h2, h3, h4, p { margin-top: 0; }
+    h1 { max-width: 760px; margin-bottom: 14px; font-size: 40px; line-height: 1.12; }
+    h2 { margin-bottom: 12px; font-size: 22px; line-height: 1.25; }
+    h3 { margin-bottom: 8px; font-size: 16px; line-height: 1.35; }
+    h4 { margin: 14px 0 6px; font-size: 13px; color: var(--accent); }
+    button, input { font: inherit; }
+    .atlas { min-height: 100vh; }
+    .hero { position: relative; display: grid; grid-template-columns: minmax(0, 1fr) auto; gap: 24px; align-items: end; padding: 34px clamp(18px, 4vw, 52px) 28px; background: #233029; color: #fff8ed; overflow: hidden; }
+    .hero::after { content: ""; position: absolute; inset: auto -8% -42% 35%; height: 280px; background: linear-gradient(90deg, rgba(199,86,59,0.42), rgba(29,118,111,0.38)); transform: rotate(-6deg); opacity: .45; }
+    .hero-copy { position: relative; z-index: 1; }
+    .eyebrow, .section-kicker { margin: 0 0 10px; font-size: 12px; font-weight: 800; letter-spacing: .08em; text-transform: uppercase; color: var(--accent-2); }
+    .hero .eyebrow { color: #f3c287; }
+    .hero-meta, .assumption { margin: 0; color: #e7dccd; }
+    .assumption { margin-top: 8px; color: #f3c287; font-weight: 700; }
+    .mode-nav { position: relative; z-index: 30; display: flex; flex-wrap: wrap; gap: 8px; justify-content: flex-end; }
+    .mode-nav a { display: inline-flex; min-height: 36px; align-items: center; padding: 7px 12px; border: 1px solid rgba(255,255,255,.25); border-radius: 999px; color: #fff8ed; background: rgba(255,255,255,.08); }
+    img, canvas, svg, video { max-width: 100%; }
+    .content { display: grid; gap: 18px; min-width: 0; padding: 18px clamp(14px, 3vw, 36px) 40px; }
+    .content > * { min-width: 0; }
+    .panel, .map-panel { background: rgba(255,253,248,.94); border: 1px solid var(--line); border-radius: var(--radius); box-shadow: var(--shadow); }
+    .panel { padding: 22px; }
+    .overview-grid { display: grid; grid-template-columns: minmax(0, 1.1fr) minmax(280px, .9fr); gap: 22px; align-items: start; min-width: 0; }
+    .lead { color: #3d4842; font-size: 16px; }
+    .quick-facts, .hotel-meta { display: flex; flex-wrap: wrap; gap: 8px; }
+    .chip { display: inline-flex; min-height: 26px; align-items: center; padding: 3px 9px; border-radius: 999px; background: #eef7f4; color: var(--accent); font-size: 12px; font-weight: 800; }
+    .chip.amber { background: #fff4da; color: var(--amber); }
+    .chip.blue { background: #e8f1fb; color: var(--blue); }
+    .chip.rose { background: #fdecef; color: var(--rose); }
+    .metric-grid { display: grid; grid-template-columns: repeat(5, minmax(0, 1fr)); gap: 9px; }
+    .metric { padding: 12px; border: 1px solid var(--line); border-radius: var(--radius); background: #fff; }
+    .metric span { display: block; color: var(--muted); font-size: 12px; }
+    .metric strong { display: block; margin-top: 2px; font-size: 22px; line-height: 1; }
+    .metric.warning strong { color: var(--accent-2); }
+    .insight-strip { display: flex; flex-wrap: wrap; gap: 8px; margin-top: 18px; }
+    .insight-strip span { padding: 8px 10px; border-radius: var(--radius); background: #f7efe2; color: #4b4034; }
+    .alert-block { margin-top: 18px; padding: 14px 16px; border-left: 4px solid var(--accent-2); border-radius: 0 var(--radius) var(--radius) 0; background: #fff1e9; }
+    .plan-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 10px; }
+    .plan-card { border: 1px solid var(--line); border-radius: var(--radius); background: #fff; padding: 12px; }
+    .plan-card span, .plan-card em { display: block; color: var(--accent-2); font-size: 12px; font-style: normal; font-weight: 800; }
+    .plan-card p { margin: 0 0 6px; color: var(--muted); font-size: 13px; }
+    .plan-card strong { display: block; }
+    .dashboard-grid { display: grid; grid-template-columns: minmax(0, .86fr) minmax(0, 1.14fr); gap: 18px; align-items: start; min-width: 0; }
+    .timeline-panel { position: sticky; top: 14px; max-height: calc(100vh - 28px); overflow: auto; }
+    .day-tabs { position: sticky; top: -22px; z-index: 3; display: flex; gap: 8px; margin: 12px -4px 14px; padding: 8px 4px; background: rgba(255,253,248,.96); border-bottom: 1px solid var(--line); }
+    .day-tabs button { min-height: 34px; border: 1px solid var(--line); border-radius: 999px; padding: 6px 12px; background: #fff; color: var(--muted); cursor: pointer; }
+    .day-tabs button.active { border-color: var(--accent); background: var(--accent); color: #fff; }
+    .day-stack { display: grid; gap: 12px; }
+    .day-card { border: 1px solid var(--line); border-radius: var(--radius); background: #fff; overflow: hidden; transition: transform .18s ease, box-shadow .18s ease, opacity .18s ease; }
+    .day-card:hover { transform: translateY(-1px); box-shadow: 0 10px 28px rgba(31, 24, 17, .1); }
+    .day-card.is-dimmed { display: none; }
+    .day-card-head { padding: 14px; background: #f7f3ea; border-bottom: 1px solid var(--line); }
+    .day-card-head p { margin: 2px 0 0; color: var(--muted); font-size: 13px; }
+    .day-badge { display: inline-flex; margin-bottom: 8px; padding: 3px 8px; border-radius: 999px; background: var(--accent-2); color: #fff; font-size: 12px; font-weight: 800; }
+    .activity-list { display: grid; gap: 0; }
+    .activity-card { display: grid; grid-template-columns: 74px minmax(0, 1fr) auto; gap: 10px; width: 100%; padding: 12px 14px; border: 0; border-bottom: 1px solid var(--line); background: #fff; text-align: left; cursor: pointer; }
+    .activity-card:hover, .activity-card.active { background: #eef7f4; }
+    .activity-card .time { color: var(--accent); font-weight: 800; font-size: 13px; }
+    .activity-main strong, .activity-main span { display: block; }
+    .activity-main span { color: var(--muted); font-size: 13px; }
+    .cost { color: var(--amber); font-weight: 800; white-space: nowrap; }
+    .day-notes { padding: 12px 14px; background: #fffdf8; color: var(--muted); font-size: 13px; }
+    .day-notes p { margin: 5px 0; }
+    .day-notes strong { margin-right: 8px; color: var(--ink); }
+    .map-panel { position: sticky; top: 14px; min-width: 0; max-width: 100%; overflow: hidden; }
+    .map-toolbar { display: flex; justify-content: space-between; gap: 16px; padding: 16px 16px 10px; align-items: start; }
+    .map-toolbar h2 { margin-bottom: 0; }
+    .map-legend { display: flex; flex-wrap: wrap; justify-content: flex-end; gap: 7px; color: var(--muted); font-size: 12px; }
+    .map-legend span { display: inline-flex; align-items: center; gap: 5px; }
+    .map-legend i { display: inline-grid; width: 22px; height: 22px; place-items: center; border-radius: 999px; background: var(--ink); color: #fff; font-style: normal; font-size: 12px; }
+    .map-canvas { position: relative; width: 100%; min-width: 0; min-height: 540px; overflow: hidden; background: #dfe7df; }
+    #atlasMap, #atlasMap .amap-container { max-width: 100%; overflow: hidden; }
+    #atlasMap .amap-container { background: #dfe7df; }
+    .map-empty, .fallback-map { position: absolute; inset: 0; display: grid; place-items: center; padding: 24px; color: var(--muted); text-align: center; }
+    .map-empty strong { display: block; color: var(--ink); font-size: 18px; }
+    .fallback-map { display: block; background: linear-gradient(135deg, #e4eadf, #f6efe2); overflow: hidden; }
+    .fallback-route-line { position: absolute; left: 10%; right: 10%; top: 50%; height: 4px; background: rgba(29,118,111,.42); transform: rotate(-8deg); }
+    .fallback-node { position: absolute; transform: translate(-50%, -50%); display: grid; gap: 6px; justify-items: center; max-width: 150px; }
+    .fallback-node i, .atlas-marker { display: grid; width: 34px; height: 34px; place-items: center; border: 2px solid #fff; border-radius: 999px; background: var(--accent); color: #fff; box-shadow: 0 8px 20px rgba(0,0,0,.18); font-style: normal; font-weight: 900; }
+    .fallback-node span { padding: 4px 7px; border-radius: 999px; background: rgba(255,255,255,.88); color: var(--ink); font-size: 12px; white-space: nowrap; }
+    .atlas-marker.hotel { background: var(--amber); }
+    .atlas-marker.transport { background: var(--blue); }
+    .atlas-marker.food { background: var(--rose); }
+    .atlas-marker.culture { background: #8461a8; }
+    .atlas-marker.city { background: var(--accent-2); }
+    .route-summary { display: flex; gap: 8px; max-width: 100%; min-width: 0; padding: 12px 16px 16px; overflow-x: auto; border-top: 1px solid var(--line); background: #fffdf8; }
+    .route-pill { flex: 0 0 auto; max-width: 300px; display: grid; gap: 2px; padding: 8px 10px; border: 1px solid var(--line); border-radius: var(--radius); background: #fff; text-align: left; cursor: pointer; }
+    .route-pill span { overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+    .route-pill strong { color: var(--accent); font-size: 12px; }
+    .dossier-grid, .hotel-grid, .check-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(260px, 1fr)); gap: 14px; }
+    .dossier-card, .hotel-card, .check-card, .split-card { border: 1px solid var(--line); border-radius: var(--radius); background: #fff; overflow: hidden; }
+    .dossier-card summary { display: grid; gap: 4px; padding: 14px; cursor: pointer; list-style: none; }
+    .dossier-card summary::-webkit-details-marker { display: none; }
+    .dossier-card summary span { color: var(--accent-2); font-size: 12px; font-weight: 800; }
+    .dossier-card summary em { color: var(--muted); font-size: 12px; font-style: normal; }
+    .dossier-card summary p { margin: 2px 0 0; color: #3d4842; font-size: 13px; }
+    .dossier-card summary small { color: var(--accent-2); font-size: 12px; }
+    .dossier-body { padding: 0 14px 14px; }
+    .dossier-body img { width: 100%; height: 150px; object-fit: cover; border-radius: var(--radius); margin-bottom: 10px; }
+    ul { margin: 6px 0 0; padding-left: 19px; }
+    li { margin: 3px 0; }
+    .source-note, .muted { color: var(--muted); font-size: 13px; }
+    .hotel-card { transition: transform .18s ease, box-shadow .18s ease; }
+    .hotel-card:hover { transform: translateY(-2px); box-shadow: 0 12px 28px rgba(31, 24, 17, .12); }
+    .hotel-card img, .hotel-image-fallback { width: 100%; height: 160px; object-fit: cover; background: #efe4d5; display: grid; place-items: center; color: var(--amber); font-weight: 900; }
+    .hotel-card-body { padding: 14px; }
+    .tier { color: var(--accent-2); font-size: 12px; font-weight: 900; }
+    .tradeoff { color: var(--muted); }
+    .card-actions { margin-top: 10px; }
+    .split-panel { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 14px; background: transparent; border: 0; box-shadow: none; padding: 0; }
+    .split-card { padding: 20px; box-shadow: var(--shadow); }
+    .mini-row { padding: 10px 0; border-bottom: 1px solid var(--line); }
+    .mini-row:last-child { border-bottom: 0; }
+    .mini-row strong, .mini-row span { display: block; }
+    .mini-row span { color: var(--muted); font-size: 13px; }
+    .total { margin: 14px 0 0; color: var(--amber); font-weight: 900; }
+    .check-card { padding: 14px; }
+    .check-card label { display: flex; gap: 8px; align-items: flex-start; padding: 6px 0; color: #3d4842; }
+    .source-list { display: grid; gap: 8px; }
+    .source-list p { margin: 0; padding: 10px 12px; border: 1px solid var(--line); border-radius: var(--radius); background: #fff; }
+    .source-list span, .source-list em { display: block; color: var(--muted); font-size: 13px; font-style: normal; }
+    .docs-intro { scroll-margin-top: 18px; }
+    .doc-jump { display: flex; flex-wrap: wrap; gap: 8px; margin-top: 14px; }
+    .doc-jump a { display: inline-flex; min-height: 34px; align-items: center; padding: 6px 10px; border: 1px solid var(--line); border-radius: 999px; background: #fff; }
+    .source-doc { scroll-margin-top: 18px; }
+    .source-doc-summary { display: grid; gap: 4px; cursor: pointer; list-style: none; }
+    .source-doc-summary::-webkit-details-marker { display: none; }
+    .source-doc-summary strong { font-size: 20px; }
+    .source-doc-summary em { color: var(--muted); font-style: normal; }
+    .source-doc .markdown-body { max-width: 1080px; margin-top: 18px; }
+    .markdown-body h3 { margin-top: 22px; font-size: 22px; line-height: 1.28; color: var(--ink); }
+    .markdown-body h4 { margin-top: 20px; font-size: 18px; color: var(--accent); }
+    .markdown-body h5 { margin: 18px 0 8px; font-size: 16px; color: var(--accent-2); }
+    .markdown-body h6 { margin: 16px 0 7px; font-size: 14px; color: var(--muted); }
+    .markdown-body p { margin: 8px 0; }
+    .markdown-body strong { color: #17221d; }
+    .markdown-body code { padding: 1px 5px; border-radius: 6px; background: #f1eadf; font-size: .92em; }
+    .markdown-body pre { overflow: auto; padding: 12px; border-radius: var(--radius); background: #233029; color: #fff8ed; }
+    .markdown-body blockquote { margin: 12px 0; padding: 10px 14px; border-left: 4px solid var(--accent); background: #eef7f4; color: #3d4842; }
+    .markdown-body hr { border: 0; border-top: 1px solid var(--line); margin: 20px 0; }
+    .markdown-body .md-table-wrap { overflow-x: auto; margin: 12px 0 16px; border: 1px solid var(--line); border-radius: var(--radius); background: #fff; }
+    .markdown-body table { width: 100%; border-collapse: collapse; min-width: 680px; }
+    .markdown-body th, .markdown-body td { padding: 9px 10px; border-bottom: 1px solid var(--line); vertical-align: top; text-align: left; }
+    .markdown-body th { background: #f7f3ea; color: #3d4842; font-weight: 900; }
+    .markdown-body tr:last-child td { border-bottom: 0; }
+    .raw-markdown { margin-top: 18px; border-top: 1px solid var(--line); padding-top: 12px; }
+    .raw-markdown summary { cursor: pointer; color: var(--accent); font-weight: 900; }
+    .raw-markdown pre { max-height: 420px; overflow: auto; padding: 12px; border-radius: var(--radius); background: #233029; color: #fff8ed; white-space: pre-wrap; }
+    .technical-facts { margin-top: 14px; color: var(--muted); }
+    .technical-facts summary { cursor: pointer; color: var(--accent); font-weight: 800; }
+    .drawer-backdrop { position: fixed; inset: 0; z-index: 19; background: rgba(32,40,35,.28); opacity: 0; pointer-events: none; transition: opacity .18s ease; }
+    .drawer-backdrop.open { opacity: 1; pointer-events: auto; }
+    .drawer { position: fixed; top: 0; right: 0; z-index: 20; width: min(420px, 100vw); height: 100vh; background: var(--paper); border-left: 1px solid var(--line); box-shadow: -20px 0 60px rgba(0,0,0,.16); transform: translateX(105%); transition: transform .22s ease; overflow: auto; }
+    .drawer.open { transform: translateX(0); }
+    .drawer-head { display: flex; align-items: center; justify-content: space-between; gap: 12px; padding: 18px; border-bottom: 1px solid var(--line); background: #233029; color: #fff8ed; }
+    .drawer-head h2 { margin: 0; font-size: 20px; }
+    .drawer-close { width: 34px; height: 34px; border: 1px solid rgba(255,255,255,.28); border-radius: 999px; background: rgba(255,255,255,.1); color: #fff; cursor: pointer; }
+    .drawer-body { padding: 18px; }
+    .drawer-body img { width: 100%; max-height: 220px; object-fit: cover; border-radius: var(--radius); margin-bottom: 12px; }
+    .drawer-field { padding: 10px 0; border-bottom: 1px solid var(--line); }
+    .drawer-field strong { display: block; color: var(--accent); font-size: 12px; }
+    @page { size: A4; margin: 12mm; }
+    @media print {
+      html, body { background: #fff; }
+      .hero, .panel, .map-panel, .split-card { box-shadow: none; }
+      .mode-nav, .map-canvas, .drawer, .day-tabs, .doc-jump { display: none !important; }
+      .content, .dashboard-grid, .overview-grid, .split-panel { display: block; padding: 0; }
+      .panel, .map-panel, .day-card, .dossier-card, .hotel-card, .check-card { break-inside: avoid; margin-bottom: 12px; }
+      .timeline-panel, .map-panel { position: static; max-height: none; overflow: visible; }
+    }
+    @media (max-width: 1100px) {
+      .hero, .overview-grid, .dashboard-grid, .split-panel { grid-template-columns: 1fr; }
+      .mode-nav { justify-content: flex-start; }
+      .timeline-panel, .map-panel { position: static; max-height: none; }
+      .map-canvas { min-height: 420px; }
+    }
+    @media (max-width: 680px) {
+      h1 { font-size: 28px; overflow-wrap: anywhere; }
+      h2 { font-size: 20px; }
+      .hero { display: block; padding: 28px 18px 22px; }
+      .mode-nav { justify-content: flex-start; margin-top: 22px; }
+      .mode-nav a { min-height: 34px; padding: 6px 10px; }
+      .content { padding: 12px; }
+      .panel { padding: 16px; }
+      .metric-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+      .plan-grid, .dossier-grid, .hotel-grid, .check-grid { grid-template-columns: 1fr; }
+      .day-tabs { overflow-x: auto; padding-bottom: 9px; }
+      .day-tabs button { flex: 0 0 auto; }
+      .activity-card { grid-template-columns: 62px minmax(0, 1fr); }
+      .cost { grid-column: 2; }
+      .map-toolbar { display: block; }
+      .map-legend { justify-content: flex-start; margin-top: 10px; }
+      .map-canvas { min-height: 360px; }
+      .route-pill { max-width: min(280px, calc(100vw - 58px)); }
+      .markdown-body table { min-width: 560px; }
+      .drawer { top: auto; bottom: 0; width: 100%; height: auto; max-height: 86vh; border-left: 0; border-top: 1px solid var(--line); border-radius: 12px 12px 0 0; transform: translateY(105%); }
+      .drawer.open { transform: translateY(0); }
+    }
+  </style>
+  <script>window._AMapSecurityConfig = { securityJsCode: "e244a2946f6a6943e42edf7f9e363133" };</script>
+  <script src="https://webapi.amap.com/maps?v=2.0&key=fbb979dc813d025582af9ec422d33750"></script>
+</head>
+<body>
+  <div class="atlas">
+    
+    <header class="hero">
+      <div class="hero-copy">
+        <p class="eyebrow">Roammate Travel Atlas</p>
+        <h1>新疆伊犁旅行地图册</h1>
+        <p class="hero-meta">2026-05-27 至 2026-05-29 · 3天2夜 · 4人（两对情侣） · 北京出发</p>
+        
+      </div>
+      <nav class="mode-nav" aria-label="页面导航">
+        <a href="#plan-overview">行程总览</a>
+        <a href="#dashboard">地图工作台</a>
+        <a href="#poi-dossier">地点档案</a>
+        <a href="#hotel-board">酒店组合</a>
+        <a href="#full-docs">完整资料</a>
+        <a href="#sources">来源</a>
+      </nav>
+    </header>
+<main class="content">
+    
+    <section class="panel overview-panel" id="overview">
+      <div class="section-kicker">行程总览</div>
+      <div class="overview-grid">
+        <div>
+          <h2>新疆伊犁怎么轻松玩</h2>
+          <p class="lead">伊犁5月底值得去，赛里木湖、喀赞其民俗区口碑优秀，但需注意薰衣草尚未盛开。3天2夜聚焦伊宁市+赛里木湖精华线路，享受轻松浪漫的情侣之旅。</p>
+          <div class="quick-facts">
+            <span class="chip emerald">轻松浪漫</span>
+            <span class="chip amber">伊宁市区（六星街/解放路/飞机场路周边）</span>
+            <span class="chip blue">飞机往返+包车</span>
+            <span class="chip rose">经济舒适型（人均约¥3500-4500）</span>
+          </div>
+        </div>
+        
+    <div class="metric-grid" aria-label="行程总览指标">
+      <div class="metric"><span>天数</span><strong>3</strong></div>
+      <div class="metric"><span>地图点位</span><strong>4</strong></div>
+      <div class="metric"><span>路线段</span><strong>8</strong></div>
+      <div class="metric"><span>酒店候选</span><strong>8</strong></div>
+      <div class="metric warning"><span>重点提醒</span><strong>3</strong></div>
+    </div>
+      </div>
+      <div class="insight-strip"><span>赛里木湖：大西洋最后一滴眼泪，5月底湖水湛蓝、雪山环绕</span><span>喀赞其民俗旅游区：伊犁蓝色小镇，免费开放，适合拍照</span><span>果子沟大桥：中国最美公路桥，壮观峡谷景观</span></div>
+      <div class="alert-block"><strong>重点提醒</strong><ul><li>⚠️ 5月底薰衣草尚未盛开（盛花期6月中旬至7月上旬）</li><li>⚠️ 昼夜温差大（10-15°C），需备冲锋衣或薄羽绒服</li><li>⚠️ 赛里木湖海拔约2000米，早晚温差大，湖边风大</li></ul></div>
+    </section>
+    
+    <section class="panel plan-overview" id="plan-overview">
+      <div class="section-kicker">总体安排</div>
+      <h2>每天的主题、强度和关键提醒</h2>
+      <div class="plan-grid">
+        
+          <article class="plan-card">
+            <span>Day 1</span>
+            <h3>初见伊犁·蓝色小镇</h3>
+            <p>伊宁市区 · 强度：低</p>
+            <strong>喀赞其民俗区、马车体验、新疆美食</strong>
+            <em>晚上抵达，轻松游览</em>
+          </article>
+          <article class="plan-card">
+            <span>Day 2</span>
+            <h3>赛里木湖·大西洋最后一滴眼泪</h3>
+            <p>赛里木湖+果子沟 · 强度：中</p>
+            <strong>环湖自驾、雪山湖泊、日落拍照</strong>
+            <em>全天包车，早晚温差大</em>
+          </article>
+          <article class="plan-card">
+            <span>Day 3</span>
+            <h3>伊宁漫步·返程</h3>
+            <p>伊宁市区 · 强度：低</p>
+            <strong>六星街美食、伊犁河大桥、采购特产</strong>
+            <em>下午航班，上午自由活动</em>
+          </article>
+      </div>
+    </section>
+    <div class="dashboard-grid">
+      
+    <section class="panel timeline-panel" aria-label="每日安排">
+      <div class="section-kicker">每日安排</div>
+      <h2>按天切换，地图同步看路线</h2>
+      
+    <div class="day-tabs" role="tablist" aria-label="每日行程">
+      <button class="active" type="button" data-day-tab="all">全部</button>
+      <button type="button" data-day-tab="1">Day 1</button><button type="button" data-day-tab="2">Day 2</button><button type="button" data-day-tab="3">Day 3</button>
+    </div>
+      <div class="day-stack">
+        
+          <article class="day-card" data-day-card="1">
+            <div class="day-card-head">
+              <div>
+                <span class="day-badge">Day 1</span>
+                <h3>初见伊犁·蓝色小镇</h3>
+                <p>2026-05-27 · 伊宁市区 · 强度：低</p>
+              </div>
+            </div>
+            <div class="activity-list">
+              
+    <button class="activity-card has-detail" type="button" data-focus-poi="北京首都T3/大兴机场出发" data-day="1">
+      <span class="time">15:35</span>
+      <span class="activity-main">
+        <strong>北京首都T3/大兴机场出发</strong>
+        <span>CA1255/CZ8894 · 提前2小时到机场</span>
+      </span>
+      <span class="cost">¥2260-2350/人</span>
+    </button>
+    <button class="activity-card has-detail" type="button" data-focus-poi="抵达伊宁机场" data-day="1">
+      <span class="time">20:45</span>
+      <span class="activity-main">
+        <strong>抵达伊宁机场</strong>
+        <span>新疆时间约18:45</span>
+      </span>
+      
+    </button>
+    <button class="activity-card has-detail" type="button" data-focus-poi="机场→酒店" data-day="1">
+      <span class="time">21:00-21:30</span>
+      <span class="activity-main">
+        <strong>机场→酒店</strong>
+        <span>打车/接机 · 距离约20-30分钟</span>
+      </span>
+      <span class="cost">¥50-80</span>
+    </button>
+    <button class="activity-card has-detail" type="button" data-focus-poi="喀赞其民俗旅游区" data-day="1">
+      <span class="time">22:00-23:30</span>
+      <span class="activity-main">
+        <strong>喀赞其民俗旅游区夜游</strong>
+        <span>步行/打车 · 新疆日落约22:00，可拍夜景</span>
+      </span>
+      <span class="cost">免费</span>
+    </button>
+    <button class="activity-card has-detail" type="button" data-focus-poi="六星街美食街" data-day="1">
+      <span class="time">23:30-01:00</span>
+      <span class="activity-main">
+        <strong>六星街美食街晚餐</strong>
+        <span>步行 · 烤包子、手抓饭、大盘鸡</span>
+      </span>
+      <span class="cost">¥100-150/人</span>
+    </button>
+            </div>
+            <div class="day-notes">
+              
+              <p><strong>餐食</strong>晚餐：六星街美食街（烤包子、手抓饭、大盘鸡、面肺子）</p>
+              <p><strong>休息</strong>酒店入住后稍作休整，适应时差（新疆比北京晚约2小时）</p>
+              <p><strong>预算</strong>约¥2523-2770/人</p>
+              <p><strong>预约</strong>无需预约，喀赞其免费开放</p>
+              <p><strong>备选</strong>若航班延误或疲劳，可直接回酒店休息，次日早起前往赛里木湖</p>
+              
+            </div>
+          </article>
+          <article class="day-card" data-day-card="2">
+            <div class="day-card-head">
+              <div>
+                <span class="day-badge">Day 2</span>
+                <h3>赛里木湖·大西洋最后一滴眼泪</h3>
+                <p>2026-05-28 · 赛里木湖+果子沟 · 强度：中</p>
+              </div>
+            </div>
+            <div class="activity-list">
+              
+    <button class="activity-card has-detail" type="button" data-focus-poi="赛里木湖" data-day="2">
+      <span class="time">07:00-08:00</span>
+      <span class="activity-main">
+        <strong>酒店早餐，出发前往赛里木湖</strong>
+        <span>建议早起，避开中午强光</span>
+      </span>
+      
+    </button>
+    <button class="activity-card has-detail" type="button" data-focus-poi="赛里木湖" data-day="2">
+      <span class="time">08:00-10:00</span>
+      <span class="activity-main">
+        <strong>伊宁→赛里木湖</strong>
+        <span>包车 · 约2小时车程，沿途经过果子沟</span>
+      </span>
+      <span class="cost">¥300-500/车/天</span>
+    </button>
+    <button class="activity-card has-detail" type="button" data-focus-poi="果子沟大桥" data-day="2">
+      <span class="time">10:00-10:30</span>
+      <span class="activity-main">
+        <strong>果子沟大桥观景</strong>
+        <span>包车 · 中国最美公路桥，拍照打卡</span>
+      </span>
+      <span class="cost">免费</span>
+    </button>
+    <button class="activity-card has-detail" type="button" data-focus-poi="赛里木湖" data-day="2">
+      <span class="time">10:30-11:00</span>
+      <span class="activity-main">
+        <strong>抵达赛里木湖，购票入园</strong>
+        <span>门票+区间车或自驾套票</span>
+      </span>
+      <span class="cost">¥70-145/人</span>
+    </button>
+    <button class="activity-card has-detail" type="button" data-focus-poi="赛里木湖" data-day="2">
+      <span class="time">11:00-16:00</span>
+      <span class="activity-main">
+        <strong>赛里木湖环湖游览</strong>
+        <span>包车环湖 · 环湖约90公里，随时停车拍照</span>
+      </span>
+      
+    </button>
+    <button class="activity-card has-detail" type="button" data-focus-poi="湖边休息，准备观赏日落" data-day="2">
+      <span class="time">16:00-17:00</span>
+      <span class="activity-main">
+        <strong>湖边休息，准备观赏日落</strong>
+        <span>日落约20:00（新疆时间）</span>
+      </span>
+      
+    </button>
+    <button class="activity-card has-detail" type="button" data-focus-poi="赛里木湖" data-day="2">
+      <span class="time">17:00-19:00</span>
+      <span class="activity-main">
+        <strong>赛里木湖→伊宁</strong>
+        <span>包车 · 约2小时车程</span>
+      </span>
+      
+    </button>
+    <button class="activity-card has-detail" type="button" data-focus-poi="伊宁市区晚餐" data-day="2">
+      <span class="time">20:00-22:00</span>
+      <span class="activity-main">
+        <strong>伊宁市区晚餐</strong>
+        <span>步行/打车 · 推荐本地餐厅</span>
+      </span>
+      <span class="cost">¥100-150/人</span>
+    </button>
+            </div>
+            <div class="day-notes">
+              
+              <p><strong>餐食</strong>早餐：酒店含早；午餐：自备干粮和水；晚餐：伊宁市区本地餐厅</p>
+              <p><strong>休息</strong>赛里木湖海拔约2000米，注意保暖，备冲锋衣或薄羽绒服</p>
+              <p><strong>预算</strong>约¥275-470/人</p>
+              <p><strong>预约</strong>赛里木湖旺季建议提前在OTA平台预约门票</p>
+              <p><strong>备选</strong>若天气不佳，可改为伊宁市区深度游：伊犁河大桥、六星街、汉人街</p>
+              
+            </div>
+          </article>
+          <article class="day-card" data-day-card="3">
+            <div class="day-card-head">
+              <div>
+                <span class="day-badge">Day 3</span>
+                <h3>伊宁漫步·返程</h3>
+                <p>2026-05-29 · 伊宁市区 · 强度：低</p>
+              </div>
+            </div>
+            <div class="activity-list">
+              
+    <button class="activity-card has-detail" type="button" data-focus-poi="酒店早餐，退房" data-day="3">
+      <span class="time">08:00-09:00</span>
+      <span class="activity-main">
+        <strong>酒店早餐，退房</strong>
+        <span></span>
+      </span>
+      
+    </button>
+    <button class="activity-card has-detail" type="button" data-focus-poi="伊犁河大桥" data-day="3">
+      <span class="time">09:00-10:30</span>
+      <span class="activity-main">
+        <strong>伊犁河大桥、伊犁河畔漫步</strong>
+        <span>打车 · 拍照打卡，欣赏河景</span>
+      </span>
+      <span class="cost">¥20-30</span>
+    </button>
+    <button class="activity-card has-detail" type="button" data-focus-poi="六星街采购特产" data-day="3">
+      <span class="time">10:30-12:00</span>
+      <span class="activity-main">
+        <strong>六星街采购特产</strong>
+        <span>步行 · 干果、薰衣草制品、手工艺品</span>
+      </span>
+      <span class="cost">¥200-500</span>
+    </button>
+    <button class="activity-card has-detail" type="button" data-focus-poi="午餐" data-day="3">
+      <span class="time">12:00-13:00</span>
+      <span class="activity-main">
+        <strong>午餐</strong>
+        <span>步行 · 最后一顿新疆美食</span>
+      </span>
+      <span class="cost">¥80-120/人</span>
+    </button>
+    <button class="activity-card has-detail" type="button" data-focus-poi="前往机场" data-day="3">
+      <span class="time">13:00-14:00</span>
+      <span class="activity-main">
+        <strong>前往机场</strong>
+        <span>打车 · 提前2小时到机场</span>
+      </span>
+      <span class="cost">¥50-80</span>
+    </button>
+    <button class="activity-card has-detail" type="button" data-focus-poi="伊宁→北京" data-day="3">
+      <span class="time">15:25-20:35</span>
+      <span class="activity-main">
+        <strong>伊宁→北京</strong>
+        <span>CZ8894</span>
+      </span>
+      <span class="cost">¥2060-2350/人</span>
+    </button>
+            </div>
+            <div class="day-notes">
+              
+              <p><strong>餐食</strong>早餐：酒店含早；午餐：伊宁市区本地餐厅（最后一顿新疆美食）</p>
+              <p><strong>休息</strong>上午轻松游览，避免过度疲劳</p>
+              <p><strong>预算</strong>约¥2358-2998/人</p>
+              <p><strong>预约</strong>无需预约</p>
+              <p><strong>备选</strong>若时间紧张，可直接前往机场，机场内也有特产店</p>
+              
+            </div>
+          </article>
+      </div>
+    </section>
+      
+    <section class="map-panel" id="dashboard" aria-label="地图与交通">
+      <div class="map-toolbar">
+        <div>
+          <div class="section-kicker">地图与交通</div>
+          <h2>每日点位、交通和酒店位置</h2>
+        </div>
+        <div class="map-legend">
+          <span><i>景</i>景点</span><span><i>文</i>文化</span><span><i>街</i>街区</span><span><i>食</i>餐饮</span><span><i>住</i>住宿</span><span><i>交</i>交通</span>
+        </div>
+      </div>
+      <div class="map-canvas" id="atlasMap">
+        <div class="map-empty">
+          <strong>地图加载中</strong>
+          <span>地图线用于点位方位示意，真实交通以每日交通提示为准。</span>
+        </div>
+      </div>
+      <div class="route-summary">
+        
+          <button class="route-pill" type="button" data-focus-poi="酒店" data-route-day="1">
+            <span>Day 1 · 机场 → 酒店</span>
+            <strong>打车/接机 · 距离约20-30分钟 · ¥50-80</strong>
+          </button>
+          <button class="route-pill" type="button" data-focus-poi="喀赞其民俗旅游区夜游" data-route-day="1">
+            <span>Day 1 · 喀赞其民俗旅游区夜游</span>
+            <strong>步行/打车 · 新疆日落约22:00，可拍夜景 · 免费</strong>
+          </button>
+          <button class="route-pill" type="button" data-focus-poi="赛里木湖" data-route-day="2">
+            <span>Day 2 · 伊宁 → 赛里木湖</span>
+            <strong>包车 · 约2小时车程，沿途经过果子沟 · ¥300-500/车/天</strong>
+          </button>
+          <button class="route-pill" type="button" data-focus-poi="伊宁" data-route-day="2">
+            <span>Day 2 · 赛里木湖 → 伊宁</span>
+            <strong>包车 · 约2小时车程</strong>
+          </button>
+          <button class="route-pill" type="button" data-focus-poi="伊宁市区晚餐" data-route-day="2">
+            <span>Day 2 · 伊宁市区晚餐</span>
+            <strong>步行/打车 · 推荐本地餐厅 · ¥100-150/人</strong>
+          </button>
+          <button class="route-pill" type="button" data-focus-poi="伊犁河大桥、伊犁河畔漫步" data-route-day="3">
+            <span>Day 3 · 伊犁河大桥、伊犁河畔漫步</span>
+            <strong>打车 · 拍照打卡，欣赏河景 · ¥20-30</strong>
+          </button>
+          <button class="route-pill" type="button" data-focus-poi="前往机场" data-route-day="3">
+            <span>Day 3 · 前往机场</span>
+            <strong>打车 · 提前2小时到机场 · ¥50-80</strong>
+          </button>
+          <button class="route-pill" type="button" data-focus-poi="北京" data-route-day="3">
+            <span>Day 3 · 伊宁 → 北京</span>
+            <strong>CZ8894 · ¥2060-2350/人</strong>
+          </button>
+      </div>
+    </section>
+    </div>
+    
+    <section class="panel dossier-panel" id="poi-dossier">
+      <div class="section-kicker">重点景点怎么玩</div>
+      <h2>地点档案：攻略、避雷、亲子注意事项</h2>
+      <div class="dossier-grid">
+        
+          <details class="dossier-card" data-dossier="赛里木湖">
+            <summary>
+              <span>Day 2</span>
+              <strong>赛里木湖</strong>
+              <em>4-6小时</em>
+              <p>被誉为&#39;大西洋最后一滴眼泪&#39;，景色震撼</p>
+              <small>旺季建议提前在OTA平台预约门票</small>
+            </summary>
+            <div class="dossier-body">
+              
+              <h4>推荐理由</h4><ul><li>被誉为&#39;大西洋最后一滴眼泪&#39;，景色震撼</li><li>5月底湖水湛蓝、雪山环绕，正值最佳观赏期</li><li>适合拍照打卡，尤其是日出/日落时分</li></ul>
+              
+              <h4>必玩/必看</h4><ul><li>环湖自驾或乘区间车，随时停车拍照</li><li>观赏日落（约20:00新疆时间）</li><li>拍摄雪山湖泊美景</li></ul>
+              <h4>排队与预约</h4><ul><li>旺季建议提前在OTA平台预约门票</li><li>门票+区间车约¥70-145，自驾套票约¥200+</li><li>5月底游客相对暑期较少，排队风险较低</li></ul>
+              
+              <h4>准备材料</h4><ul><li>冲锋衣或薄羽绒服（海拔约2000米，早晚温差大，湖边风大）</li><li>防晒霜、墨镜、遮阳帽（紫外线强）</li><li>自备干粮和水（景区内餐饮选择少且贵）</li></ul>
+              <h4>常见差评</h4><ul><li>门票+区间车价格较贵</li><li>景区内餐饮选择少且贵</li><li>中午光线过强，拍照效果一般</li></ul>
+              <h4>避雷</h4><ul><li>不要只在中午前往，建议上午或傍晚，光线最佳</li><li>不要忘记保暖装备，即使白天温暖，湖边风大</li></ul>
+              <h4>适合</h4><p>情侣、年轻人、喜欢自然风光和拍照的旅行者</p>
+              <h4>不适合</h4><p>不愿早起或对高海拔敏感的游客</p>
+              <p class="source-note">FlyAI semantic reference + Web-Rooter cited，2026-05-10</p>
+            </div>
+          </details>
+          <details class="dossier-card" data-dossier="喀赞其民俗旅游区">
+            <summary>
+              <span>Day 1</span>
+              <strong>喀赞其民俗旅游区</strong>
+              <em>2-4小时</em>
+              <p>伊犁蓝色小镇，免费开放</p>
+              <small>免费开放，无需预约</small>
+            </summary>
+            <div class="dossier-body">
+              
+              <h4>推荐理由</h4><ul><li>伊犁蓝色小镇，免费开放</li><li>蓝色建筑极具特色，拍照出片率高</li><li>原生态居住区，可以感受当地人真实生活</li></ul>
+              
+              <h4>必玩/必看</h4><ul><li>乘坐哈迪克马车穿梭蓝色街巷</li><li>拍摄伊犁蓝建筑</li><li>体验维吾尔族民俗文化</li></ul>
+              <h4>排队与预约</h4><ul><li>免费开放，无需预约</li><li>马车体验需单独付费，约¥50-100/人</li></ul>
+              
+              <h4>准备材料</h4><ul><li>相机/手机（极具拍照价值）</li><li>尊重当地居民隐私，拍摄前需征得同意</li></ul>
+              <h4>常见差评</h4><ul><li>部分民居不对外开放</li><li>马车价格需提前询问，避免被宰</li></ul>
+              <h4>避雷</h4><ul><li>不要在傍晚前往，光线较暗，拍照效果不佳</li><li>不要未经同意拍摄当地居民</li></ul>
+              <h4>适合</h4><p>情侣、喜欢人文摄影和慢节奏旅行的游客</p>
+              
+              <p class="source-note">FlyAI semantic reference + Web-Rooter cited，2026-05-10</p>
+            </div>
+          </details>
+          <details class="dossier-card" data-dossier="果子沟大桥">
+            <summary>
+              <span>Day 2</span>
+              <strong>果子沟大桥</strong>
+              <em>30分钟-1小时</em>
+              <p>中国最美公路桥，壮观峡谷景观</p>
+              <small>无需门票，无需预约</small>
+            </summary>
+            <div class="dossier-body">
+              
+              <h4>推荐理由</h4><ul><li>中国最美公路桥，壮观峡谷景观</li><li>前往赛里木湖必经之路，无需门票</li></ul>
+              
+              <h4>必玩/必看</h4><ul><li>观赏桥梁工程壮观景象</li><li>拍摄峡谷景观</li></ul>
+              <h4>排队与预约</h4><ul><li>无需门票，无需预约</li><li>注意选择安全停车点</li></ul>
+              
+              
+              
+              <h4>避雷</h4><ul><li>不要只是路过，建议预留30分钟-1小时观景拍照</li></ul>
+              <h4>适合</h4><p>所有游客</p>
+              
+              <p class="source-note">Web-Rooter cited，2026-05-10</p>
+            </div>
+          </details>
+      </div>
+    </section>
+    
+    <section class="panel hotel-panel" id="hotel-board">
+      <div class="section-kicker">住宿决策</div>
+      <h2>酒店组合：不同档次、位置和取舍</h2>
+      <p class="lead">优先住伊宁市区（六星街/解放路/飞机场路周边），交通便利，距离机场约20-30分钟，餐饮选择丰富，步行可达喀赞其民俗区。</p>
+      <div class="hotel-grid">
+        
+          <article class="hotel-card" data-focus-hotel="永丹客栈">
+            <img src="https://img.alicdn.com/imgextra/i2/6000000005152/O1CN01TSYoBd1nvfQIcWjvR_!!6000000005152-0-hotel.jpg" alt="永丹客栈">
+            <div class="hotel-card-body">
+              <span class="tier">经济/交通优先</span>
+              <h3>永丹客栈</h3>
+              <p>近伊宁站</p>
+              <div class="hotel-meta">
+                <span class="chip amber">¥116（代表性日期样例价，价格波动）</span>
+                <span class="chip blue">FlyAI未返回具体房型，需点击飞猪链接确认</span>
+              </div>
+              <p>预算敏感、只需要基础住宿和可接受交通</p>
+              <p class="tradeoff">价格优先，需额外核实隔音、房间面积和亲子舒适度</p>
+              <div class="card-actions"><a href="https://a.feizhu.com/1MFxy3" target="_blank" rel="noopener noreferrer">飞猪查看</a></div>
+            </div>
+          </article>
+          <article class="hotel-card" data-focus-hotel="伊宁市行政服务中心广东路亚朵酒店">
+            <img src="https://img.alicdn.com/imgextra/i3/6000000003002/O1CN01WCNeub1Y2y6KJQ1KC_!!6000000003002-0-hotel.jpg" alt="伊宁市行政服务中心广东路亚朵酒店">
+            <div class="hotel-card-body">
+              <span class="tier">舒适/情侣优先</span>
+              <h3>伊宁市行政服务中心广东路亚朵酒店</h3>
+              <p>近伊犁哈萨克自治州博物馆</p>
+              <div class="hotel-meta">
+                <span class="chip amber">¥637（代表性日期样例价，价格波动）</span>
+                <span class="chip blue">FlyAI未返回具体房型，需点击飞猪链接确认</span>
+              </div>
+              <p>情侣出行、希望房间和早餐更稳妥、降低通勤和休息成本</p>
+              <p class="tradeoff">价格通常高于经济型，热门日期需尽早确认房型</p>
+              <div class="card-actions"><a href="https://a.feizhu.com/40Twoj" target="_blank" rel="noopener noreferrer">飞猪查看</a></div>
+            </div>
+          </article>
+          <article class="hotel-card" data-focus-hotel="浦东假日酒店（伊宁六星街伊犁师范店）">
+            <img src="https://img.alicdn.com/imgextra/i2/6000000000815/O1CN01ZwklEh1HtJuBoqCZM_!!6000000000815-2-hotel.png" alt="浦东假日酒店（伊宁六星街伊犁师范店）">
+            <div class="hotel-card-body">
+              <span class="tier">舒适/情侣优先</span>
+              <h3>浦东假日酒店（伊宁六星街伊犁师范店）</h3>
+              <p>近农四师客运站</p>
+              <div class="hotel-meta">
+                <span class="chip amber">¥588（代表性日期样例价，价格波动）</span>
+                <span class="chip blue">FlyAI未返回具体房型，需点击飞猪链接确认</span>
+              </div>
+              <p>情侣出行、希望房间和早餐更稳妥、降低通勤和休息成本</p>
+              <p class="tradeoff">价格通常高于经济型，热门日期需尽早确认房型</p>
+              <div class="card-actions"><a href="https://a.feizhu.com/0obw1o" target="_blank" rel="noopener noreferrer">飞猪查看</a></div>
+            </div>
+          </article>
+          <article class="hotel-card" data-focus-hotel="喀秋莎民宿（伊宁六星街店）">
+            <img src="https://img.alicdn.com/imgextra/i1/6000000005883/O1CN01RUoADH1tKT8UYTwOa_!!6000000005883-0-hotel.jpg" alt="喀秋莎民宿（伊宁六星街店）">
+            <div class="hotel-card-body">
+              <span class="tier">舒适/情侣优先</span>
+              <h3>喀秋莎民宿（伊宁六星街店）</h3>
+              <p>近六星美食街</p>
+              <div class="hotel-meta">
+                <span class="chip amber">¥902（代表性日期样例价，价格波动）</span>
+                <span class="chip blue">FlyAI未返回具体房型，需点击飞猪链接确认</span>
+              </div>
+              <p>情侣出行、希望房间和早餐更稳妥、降低通勤和休息成本</p>
+              <p class="tradeoff">价格通常高于经济型，热门日期需尽早确认房型</p>
+              <div class="card-actions"><a href="https://a.feizhu.com/4bS6RL" target="_blank" rel="noopener noreferrer">飞猪查看</a></div>
+            </div>
+          </article>
+          <article class="hotel-card" data-focus-hotel="伊犁宾馆">
+            <img src="https://img.alicdn.com/imgextra/i2/6000000000803/O1CN01LyBB5p1Hnp11pwpNW_!!6000000000803-0-hotel.jpg" alt="伊犁宾馆">
+            <div class="hotel-card-body">
+              <span class="tier">舒适/情侣优先</span>
+              <h3>伊犁宾馆</h3>
+              <p>近喀赞其民俗旅游区</p>
+              <div class="hotel-meta">
+                <span class="chip amber">¥529（代表性日期样例价，价格波动）</span>
+                <span class="chip blue">FlyAI未返回具体房型，需点击飞猪链接确认</span>
+              </div>
+              <p>情侣出行、希望房间和早餐更稳妥、降低通勤和休息成本</p>
+              <p class="tradeoff">价格通常高于经济型，热门日期需尽早确认房型</p>
+              <div class="card-actions"><a href="https://a.feizhu.com/0u5rFL" target="_blank" rel="noopener noreferrer">飞猪查看</a></div>
+            </div>
+          </article>
+          <article class="hotel-card" data-focus-hotel="伊宁利群大酒店">
+            <img src="https://img.alicdn.com/imgextra/i4/6000000003935/O1CN01wWVHAy1ewHG7Du4qx_!!6000000003935-2-hotel.png" alt="伊宁利群大酒店">
+            <div class="hotel-card-body">
+              <span class="tier">位置优先</span>
+              <h3>伊宁利群大酒店</h3>
+              <p>近四川路</p>
+              <div class="hotel-meta">
+                <span class="chip amber">¥407（代表性日期样例价，价格波动）</span>
+                <span class="chip blue">FlyAI未返回具体房型，需点击飞猪链接确认</span>
+              </div>
+              <p>晚间吃饭、返程、临时休息便利性优先</p>
+              <p class="tradeoff">核心区可能更贵或房间偏小</p>
+              <div class="card-actions"><a href="https://a.feizhu.com/2x6rwm" target="_blank" rel="noopener noreferrer">飞猪查看</a></div>
+            </div>
+          </article>
+          <article class="hotel-card" data-focus-hotel="伊宁若安精品酒店">
+            <img src="https://img.alicdn.com/imgextra/i3/6000000000045/O1CN01IkxYWA1CCexIsPCxT_!!6000000000045-2-hotel.png" alt="伊宁若安精品酒店">
+            <div class="hotel-card-body">
+              <span class="tier">位置优先</span>
+              <h3>伊宁若安精品酒店</h3>
+              <p>近波尔多商业街</p>
+              <div class="hotel-meta">
+                <span class="chip amber">¥229（代表性日期样例价，价格波动）</span>
+                <span class="chip blue">FlyAI未返回具体房型，需点击飞猪链接确认</span>
+              </div>
+              <p>晚间吃饭、返程、临时休息便利性优先</p>
+              <p class="tradeoff">核心区可能更贵或房间偏小</p>
+              <div class="card-actions"><a href="https://a.feizhu.com/3Wlwrc" target="_blank" rel="noopener noreferrer">飞猪查看</a></div>
+            </div>
+          </article>
+          <article class="hotel-card" data-focus-hotel="全季伊宁北京路酒店">
+            <img src="https://img.alicdn.com/imgextra/i2/6000000005302/O1CN01sLC1UB1p2N3jEMieG_!!6000000005302-0-hotel.jpg" alt="全季伊宁北京路酒店">
+            <div class="hotel-card-body">
+              <span class="tier">特色/民宿备选</span>
+              <h3>全季伊宁北京路酒店</h3>
+              <p>近伊犁哈萨克自治州博物馆</p>
+              <div class="hotel-meta">
+                <span class="chip amber">¥450（代表性日期样例价，价格波动）</span>
+                <span class="chip blue">FlyAI未返回具体房型，需点击飞猪链接确认</span>
+              </div>
+              <p>想要公寓、民宿、客栈等不同住宿体验时备选</p>
+              <p class="tradeoff">服务稳定性、前台、早餐和亲子设施需逐项核实</p>
+              <div class="card-actions"><a href="https://a.feizhu.com/2hPRJu" target="_blank" rel="noopener noreferrer">飞猪查看</a></div>
+            </div>
+          </article>
+      </div>
+      <p class="source-note">FlyAI booking reference + Web-Rooter cited，2026-05-10</p>
+    </section>
+    
+    <section class="panel split-panel">
+      <div class="split-card">
+        <div class="section-kicker">美食与口碑避雷</div>
+        <h2>吃什么、哪里谨慎</h2>
+        
+          <div class="mini-row">
+            <strong>烤包子</strong>
+            <span>六星街美食街</span>
+          </div>
+          <div class="mini-row">
+            <strong>手抓饭</strong>
+            <span>六星街美食街</span>
+          </div>
+          <div class="mini-row">
+            <strong>大盘鸡</strong>
+            <span>六星街美食街 · 部分偏辣，不吃辣的游客需提前说明</span>
+          </div>
+          <div class="mini-row">
+            <strong>面肺子</strong>
+            <span>喀赞其周边</span>
+          </div>
+          <div class="mini-row">
+            <strong>手工冰淇淋</strong>
+            <span>喀赞其周边</span>
+          </div>
+      </div>
+      <div class="split-card">
+        <div class="section-kicker">预算</div>
+        <h2>费用参考</h2>
+        
+          <div class="mini-row">
+            <strong>往返机票</strong>
+            <span>¥4700</span>
+          </div>
+          <div class="mini-row">
+            <strong>住宿（2晚）</strong>
+            <span>¥1000</span>
+          </div>
+          <div class="mini-row">
+            <strong>包车（1天）</strong>
+            <span>¥500</span>
+          </div>
+          <div class="mini-row">
+            <strong>景点门票</strong>
+            <span>¥145</span>
+          </div>
+          <div class="mini-row">
+            <strong>餐饮（3天）</strong>
+            <span>¥900</span>
+          </div>
+          <div class="mini-row">
+            <strong>市内交通</strong>
+            <span>¥150</span>
+          </div>
+          <div class="mini-row">
+            <strong>特产采购</strong>
+            <span>¥500</span>
+          </div>
+        <p class="total">合计参考：economy: ¥6190；comfortable: ¥7895</p>
+      </div>
+    </section>
+    
+    <section class="panel checklist-panel">
+      <div class="section-kicker">行前检查</div>
+      <h2>出发前别漏掉</h2>
+      <div class="check-grid">
+        
+          <div class="check-card">
+            <h3>documents</h3>
+            <label><input type="checkbox"> <span>身份证（景区实名入园）</span></label><label><input type="checkbox"> <span>学生证/老年证（如有，部分景区可享优惠）</span></label>
+          </div>
+          <div class="check-card">
+            <h3>equipment</h3>
+            <label><input type="checkbox"> <span>冲锋衣或薄羽绒服（早晚温差大，赛里木湖边风大）</span></label><label><input type="checkbox"> <span>防晒霜、墨镜、遮阳帽（紫外线强）</span></label><label><input type="checkbox"> <span>相机/手机（赛里木湖、喀赞其极具拍照价值）</span></label><label><input type="checkbox"> <span>保温杯、干粮、水（赛里木湖景区内餐饮选择少）</span></label><label><input type="checkbox"> <span>常用药品（感冒药、肠胃药、创可贴）</span></label>
+          </div>
+          <div class="check-card">
+            <h3>apps</h3>
+            <label><input type="checkbox"> <span>高德地图/百度地图（导航）</span></label><label><input type="checkbox"> <span>飞猪/携程/美团（预订酒店、门票）</span></label><label><input type="checkbox"> <span>大众点评/美团（查找餐厅）</span></label><label><input type="checkbox"> <span>微信/支付宝（支付）</span></label>
+          </div>
+          <div class="check-card">
+            <h3>bookings</h3>
+            <label><input type="checkbox"> <span>赛里木湖门票（建议提前在OTA平台预约）</span></label><label><input type="checkbox"> <span>酒店预订（建议提前预订，尤其是周末和节假日）</span></label><label><input type="checkbox"> <span>包车预订（建议提前联系，确认价格和行程）</span></label>
+          </div>
+      </div>
+    </section>
+    
+    <section class="panel docs-intro" id="full-docs">
+      <div class="section-kicker">完整资料库</div>
+      <h2>原文归档：需要核对时再展开</h2>
+      <p class="lead">主页面优先呈现可执行信息；原始简报、行程和口碑保留为折叠归档，避免把网页变成长文堆叠。</p>
+      <div class="doc-jump">
+        <a href="#doc-destination-brief">完整目的地简报</a><a href="#doc-itinerary">完整行程原文</a><a href="#doc-reputation">完整口碑与避雷原文</a>
+      </div>
+    </section>
+    
+      <details class="panel source-doc" id="doc-destination-brief">
+        <summary class="source-doc-summary">
+          <span class="section-kicker">destination-brief.md</span>
+          <strong>完整目的地简报</strong>
+          <em>新疆伊犁旅行简报</em>
+        </summary>
+        <div class="markdown-body">
+          <h3>新疆伊犁旅行简报</h3>
+<h4>一句话判断</h4>
+<p>适合情侣浪漫出行，建议3天2夜聚焦伊宁市+赛里木湖精华线路。<strong>重要提醒：5月底薰衣草尚未盛开</strong>（盛花期6月中旬至7月上旬），但赛里木湖、那拉提草原正值最佳观赏期。</p>
+<h4>目的地概览</h4>
+<ul><li><strong>城市定位</strong>：伊犁哈萨克自治州首府伊宁市，&quot;塞外江南&quot;，以草原、湖泊、民俗风情著称</li><li><strong>适合人群</strong>：情侣、年轻人、喜欢自然风光和民族文化体验的旅行者</li><li><strong>旅行强度</strong>：中等（3天2夜需包车/自驾，单日行车时间2-4小时）</li></ul>
+<h4>最佳旅行时间</h4>
+<ul><li><strong>推荐月份</strong>：5月底至6月初（草原返青、野花初绽）、6月中旬至7月上旬（薰衣草盛花期）</li><li><strong>天气和旺季风险</strong>：</li><li>5月底白天20-28°C，夜间10-15°C，昼夜温差大，需备冲锋衣或薄羽绒服</li><li>紫外线强，需防晒</li><li>新疆时差比北京晚约2小时，日落约22:00</li><li><strong>用户指定日期提醒</strong>：</li><li>✅ 5月27-29日天气宜人，草原、湖泊景色绝佳</li><li>⚠️ 薰衣草尚未盛开，建议调整预期或改期至6月15日后</li></ul>
+<h4>怎么到达</h4>
+<ul><li><strong>航班</strong>：北京直飞伊宁约5小时10分钟</li><li>去程：CA1255（首都T3 15:35→伊宁 20:45）¥2260 或 CZ8894（大兴 15:25→伊宁 20:35）¥2350</li><li>返程：CZ8893（伊宁 09:40→大兴 13:55）¥2060 或 CA1256（伊宁 21:45→首都T3 次日01:55）¥2120</li><li><strong>市内交通</strong>：伊宁市区打车方便，前往赛里木湖、那拉提需包车或自驾</li><li><strong>包车参考</strong>：伊宁-赛里木湖往返约300-500元/车/天（4人分摊）</li></ul>
+<h4>核心体验</h4>
+<ol><li><strong>赛里木湖</strong>：大西洋最后一滴眼泪，5月底湖水湛蓝、雪山环绕，环湖自驾或观景台打卡</li><li><strong>喀赞其民俗旅游区</strong>：伊犁蓝色小镇，乘坐哈迪克马车穿梭维吾尔族老城，免费开放</li><li><strong>果子沟大桥</strong>：中国最美公路桥，前往赛里木湖必经之路，壮观峡谷景观</li></ol>
+<h4>体验情报初筛</h4>
+<ul><li><strong>重点景点</strong>：</li><li>赛里木湖：环湖一圈约90公里，建议游玩4-6小时，门票+区间车约¥70-145（自驾套票更高）</li><li>喀赞其民俗旅游区：免费开放，建议游玩2-4小时，马车体验约¥50-100/人</li><li>那拉提草原：距伊宁约3-4小时车程，门票+区间车约¥200+，建议游玩1-2天（3天2夜行程较紧凑）</li><li><strong>首推项目/特色活动</strong>：</li><li>赛里木湖环湖自驾或观景台日出/日落</li><li>喀赞其乘马车游览蓝色街巷</li><li>伊宁六星街品尝新疆美食（烤包子、手抓饭、大盘鸡）</li><li><strong>预计体验时长</strong>：</li><li>Day 1：北京飞抵伊宁（晚上），喀赞其民俗区（2-3小时）</li><li>Day 2：赛里木湖+果子沟大桥（全天，往返约4-5小时车程+游玩4-6小时）</li><li>Day 3：伊宁市区（六星街、伊犁河大桥），下午返程北京</li><li><strong>准备材料/情侣提醒</strong>：</li><li>身份证（景区实名入园）</li><li>防晒霜、墨镜、遮阳帽</li><li>冲锋衣或薄羽绒服（早晚温差大）</li><li>相机/手机（赛里木湖、喀赞其极具拍照价值）</li><li><strong>预约/排队风险</strong>：</li><li>赛里木湖旺季建议提前在OTA平台预约门票</li><li>喀赞其无需预约，免费开放</li><li>5月底非暑期高峰，排队风险较低</li></ul>
+<h4>风险与注意</h4>
+<ul><li><strong>天气风险</strong>：昼夜温差大（10-15°C），需备厚外套；紫外线强，需防晒</li><li><strong>交通风险</strong>：赛里木湖往返伊宁约4-5小时车程，山路较多，建议包车或自驾经验丰富者驾驶</li><li><strong>薰衣草风险</strong>：5月底薰衣草尚未盛开，若专为薰衣草而来建议改期至6月15日后</li><li><strong>高原反应</strong>：赛里木湖海拔约2000米，一般无高反风险，但注意保暖</li><li><strong>时差适应</strong>：新疆比北京晚约2小时，日落约22:00，可利用长白天安排更多行程</li></ul>
+<h4>来源与可信度</h4>
+<ul><li><strong>已核实</strong>：</li><li>航班信息：FlyAI booking reference（2026-05-27/29代表性日期样例数据）</li><li>天气信息：FlyAI semantic reference（5月底气温、昼夜温差）</li><li>景点信息：FlyAI semantic reference（那拉提、喀赞其游玩时长、必玩项目）</li><li>薰衣草花期：Web-Rooter cited（盛花期6月中旬至7月上旬）</li><li>伊宁酒店：FlyAI booking reference（代表性日期样例价格）</li><li><strong>可能波动</strong>：</li><li>航班价格、酒店价格（需出发前再次确认）</li><li>赛里木湖门票政策（建议出发前查询官方公众号）</li><li>天气预报（建议出发前3-4天再次确认）</li><li><strong>Research conducted</strong>: 2026-05-10</li></ul>
+        </div>
+        <details class="raw-markdown">
+          <summary>查看原始 Markdown</summary>
+          <pre><code># 新疆伊犁旅行简报
+
+## 一句话判断
+适合情侣浪漫出行，建议3天2夜聚焦伊宁市+赛里木湖精华线路。**重要提醒：5月底薰衣草尚未盛开**（盛花期6月中旬至7月上旬），但赛里木湖、那拉提草原正值最佳观赏期。
+
+## 目的地概览
+- **城市定位**：伊犁哈萨克自治州首府伊宁市，&quot;塞外江南&quot;，以草原、湖泊、民俗风情著称
+- **适合人群**：情侣、年轻人、喜欢自然风光和民族文化体验的旅行者
+- **旅行强度**：中等（3天2夜需包车/自驾，单日行车时间2-4小时）
+
+## 最佳旅行时间
+- **推荐月份**：5月底至6月初（草原返青、野花初绽）、6月中旬至7月上旬（薰衣草盛花期）
+- **天气和旺季风险**：
+  - 5月底白天20-28°C，夜间10-15°C，昼夜温差大，需备冲锋衣或薄羽绒服
+  - 紫外线强，需防晒
+  - 新疆时差比北京晚约2小时，日落约22:00
+- **用户指定日期提醒**：
+  - ✅ 5月27-29日天气宜人，草原、湖泊景色绝佳
+  - ⚠️ 薰衣草尚未盛开，建议调整预期或改期至6月15日后
+
+## 怎么到达
+- **航班**：北京直飞伊宁约5小时10分钟
+  - 去程：CA1255（首都T3 15:35→伊宁 20:45）¥2260 或 CZ8894（大兴 15:25→伊宁 20:35）¥2350
+  - 返程：CZ8893（伊宁 09:40→大兴 13:55）¥2060 或 CA1256（伊宁 21:45→首都T3 次日01:55）¥2120
+- **市内交通**：伊宁市区打车方便，前往赛里木湖、那拉提需包车或自驾
+- **包车参考**：伊宁-赛里木湖往返约300-500元/车/天（4人分摊）
+
+## 核心体验
+1. **赛里木湖**：大西洋最后一滴眼泪，5月底湖水湛蓝、雪山环绕，环湖自驾或观景台打卡
+2. **喀赞其民俗旅游区**：伊犁蓝色小镇，乘坐哈迪克马车穿梭维吾尔族老城，免费开放
+3. **果子沟大桥**：中国最美公路桥，前往赛里木湖必经之路，壮观峡谷景观
+
+## 体验情报初筛
+- **重点景点**：
+  - 赛里木湖：环湖一圈约90公里，建议游玩4-6小时，门票+区间车约¥70-145（自驾套票更高）
+  - 喀赞其民俗旅游区：免费开放，建议游玩2-4小时，马车体验约¥50-100/人
+  - 那拉提草原：距伊宁约3-4小时车程，门票+区间车约¥200+，建议游玩1-2天（3天2夜行程较紧凑）
+- **首推项目/特色活动**：
+  - 赛里木湖环湖自驾或观景台日出/日落
+  - 喀赞其乘马车游览蓝色街巷
+  - 伊宁六星街品尝新疆美食（烤包子、手抓饭、大盘鸡）
+- **预计体验时长**：
+  - Day 1：北京飞抵伊宁（晚上），喀赞其民俗区（2-3小时）
+  - Day 2：赛里木湖+果子沟大桥（全天，往返约4-5小时车程+游玩4-6小时）
+  - Day 3：伊宁市区（六星街、伊犁河大桥），下午返程北京
+- **准备材料/情侣提醒**：
+  - 身份证（景区实名入园）
+  - 防晒霜、墨镜、遮阳帽
+  - 冲锋衣或薄羽绒服（早晚温差大）
+  - 相机/手机（赛里木湖、喀赞其极具拍照价值）
+- **预约/排队风险**：
+  - 赛里木湖旺季建议提前在OTA平台预约门票
+  - 喀赞其无需预约，免费开放
+  - 5月底非暑期高峰，排队风险较低
+
+## 风险与注意
+- **天气风险**：昼夜温差大（10-15°C），需备厚外套；紫外线强，需防晒
+- **交通风险**：赛里木湖往返伊宁约4-5小时车程，山路较多，建议包车或自驾经验丰富者驾驶
+- **薰衣草风险**：5月底薰衣草尚未盛开，若专为薰衣草而来建议改期至6月15日后
+- **高原反应**：赛里木湖海拔约2000米，一般无高反风险，但注意保暖
+- **时差适应**：新疆比北京晚约2小时，日落约22:00，可利用长白天安排更多行程
+
+## 来源与可信度
+- **已核实**：
+  - 航班信息：FlyAI booking reference（2026-05-27/29代表性日期样例数据）
+  - 天气信息：FlyAI semantic reference（5月底气温、昼夜温差）
+  - 景点信息：FlyAI semantic reference（那拉提、喀赞其游玩时长、必玩项目）
+  - 薰衣草花期：Web-Rooter cited（盛花期6月中旬至7月上旬）
+  - 伊宁酒店：FlyAI booking reference（代表性日期样例价格）
+- **可能波动**：
+  - 航班价格、酒店价格（需出发前再次确认）
+  - 赛里木湖门票政策（建议出发前查询官方公众号）
+  - 天气预报（建议出发前3-4天再次确认）
+- **Research conducted**: 2026-05-10
+</code></pre>
+        </details>
+      </details>
+      <details class="panel source-doc" id="doc-itinerary">
+        <summary class="source-doc-summary">
+          <span class="section-kicker">itinerary.md</span>
+          <strong>完整行程原文</strong>
+          <em>新疆伊犁3天2夜行程</em>
+        </summary>
+        <div class="markdown-body">
+          <h3>新疆伊犁3天2夜行程</h3>
+<h4>行程参数</h4>
+<ul><li><strong>日期</strong>：2026年5月27日（周三）至 2026年5月29日（周五）</li><li><strong>出发地</strong>：北京</li><li><strong>同行人</strong>：4人（两对情侣）</li><li><strong>交通方式</strong>：飞机往返 + 包车/自驾</li><li><strong>预算</strong>：经济舒适型（人均约¥3500-4500）</li><li><strong>节奏</strong>：轻松浪漫，适合情侣拍照打卡</li></ul>
+<h4>总体安排</h4>
+<div class="md-table-wrap"><table><thead><tr><th>天数</th><th>主题</th><th>区域</th><th>强度</th><th>核心体验</th><th>重点提醒</th></tr></thead><tbody><tr><td>Day 1</td><td>初见伊犁·蓝色小镇</td><td>伊宁市区</td><td>低</td><td>喀赞其民俗区、马车体验、新疆美食</td><td>晚上抵达，轻松游览</td></tr><tr><td>Day 2</td><td>赛里木湖·大西洋最后一滴眼泪</td><td>赛里木湖+果子沟</td><td>中</td><td>环湖自驾、雪山湖泊、日落拍照</td><td>全天包车，早晚温差大</td></tr><tr><td>Day 3</td><td>伊宁漫步·返程</td><td>伊宁市区</td><td>低</td><td>六星街美食、伊犁河大桥、采购特产</td><td>下午航班，上午自由活动</td></tr></tbody></table></div>
+<h4>每日行程</h4>
+<h5>Day 1 · 初见伊犁·蓝色小镇（2026-05-27 周三）</h5>
+<div class="md-table-wrap"><table><thead><tr><th>时间</th><th>安排</th><th>交通</th><th>费用</th><th>备注</th></tr></thead><tbody><tr><td>15:35</td><td>北京首都T3/大兴机场出发</td><td>CA1255/CZ8894</td><td>¥2260-2350/人</td><td>提前2小时到机场</td></tr><tr><td>20:45</td><td>抵达伊宁机场</td><td>-</td><td>-</td><td>新疆时间约18:45</td></tr><tr><td>21:00-21:30</td><td>机场→酒店</td><td>打车/接机</td><td>¥50-80</td><td>距离约20-30分钟</td></tr><tr><td>21:30-22:00</td><td>酒店办理入住，稍作休整</td><td>-</td><td>-</td><td>推荐六星街/解放路周边酒店</td></tr><tr><td>22:00-23:30</td><td>喀赞其民俗旅游区夜游</td><td>步行/打车</td><td>免费</td><td>新疆日落约22:00，可拍夜景</td></tr><tr><td>23:30-01:00</td><td>六星街美食街晚餐</td><td>步行</td><td>¥100-150/人</td><td>烤包子、手抓饭、大盘鸡</td></tr></tbody></table></div>
+<p><strong>今日餐食</strong>：</p>
+<ul><li>晚餐：六星街美食街（烤包子、手抓饭、大盘鸡、面肺子）</li></ul>
+<p><strong>休息与补给</strong>：</p>
+<ul><li>酒店入住后稍作休整，适应时差（新疆比北京晚约2小时）</li><li>新疆日落晚，可利用长白天安排更多行程</li></ul>
+<p><strong>核心体验/首推项目</strong>：</p>
+<ul><li>喀赞其民俗旅游区：伊犁蓝色小镇，免费开放，适合拍照</li><li>六星街美食街：本地人聚集地，品尝正宗新疆美食</li></ul>
+<p><strong>预算估算</strong>：</p>
+<ul><li>机票：¥2260-2350/人</li><li>接机：¥50-80（4人分摊约¥13-20/人）</li><li>酒店：¥300-500/间（2间，约¥150-250/人）</li><li>晚餐：¥100-150/人</li><li><strong>Day 1 小计</strong>：约¥2523-2770/人</li></ul>
+<p><strong>预约提醒</strong>：</p>
+<ul><li>无需预约，喀赞其免费开放</li></ul>
+<p><strong>雨天/疲劳备用</strong>：</p>
+<ul><li>若航班延误或疲劳，可直接回酒店休息，次日早起前往赛里木湖</li></ul>
+<hr>
+<h5>Day 2 · 赛里木湖·大西洋最后一滴眼泪（2026-05-28 周四）</h5>
+<div class="md-table-wrap"><table><thead><tr><th>时间</th><th>安排</th><th>交通</th><th>费用</th><th>备注</th></tr></thead><tbody><tr><td>07:00-08:00</td><td>酒店早餐，出发前往赛里木湖</td><td>-</td><td>含酒店早餐</td><td>建议早起，避开中午强光</td></tr><tr><td>08:00-10:00</td><td>伊宁→赛里木湖</td><td>包车</td><td>¥300-500/车/天</td><td>约2小时车程，沿途经过果子沟</td></tr><tr><td>10:00-10:30</td><td>果子沟大桥观景</td><td>包车</td><td>免费</td><td>中国最美公路桥，拍照打卡</td></tr><tr><td>10:30-11:00</td><td>抵达赛里木湖，购票入园</td><td>-</td><td>¥70-145/人</td><td>门票+区间车或自驾套票</td></tr><tr><td>11:00-16:00</td><td>赛里木湖环湖游览</td><td>包车环湖</td><td>-</td><td>环湖约90公里，随时停车拍照</td></tr><tr><td>16:00-17:00</td><td>湖边休息，准备观赏日落</td><td>-</td><td>-</td><td>日落约20:00（新疆时间）</td></tr><tr><td>17:00-19:00</td><td>赛里木湖→伊宁</td><td>包车</td><td>-</td><td>约2小时车程</td></tr><tr><td>19:00-20:00</td><td>返回酒店，稍作休整</td><td>-</td><td>-</td><td>-</td></tr><tr><td>20:00-22:00</td><td>伊宁市区晚餐</td><td>步行/打车</td><td>¥100-150/人</td><td>推荐本地餐厅</td></tr></tbody></table></div>
+<p><strong>今日餐食</strong>：</p>
+<ul><li>早餐：酒店含早</li><li>午餐：赛里木湖景区内（建议自备干粮和水，景区餐饮贵且选择少）</li><li>晚餐：伊宁市区本地餐厅</li></ul>
+<p><strong>休息与补给</strong>：</p>
+<ul><li>赛里木湖海拔约2000米，注意保暖，备冲锋衣或薄羽绒服</li><li>湖边风大，建议携带防风外套和防晒用品</li><li>自备干粮和水，景区内餐饮选择少</li></ul>
+<p><strong>核心体验/首推项目</strong>：</p>
+<ul><li>赛里木湖环湖自驾：随时停车拍照，欣赏雪山湖泊美景</li><li>果子沟大桥：壮观峡谷景观，中国最美公路桥</li><li>日落拍照：赛里木湖日落约20:00（新疆时间），光线柔和，适合拍照</li></ul>
+<p><strong>预算估算</strong>：</p>
+<ul><li>包车：¥300-500/车/天（4人分摊约¥75-125/人）</li><li>赛里木湖门票：¥70-145/人</li><li>午餐（自备干粮）：¥30-50/人</li><li>晚餐：¥100-150/人</li><li><strong>Day 2 小计</strong>：约¥275-470/人</li></ul>
+<p><strong>预约提醒</strong>：</p>
+<ul><li>赛里木湖旺季建议提前在OTA平台预约门票</li></ul>
+<p><strong>雨天/疲劳备用</strong>：</p>
+<ul><li>若天气不佳，可改为伊宁市区深度游：伊犁河大桥、六星街、汉人街</li><li>若疲劳，可缩短赛里木湖游览时间，下午提前返回伊宁休息</li></ul>
+<hr>
+<h5>Day 3 · 伊宁漫步·返程（2026-05-29 周五）</h5>
+<div class="md-table-wrap"><table><thead><tr><th>时间</th><th>安排</th><th>交通</th><th>费用</th><th>备注</th></tr></thead><tbody><tr><td>08:00-09:00</td><td>酒店早餐，退房</td><td>-</td><td>含酒店早餐</td><td>-</td></tr><tr><td>09:00-10:30</td><td>伊犁河大桥、伊犁河畔漫步</td><td>打车</td><td>¥20-30</td><td>拍照打卡，欣赏河景</td></tr><tr><td>10:30-12:00</td><td>六星街采购特产</td><td>步行</td><td>¥200-500</td><td>干果、薰衣草制品、手工艺品</td></tr><tr><td>12:00-13:00</td><td>午餐</td><td>步行</td><td>¥80-120/人</td><td>最后一顿新疆美食</td></tr><tr><td>13:00-14:00</td><td>前往机场</td><td>打车</td><td>¥50-80</td><td>提前2小时到机场</td></tr><tr><td>15:25-20:35</td><td>伊宁→北京</td><td>CZ8894</td><td>¥2060-2350/人</td><td>或选择其他航班</td></tr></tbody></table></div>
+<p><strong>今日餐食</strong>：</p>
+<ul><li>早餐：酒店含早</li><li>午餐：伊宁市区本地餐厅（最后一顿新疆美食）</li></ul>
+<p><strong>休息与补给</strong>：</p>
+<ul><li>上午轻松游览，避免过度疲劳</li><li>采购特产时注意行李重量限制</li></ul>
+<p><strong>核心体验/首推项目</strong>：</p>
+<ul><li>伊犁河大桥：伊宁地标，适合拍照</li><li>六星街采购特产：干果（核桃、巴旦木、葡萄干）、薰衣草制品、手工艺品</li></ul>
+<p><strong>预算估算</strong>：</p>
+<ul><li>打车：¥70-110（4人分摊约¥18-28/人）</li><li>午餐：¥80-120/人</li><li>特产采购：¥200-500/人</li><li>返程机票：¥2060-2350/人</li><li><strong>Day 3 小计</strong>：约¥2358-2998/人</li></ul>
+<p><strong>预约提醒</strong>：</p>
+<ul><li>无需预约</li></ul>
+<p><strong>雨天/疲劳备用</strong>：</p>
+<ul><li>若时间紧张，可直接前往机场，机场内也有特产店</li></ul>
+<hr>
+<h4>预算汇总</h4>
+<div class="md-table-wrap"><table><thead><tr><th>项目</th><th>经济</th><th>舒适</th><th>备注</th></tr></thead><tbody><tr><td>往返机票</td><td>¥4320</td><td>¥4700</td><td>北京-伊宁往返</td></tr><tr><td>住宿（2晚）</td><td>¥600</td><td>¥1000</td><td>经济型¥300/间，舒适型¥500/间</td></tr><tr><td>包车（1天）</td><td>¥300</td><td>¥500</td><td>赛里木湖往返，4人分摊</td></tr><tr><td>景点门票</td><td>¥70</td><td>¥145</td><td>赛里木湖门票+区间车/自驾套票</td></tr><tr><td>餐饮（3天）</td><td>¥600</td><td>¥900</td><td>早餐含酒店，午晚餐约¥200-300/天</td></tr><tr><td>市内交通</td><td>¥100</td><td>¥150</td><td>打车、接送机</td></tr><tr><td>特产采购</td><td>¥200</td><td>¥500</td><td>干果、薰衣草制品</td></tr><tr><td><strong>总计/人</strong></td><td><strong>¥6190</strong></td><td><strong>¥7895</strong></td><td>不含个人消费</td></tr></tbody></table></div>
+<p><strong>预算说明</strong>：</p>
+<ul><li>以上价格为代表性日期样例数据，实际价格可能波动</li><li>建议预留10-20%的弹性预算应对价格波动</li><li>特产采购可根据个人需求调整</li></ul>
+<hr>
+<h4>交通与住宿参考</h4>
+<h5>城际交通</h5>
+<p><strong>去程航班</strong>（2026-05-27）：</p>
+<ul><li>CA1255：北京首都T3 15:35 → 伊宁 20:45，¥2260</li><li>CZ8894：北京大兴 15:25 → 伊宁 20:35，¥2350</li></ul>
+<p><strong>返程航班</strong>（2026-05-29）：</p>
+<ul><li>CZ8893：伊宁 09:40 → 北京大兴 13:55，¥2060</li><li>CA1256：伊宁 21:45 → 北京首都T3 次日01:55，¥2120</li></ul>
+<p><strong>来源</strong>：FlyAI booking reference（代表性日期样例数据）</p>
+<h5>市内交通</h5>
+<ul><li><strong>伊宁市区</strong>：打车方便，起步价约¥10，市区内约¥20-30</li><li><strong>赛里木湖包车</strong>：约¥300-500/车/天（4人分摊约¥75-125/人）</li><li><strong>包车渠道</strong>：酒店前台、OTA平台、当地旅行社</li></ul>
+<p><strong>来源</strong>：Web-Rooter cited（搜狐伊犁自驾攻略）</p>
+<h5>住宿区域</h5>
+<p><strong>推荐区域</strong>：伊宁市区（六星街/解放路/飞机场路周边）</p>
+<p><strong>经济/交通优先</strong>（¥200-300/间）：</p>
+<ul><li>7天优品·伊宁上海城店（¥286）</li><li>格林豪泰智选酒店（¥294）</li><li>伊宁市上海城六星街铭豪精品酒店（¥239）</li></ul>
+<p><strong>舒适/情侣优先</strong>（¥300-500/间）：</p>
+<ul><li>希岸酒店（伊宁飞机场路六星街）（¥383）</li><li>喆啡酒店（伊宁机场六星街店）（¥390）</li><li>美豪怡致酒店（伊宁六星街景区店）（¥455）</li><li>全季伊宁北京路酒店（¥450）</li><li>汉庭伊宁喀赞其酒店（¥423）</li></ul>
+<p><strong>高端/位置优先</strong>（¥500+/间）：</p>
+<ul><li>伊宁市行政服务中心广东路亚朵酒店（¥637）</li><li>伊宁城与晚民宿（¥575）</li></ul>
+<p><strong>住宿建议</strong>：</p>
+<ul><li>选择六星街/解放路周边酒店，步行可达喀赞其和美食街</li><li>情侣出行建议选择舒适型酒店，房间设施更好</li><li>旺季（5-10月）建议提前预订</li></ul>
+<p><strong>来源</strong>：FlyAI booking reference（代表性日期样例价格）+ Web-Rooter cited（搜狐本地人酒店推荐）</p>
+<hr>
+<h4>出行前检查</h4>
+<h5>预约</h5>
+<ul><li>✅ 赛里木湖门票（建议提前在OTA平台预约）</li><li>✅ 酒店预订（建议提前预订，尤其是周末和节假日）</li><li>✅ 包车预订（建议提前联系，确认价格和行程）</li></ul>
+<h5>证件</h5>
+<ul><li>✅ 身份证（景区实名入园）</li><li>✅ 学生证/老年证（如有，部分景区可享优惠）</li></ul>
+<h5>装备</h5>
+<ul><li>✅ 冲锋衣或薄羽绒服（早晚温差大，赛里木湖边风大）</li><li>✅ 防晒霜、墨镜、遮阳帽（紫外线强）</li><li>✅ 相机/手机（赛里木湖、喀赞其极具拍照价值）</li><li>✅ 保温杯、干粮、水（赛里木湖景区内餐饮选择少）</li><li>✅ 常用药品（感冒药、肠胃药、创可贴）</li></ul>
+<h5>APP</h5>
+<ul><li>✅ 高德地图/百度地图（导航）</li><li>✅ 飞猪/携程/美团（预订酒店、门票）</li><li>✅ 大众点评/美团（查找餐厅）</li><li>✅ 微信/支付宝（支付）</li></ul>
+<hr>
+<h4>来源与可信度</h4>
+<ul><li><strong>Research conducted</strong>: 2026-05-10</li><li><strong>已核实</strong>：</li><li>航班信息：FlyAI booking reference（代表性日期样例数据）</li><li>酒店信息：FlyAI booking reference（代表性日期样例价格）</li><li>景点信息：FlyAI semantic reference + Web-Rooter cited</li><li>包车价格：Web-Rooter cited（搜狐伊犁自驾攻略）</li><li><strong>可能波动</strong>：</li><li>航班价格、酒店价格（需出发前再次确认）</li><li>赛里木湖门票政策（建议出发前查询官方公众号）</li><li>天气预报（建议出发前3-4天再次确认）</li><li>包车价格（建议提前联系确认）</li></ul>
+        </div>
+        <details class="raw-markdown">
+          <summary>查看原始 Markdown</summary>
+          <pre><code># 新疆伊犁3天2夜行程
+
+## 行程参数
+- **日期**：2026年5月27日（周三）至 2026年5月29日（周五）
+- **出发地**：北京
+- **同行人**：4人（两对情侣）
+- **交通方式**：飞机往返 + 包车/自驾
+- **预算**：经济舒适型（人均约¥3500-4500）
+- **节奏**：轻松浪漫，适合情侣拍照打卡
+
+## 总体安排
+| 天数 | 主题 | 区域 | 强度 | 核心体验 | 重点提醒 |
+| --- | --- | --- | --- | --- | --- |
+| Day 1 | 初见伊犁·蓝色小镇 | 伊宁市区 | 低 | 喀赞其民俗区、马车体验、新疆美食 | 晚上抵达，轻松游览 |
+| Day 2 | 赛里木湖·大西洋最后一滴眼泪 | 赛里木湖+果子沟 | 中 | 环湖自驾、雪山湖泊、日落拍照 | 全天包车，早晚温差大 |
+| Day 3 | 伊宁漫步·返程 | 伊宁市区 | 低 | 六星街美食、伊犁河大桥、采购特产 | 下午航班，上午自由活动 |
+
+## 每日行程
+
+### Day 1 · 初见伊犁·蓝色小镇（2026-05-27 周三）
+
+| 时间 | 安排 | 交通 | 费用 | 备注 |
+| --- | --- | --- | --- | --- |
+| 15:35 | 北京首都T3/大兴机场出发 | CA1255/CZ8894 | ¥2260-2350/人 | 提前2小时到机场 |
+| 20:45 | 抵达伊宁机场 | - | - | 新疆时间约18:45 |
+| 21:00-21:30 | 机场→酒店 | 打车/接机 | ¥50-80 | 距离约20-30分钟 |
+| 21:30-22:00 | 酒店办理入住，稍作休整 | - | - | 推荐六星街/解放路周边酒店 |
+| 22:00-23:30 | 喀赞其民俗旅游区夜游 | 步行/打车 | 免费 | 新疆日落约22:00，可拍夜景 |
+| 23:30-01:00 | 六星街美食街晚餐 | 步行 | ¥100-150/人 | 烤包子、手抓饭、大盘鸡 |
+
+**今日餐食**：
+- 晚餐：六星街美食街（烤包子、手抓饭、大盘鸡、面肺子）
+
+**休息与补给**：
+- 酒店入住后稍作休整，适应时差（新疆比北京晚约2小时）
+- 新疆日落晚，可利用长白天安排更多行程
+
+**核心体验/首推项目**：
+- 喀赞其民俗旅游区：伊犁蓝色小镇，免费开放，适合拍照
+- 六星街美食街：本地人聚集地，品尝正宗新疆美食
+
+**预算估算**：
+- 机票：¥2260-2350/人
+- 接机：¥50-80（4人分摊约¥13-20/人）
+- 酒店：¥300-500/间（2间，约¥150-250/人）
+- 晚餐：¥100-150/人
+- **Day 1 小计**：约¥2523-2770/人
+
+**预约提醒**：
+- 无需预约，喀赞其免费开放
+
+**雨天/疲劳备用**：
+- 若航班延误或疲劳，可直接回酒店休息，次日早起前往赛里木湖
+
+---
+
+### Day 2 · 赛里木湖·大西洋最后一滴眼泪（2026-05-28 周四）
+
+| 时间 | 安排 | 交通 | 费用 | 备注 |
+| --- | --- | --- | --- | --- |
+| 07:00-08:00 | 酒店早餐，出发前往赛里木湖 | - | 含酒店早餐 | 建议早起，避开中午强光 |
+| 08:00-10:00 | 伊宁→赛里木湖 | 包车 | ¥300-500/车/天 | 约2小时车程，沿途经过果子沟 |
+| 10:00-10:30 | 果子沟大桥观景 | 包车 | 免费 | 中国最美公路桥，拍照打卡 |
+| 10:30-11:00 | 抵达赛里木湖，购票入园 | - | ¥70-145/人 | 门票+区间车或自驾套票 |
+| 11:00-16:00 | 赛里木湖环湖游览 | 包车环湖 | - | 环湖约90公里，随时停车拍照 |
+| 16:00-17:00 | 湖边休息，准备观赏日落 | - | - | 日落约20:00（新疆时间） |
+| 17:00-19:00 | 赛里木湖→伊宁 | 包车 | - | 约2小时车程 |
+| 19:00-20:00 | 返回酒店，稍作休整 | - | - | - |
+| 20:00-22:00 | 伊宁市区晚餐 | 步行/打车 | ¥100-150/人 | 推荐本地餐厅 |
+
+**今日餐食**：
+- 早餐：酒店含早
+- 午餐：赛里木湖景区内（建议自备干粮和水，景区餐饮贵且选择少）
+- 晚餐：伊宁市区本地餐厅
+
+**休息与补给**：
+- 赛里木湖海拔约2000米，注意保暖，备冲锋衣或薄羽绒服
+- 湖边风大，建议携带防风外套和防晒用品
+- 自备干粮和水，景区内餐饮选择少
+
+**核心体验/首推项目**：
+- 赛里木湖环湖自驾：随时停车拍照，欣赏雪山湖泊美景
+- 果子沟大桥：壮观峡谷景观，中国最美公路桥
+- 日落拍照：赛里木湖日落约20:00（新疆时间），光线柔和，适合拍照
+
+**预算估算**：
+- 包车：¥300-500/车/天（4人分摊约¥75-125/人）
+- 赛里木湖门票：¥70-145/人
+- 午餐（自备干粮）：¥30-50/人
+- 晚餐：¥100-150/人
+- **Day 2 小计**：约¥275-470/人
+
+**预约提醒**：
+- 赛里木湖旺季建议提前在OTA平台预约门票
+
+**雨天/疲劳备用**：
+- 若天气不佳，可改为伊宁市区深度游：伊犁河大桥、六星街、汉人街
+- 若疲劳，可缩短赛里木湖游览时间，下午提前返回伊宁休息
+
+---
+
+### Day 3 · 伊宁漫步·返程（2026-05-29 周五）
+
+| 时间 | 安排 | 交通 | 费用 | 备注 |
+| --- | --- | --- | --- | --- |
+| 08:00-09:00 | 酒店早餐，退房 | - | 含酒店早餐 | - |
+| 09:00-10:30 | 伊犁河大桥、伊犁河畔漫步 | 打车 | ¥20-30 | 拍照打卡，欣赏河景 |
+| 10:30-12:00 | 六星街采购特产 | 步行 | ¥200-500 | 干果、薰衣草制品、手工艺品 |
+| 12:00-13:00 | 午餐 | 步行 | ¥80-120/人 | 最后一顿新疆美食 |
+| 13:00-14:00 | 前往机场 | 打车 | ¥50-80 | 提前2小时到机场 |
+| 15:25-20:35 | 伊宁→北京 | CZ8894 | ¥2060-2350/人 | 或选择其他航班 |
+
+**今日餐食**：
+- 早餐：酒店含早
+- 午餐：伊宁市区本地餐厅（最后一顿新疆美食）
+
+**休息与补给**：
+- 上午轻松游览，避免过度疲劳
+- 采购特产时注意行李重量限制
+
+**核心体验/首推项目**：
+- 伊犁河大桥：伊宁地标，适合拍照
+- 六星街采购特产：干果（核桃、巴旦木、葡萄干）、薰衣草制品、手工艺品
+
+**预算估算**：
+- 打车：¥70-110（4人分摊约¥18-28/人）
+- 午餐：¥80-120/人
+- 特产采购：¥200-500/人
+- 返程机票：¥2060-2350/人
+- **Day 3 小计**：约¥2358-2998/人
+
+**预约提醒**：
+- 无需预约
+
+**雨天/疲劳备用**：
+- 若时间紧张，可直接前往机场，机场内也有特产店
+
+---
+
+## 预算汇总
+
+| 项目 | 经济 | 舒适 | 备注 |
+| --- | --- | --- | --- |
+| 往返机票 | ¥4320 | ¥4700 | 北京-伊宁往返 |
+| 住宿（2晚） | ¥600 | ¥1000 | 经济型¥300/间，舒适型¥500/间 |
+| 包车（1天） | ¥300 | ¥500 | 赛里木湖往返，4人分摊 |
+| 景点门票 | ¥70 | ¥145 | 赛里木湖门票+区间车/自驾套票 |
+| 餐饮（3天） | ¥600 | ¥900 | 早餐含酒店，午晚餐约¥200-300/天 |
+| 市内交通 | ¥100 | ¥150 | 打车、接送机 |
+| 特产采购 | ¥200 | ¥500 | 干果、薰衣草制品 |
+| **总计/人** | **¥6190** | **¥7895** | 不含个人消费 |
+
+**预算说明**：
+- 以上价格为代表性日期样例数据，实际价格可能波动
+- 建议预留10-20%的弹性预算应对价格波动
+- 特产采购可根据个人需求调整
+
+---
+
+## 交通与住宿参考
+
+### 城际交通
+**去程航班**（2026-05-27）：
+- CA1255：北京首都T3 15:35 → 伊宁 20:45，¥2260
+- CZ8894：北京大兴 15:25 → 伊宁 20:35，¥2350
+
+**返程航班**（2026-05-29）：
+- CZ8893：伊宁 09:40 → 北京大兴 13:55，¥2060
+- CA1256：伊宁 21:45 → 北京首都T3 次日01:55，¥2120
+
+**来源**：FlyAI booking reference（代表性日期样例数据）
+
+### 市内交通
+- **伊宁市区**：打车方便，起步价约¥10，市区内约¥20-30
+- **赛里木湖包车**：约¥300-500/车/天（4人分摊约¥75-125/人）
+- **包车渠道**：酒店前台、OTA平台、当地旅行社
+
+**来源**：Web-Rooter cited（搜狐伊犁自驾攻略）
+
+### 住宿区域
+**推荐区域**：伊宁市区（六星街/解放路/飞机场路周边）
+
+**经济/交通优先**（¥200-300/间）：
+- 7天优品·伊宁上海城店（¥286）
+- 格林豪泰智选酒店（¥294）
+- 伊宁市上海城六星街铭豪精品酒店（¥239）
+
+**舒适/情侣优先**（¥300-500/间）：
+- 希岸酒店（伊宁飞机场路六星街）（¥383）
+- 喆啡酒店（伊宁机场六星街店）（¥390）
+- 美豪怡致酒店（伊宁六星街景区店）（¥455）
+- 全季伊宁北京路酒店（¥450）
+- 汉庭伊宁喀赞其酒店（¥423）
+
+**高端/位置优先**（¥500+/间）：
+- 伊宁市行政服务中心广东路亚朵酒店（¥637）
+- 伊宁城与晚民宿（¥575）
+
+**住宿建议**：
+- 选择六星街/解放路周边酒店，步行可达喀赞其和美食街
+- 情侣出行建议选择舒适型酒店，房间设施更好
+- 旺季（5-10月）建议提前预订
+
+**来源**：FlyAI booking reference（代表性日期样例价格）+ Web-Rooter cited（搜狐本地人酒店推荐）
+
+---
+
+## 出行前检查
+
+### 预约
+- ✅ 赛里木湖门票（建议提前在OTA平台预约）
+- ✅ 酒店预订（建议提前预订，尤其是周末和节假日）
+- ✅ 包车预订（建议提前联系，确认价格和行程）
+
+### 证件
+- ✅ 身份证（景区实名入园）
+- ✅ 学生证/老年证（如有，部分景区可享优惠）
+
+### 装备
+- ✅ 冲锋衣或薄羽绒服（早晚温差大，赛里木湖边风大）
+- ✅ 防晒霜、墨镜、遮阳帽（紫外线强）
+- ✅ 相机/手机（赛里木湖、喀赞其极具拍照价值）
+- ✅ 保温杯、干粮、水（赛里木湖景区内餐饮选择少）
+- ✅ 常用药品（感冒药、肠胃药、创可贴）
+
+### APP
+- ✅ 高德地图/百度地图（导航）
+- ✅ 飞猪/携程/美团（预订酒店、门票）
+- ✅ 大众点评/美团（查找餐厅）
+- ✅ 微信/支付宝（支付）
+
+---
+
+## 来源与可信度
+
+- **Research conducted**: 2026-05-10
+- **已核实**：
+  - 航班信息：FlyAI booking reference（代表性日期样例数据）
+  - 酒店信息：FlyAI booking reference（代表性日期样例价格）
+  - 景点信息：FlyAI semantic reference + Web-Rooter cited
+  - 包车价格：Web-Rooter cited（搜狐伊犁自驾攻略）
+- **可能波动**：
+  - 航班价格、酒店价格（需出发前再次确认）
+  - 赛里木湖门票政策（建议出发前查询官方公众号）
+  - 天气预报（建议出发前3-4天再次确认）
+  - 包车价格（建议提前联系确认）
+</code></pre>
+        </details>
+      </details>
+      <details class="panel source-doc" id="doc-reputation">
+        <summary class="source-doc-summary">
+          <span class="section-kicker">reputation.md</span>
+          <strong>完整口碑与避雷原文</strong>
+          <em>新疆伊犁口碑调研与避坑指南</em>
+        </summary>
+        <div class="markdown-body">
+          <h3>新疆伊犁口碑调研与避坑指南</h3>
+<h4>总体评价</h4>
+<p>伊犁5月底值得去，赛里木湖、喀赞其民俗区口碑优秀，但需注意薰衣草尚未盛开。3天2夜建议聚焦伊宁市+赛里木湖精华线路，避免贪多导致行程过于紧凑。</p>
+<h4>核心景点口碑</h4>
+<h5>赛里木湖 ⭐⭐⭐⭐⭐</h5>
+<p><strong>值得去吗</strong>：强烈推荐，被誉为&quot;大西洋最后一滴眼泪&quot;，5月底湖水湛蓝、雪山环绕，景色绝美。</p>
+<p><strong>游客评价</strong>：</p>
+<ul><li>✅ 景色震撼，适合拍照打卡，尤其是日出/日落时分</li><li>✅ 5月底游客相对暑期较少，体验更好</li><li>✅ 环湖自驾体验佳，可以随时停车拍照</li><li>⚠️ 门票+区间车约¥70-145，自驾套票更贵（约¥200+）</li><li>⚠️ 环湖一圈约90公里，建议预留4-6小时</li><li>⚠️ 海拔约2000米，早晚温差大，需备厚外套</li></ul>
+<p><strong>避雷提示</strong>：</p>
+<ol><li><strong>门票政策</strong>：旺季建议提前在OTA平台预约，避免现场排队</li><li><strong>自驾选择</strong>：如果包车/自驾，建议购买自驾套票（可环湖），比区间车自由度高</li><li><strong>游玩时间</strong>：建议上午或傍晚前往，光线最佳；中午光线过强，拍照效果一般</li><li><strong>保暖装备</strong>：湖边风大，即使5月底白天温暖，也需备冲锋衣或薄羽绒服</li><li><strong>餐饮</strong>：景区内餐饮选择少且贵，建议自备干粮和水</li></ol>
+<p><strong>来源</strong>：Web-Rooter cited（搜狐、百度百家号游客评价）</p>
+<h5>喀赞其民俗旅游区 ⭐⭐⭐⭐</h5>
+<p><strong>值得去吗</strong>：推荐，伊犁蓝色小镇，免费开放，适合拍照和体验维吾尔族民俗文化。</p>
+<p><strong>游客评价</strong>：</p>
+<ul><li>✅ 免费开放，蓝色建筑极具特色，拍照出片率高</li><li>✅ 乘坐哈迪克马车体验独特，穿梭于老城街巷</li><li>✅ 原生态居住区，可以感受当地人真实生活</li><li>⚠️ 马车体验需单独付费，约¥50-100/人</li><li>⚠️ 部分民居不对外开放，需尊重当地居民隐私</li></ul>
+<p><strong>避雷提示</strong>：</p>
+<ol><li><strong>马车价格</strong>：提前询问价格，避免被宰；正规马车约¥50-80/人，游览时长约1小时</li><li><strong>拍照礼仪</strong>：拍摄当地居民前需征得同意，尊重民族习俗</li><li><strong>游玩时间</strong>：建议白天前往，光线充足时拍照效果最佳；傍晚光线较暗</li><li><strong>周边美食</strong>：喀赞其附近有不少本地餐厅，可以顺便品尝新疆美食</li></ol>
+<p><strong>来源</strong>：FlyAI semantic reference + Web-Rooter cited（网易、百度移动搜索游客评价）</p>
+<h5>果子沟大桥 ⭐⭐⭐⭐</h5>
+<p><strong>值得去吗</strong>：推荐，前往赛里木湖必经之路，中国最美公路桥，壮观峡谷景观。</p>
+<p><strong>游客评价</strong>：</p>
+<ul><li>✅ 桥梁工程壮观，峡谷景色优美</li><li>✅ 无需门票，沿途可停车拍照</li><li>⚠️ 山路较多，自驾需注意安全</li></ul>
+<p><strong>避雷提示</strong>：</p>
+<ol><li><strong>停车拍照</strong>：注意选择安全停车点，避免影响交通</li><li><strong>观景时间</strong>：建议预留30分钟-1小时，不要只是路过</li></ol>
+<p><strong>来源</strong>：Web-Rooter cited（搜狐情侣攻略）</p>
+<h4>住宿区域建议</h4>
+<h5>推荐区域：伊宁市区（六星街/解放路/飞机场路周边）</h5>
+<p><strong>优势</strong>：</p>
+<ul><li>交通便利，距离机场约20-30分钟</li><li>餐饮选择丰富，步行可达喀赞其民俗区</li><li>酒店选择多，从经济型到高档型都有</li></ul>
+<p><strong>酒店档次建议</strong>：</p>
+<ol><li><strong>经济/交通优先</strong>（¥200-300）：</li></ol>
+<ul><li>7天优品·伊宁上海城店（¥286）</li><li>格林豪泰智选酒店（¥294）</li><li>伊宁市上海城六星街铭豪精品酒店（¥239）</li></ul>
+<ol><li><strong>舒适/情侣优先</strong>（¥300-500）：</li></ol>
+<ul><li>希岸酒店（伊宁飞机场路六星街）（¥383）</li><li>喆啡酒店（伊宁机场六星街店）（¥390）</li><li>美豪怡致酒店（伊宁六星街景区店）（¥455）</li><li>伊宁六星街薰衣草主题民宿（¥360）</li></ul>
+<ol><li><strong>高端/位置优先</strong>（¥500+）：</li></ol>
+<ul><li>伊宁康莱德酒店（高端国际品牌，空中大堂吧，全景客房）</li></ul>
+<p><strong>避雷提示</strong>：</p>
+<ul><li>旺季（5-10月）建议提前预订，尤其是周末和节假日</li><li>选择六星街/解放路周边酒店，步行可达喀赞其和美食街</li><li>避免选择距离市区过远的酒店，影响行程安排</li></ul>
+<p><strong>来源</strong>：FlyAI booking reference（代表性日期样例价格）+ Web-Rooter cited（搜狐本地人酒店推荐）</p>
+<h4>美食推荐</h4>
+<h5>必吃美食</h5>
+<ol><li><strong>烤包子</strong>：外皮酥脆，内馅鲜美，伊宁特色</li><li><strong>手抓饭</strong>：新疆经典，羊肉、胡萝卜、洋葱混合米饭</li><li><strong>大盘鸡</strong>：新疆名菜，鸡肉鲜嫩，配皮带面</li><li><strong>面肺子</strong>：维吾尔族传统小吃，羊肺灌米饭</li><li><strong>手工冰淇淋</strong>：喀赞其街头特色，奶香浓郁</li></ol>
+<h5>推荐餐厅区域</h5>
+<ul><li><strong>六星街美食街</strong>：本地人聚集地，餐厅选择多，价格实惠</li><li><strong>喀赞其周边</strong>：街头小吃丰富，可以边逛边吃</li><li><strong>解放路/上海城周边</strong>：连锁餐厅和本地餐厅都有</li></ul>
+<p><strong>避雷提示</strong>：</p>
+<ul><li>避免在景区内用餐，价格贵且口味一般</li><li>选择本地人多的餐厅，口味更正宗</li><li>不吃辣的游客需提前说明，新疆菜部分偏辣</li></ul>
+<p><strong>来源</strong>：Web-Rooter cited（大众点评伊宁美食地图）</p>
+<h4>交通与包车</h4>
+<h5>包车建议</h5>
+<ul><li><strong>伊宁-赛里木湖往返</strong>：约¥300-500/车/天（4人分摊约¥75-125/人）</li><li><strong>包车优势</strong>：时间自由，可以随时停车拍照，适合情侣出行</li><li><strong>包车渠道</strong>：酒店前台、OTA平台、当地旅行社</li></ul>
+<h5>自驾建议</h5>
+<ul><li><strong>租车价格</strong>：约¥200-400/天（SUV）</li><li><strong>路况</strong>：伊宁-赛里木湖路况良好，但山路较多，需有一定驾驶经验</li><li><strong>加油</strong>：沿途加油站较少，建议提前加满油</li></ul>
+<p><strong>避雷提示</strong>：</p>
+<ul><li>包车前确认价格、行程、用车时间，避免临时加价</li><li>自驾需注意山路安全，尤其是雨雾天气</li><li>新疆地域辽阔，导航可能不准确，建议提前下载离线地图</li></ul>
+<p><strong>来源</strong>：Web-Rooter cited（搜狐伊犁自驾攻略）</p>
+<h4>行程建议</h4>
+<h5>3天2夜精华路线</h5>
+<p><strong>Day 1</strong>：北京飞抵伊宁（晚上），喀赞其民俗区（2-3小时）<br><strong>Day 2</strong>：赛里木湖+果子沟大桥（全天，往返约4-5小时车程+游玩4-6小时）<br><strong>Day 3</strong>：伊宁市区（六星街、伊犁河大桥），下午返程北京</p>
+<p><strong>不推荐</strong>：</p>
+<ul><li>❌ 那拉提草原：距离伊宁约3-4小时车程，3天2夜时间过于紧凑</li><li>❌ 霍城薰衣草：5月底尚未盛开，不建议专程前往</li></ul>
+<p><strong>来源</strong>：Web-Rooter cited（搜狐伊犁3天短途游精华攻略）</p>
+<h4>总结与提醒</h4>
+<h5>值得去的理由</h5>
+<ol><li>赛里木湖景色绝美，5月底正值最佳观赏期</li><li>喀赞其民俗区免费开放，蓝色小镇拍照出片率高</li><li>伊宁美食丰富，新疆特色浓郁</li><li>5月底游客相对暑期较少，体验更好</li></ol>
+<h5>需要注意的风险</h5>
+<ol><li><strong>薰衣草尚未盛开</strong>：5月底薰衣草处于生长初期，若专为薰衣草而来建议改期至6月15日后</li><li><strong>昼夜温差大</strong>：需备冲锋衣或薄羽绒服，尤其是赛里木湖边</li><li><strong>行程不宜贪多</strong>：3天2夜建议聚焦伊宁市+赛里木湖，避免过于紧凑</li><li><strong>包车/自驾必要性</strong>：前往赛里木湖需包车或自驾，公共交通不便</li></ol>
+<h5>最终建议</h5>
+<p>伊犁5月底值得去，但需调整对薰衣草的预期。建议聚焦赛里木湖+喀赞其+伊宁美食的精华线路，享受轻松浪漫的情侣之旅。</p>
+<p><strong>Research conducted</strong>: 2026-05-10</p>
+        </div>
+        <details class="raw-markdown">
+          <summary>查看原始 Markdown</summary>
+          <pre><code># 新疆伊犁口碑调研与避坑指南
+
+## 总体评价
+伊犁5月底值得去，赛里木湖、喀赞其民俗区口碑优秀，但需注意薰衣草尚未盛开。3天2夜建议聚焦伊宁市+赛里木湖精华线路，避免贪多导致行程过于紧凑。
+
+## 核心景点口碑
+
+### 赛里木湖 ⭐⭐⭐⭐⭐
+**值得去吗**：强烈推荐，被誉为&quot;大西洋最后一滴眼泪&quot;，5月底湖水湛蓝、雪山环绕，景色绝美。
+
+**游客评价**：
+- ✅ 景色震撼，适合拍照打卡，尤其是日出/日落时分
+- ✅ 5月底游客相对暑期较少，体验更好
+- ✅ 环湖自驾体验佳，可以随时停车拍照
+- ⚠️ 门票+区间车约¥70-145，自驾套票更贵（约¥200+）
+- ⚠️ 环湖一圈约90公里，建议预留4-6小时
+- ⚠️ 海拔约2000米，早晚温差大，需备厚外套
+
+**避雷提示**：
+1. **门票政策**：旺季建议提前在OTA平台预约，避免现场排队
+2. **自驾选择**：如果包车/自驾，建议购买自驾套票（可环湖），比区间车自由度高
+3. **游玩时间**：建议上午或傍晚前往，光线最佳；中午光线过强，拍照效果一般
+4. **保暖装备**：湖边风大，即使5月底白天温暖，也需备冲锋衣或薄羽绒服
+5. **餐饮**：景区内餐饮选择少且贵，建议自备干粮和水
+
+**来源**：Web-Rooter cited（搜狐、百度百家号游客评价）
+
+### 喀赞其民俗旅游区 ⭐⭐⭐⭐
+**值得去吗**：推荐，伊犁蓝色小镇，免费开放，适合拍照和体验维吾尔族民俗文化。
+
+**游客评价**：
+- ✅ 免费开放，蓝色建筑极具特色，拍照出片率高
+- ✅ 乘坐哈迪克马车体验独特，穿梭于老城街巷
+- ✅ 原生态居住区，可以感受当地人真实生活
+- ⚠️ 马车体验需单独付费，约¥50-100/人
+- ⚠️ 部分民居不对外开放，需尊重当地居民隐私
+
+**避雷提示**：
+1. **马车价格**：提前询问价格，避免被宰；正规马车约¥50-80/人，游览时长约1小时
+2. **拍照礼仪**：拍摄当地居民前需征得同意，尊重民族习俗
+3. **游玩时间**：建议白天前往，光线充足时拍照效果最佳；傍晚光线较暗
+4. **周边美食**：喀赞其附近有不少本地餐厅，可以顺便品尝新疆美食
+
+**来源**：FlyAI semantic reference + Web-Rooter cited（网易、百度移动搜索游客评价）
+
+### 果子沟大桥 ⭐⭐⭐⭐
+**值得去吗**：推荐，前往赛里木湖必经之路，中国最美公路桥，壮观峡谷景观。
+
+**游客评价**：
+- ✅ 桥梁工程壮观，峡谷景色优美
+- ✅ 无需门票，沿途可停车拍照
+- ⚠️ 山路较多，自驾需注意安全
+
+**避雷提示**：
+1. **停车拍照**：注意选择安全停车点，避免影响交通
+2. **观景时间**：建议预留30分钟-1小时，不要只是路过
+
+**来源**：Web-Rooter cited（搜狐情侣攻略）
+
+## 住宿区域建议
+
+### 推荐区域：伊宁市区（六星街/解放路/飞机场路周边）
+**优势**：
+- 交通便利，距离机场约20-30分钟
+- 餐饮选择丰富，步行可达喀赞其民俗区
+- 酒店选择多，从经济型到高档型都有
+
+**酒店档次建议**：
+1. **经济/交通优先**（¥200-300）：
+   - 7天优品·伊宁上海城店（¥286）
+   - 格林豪泰智选酒店（¥294）
+   - 伊宁市上海城六星街铭豪精品酒店（¥239）
+   
+2. **舒适/情侣优先**（¥300-500）：
+   - 希岸酒店（伊宁飞机场路六星街）（¥383）
+   - 喆啡酒店（伊宁机场六星街店）（¥390）
+   - 美豪怡致酒店（伊宁六星街景区店）（¥455）
+   - 伊宁六星街薰衣草主题民宿（¥360）
+
+3. **高端/位置优先**（¥500+）：
+   - 伊宁康莱德酒店（高端国际品牌，空中大堂吧，全景客房）
+
+**避雷提示**：
+- 旺季（5-10月）建议提前预订，尤其是周末和节假日
+- 选择六星街/解放路周边酒店，步行可达喀赞其和美食街
+- 避免选择距离市区过远的酒店，影响行程安排
+
+**来源**：FlyAI booking reference（代表性日期样例价格）+ Web-Rooter cited（搜狐本地人酒店推荐）
+
+## 美食推荐
+
+### 必吃美食
+1. **烤包子**：外皮酥脆，内馅鲜美，伊宁特色
+2. **手抓饭**：新疆经典，羊肉、胡萝卜、洋葱混合米饭
+3. **大盘鸡**：新疆名菜，鸡肉鲜嫩，配皮带面
+4. **面肺子**：维吾尔族传统小吃，羊肺灌米饭
+5. **手工冰淇淋**：喀赞其街头特色，奶香浓郁
+
+### 推荐餐厅区域
+- **六星街美食街**：本地人聚集地，餐厅选择多，价格实惠
+- **喀赞其周边**：街头小吃丰富，可以边逛边吃
+- **解放路/上海城周边**：连锁餐厅和本地餐厅都有
+
+**避雷提示**：
+- 避免在景区内用餐，价格贵且口味一般
+- 选择本地人多的餐厅，口味更正宗
+- 不吃辣的游客需提前说明，新疆菜部分偏辣
+
+**来源**：Web-Rooter cited（大众点评伊宁美食地图）
+
+## 交通与包车
+
+### 包车建议
+- **伊宁-赛里木湖往返**：约¥300-500/车/天（4人分摊约¥75-125/人）
+- **包车优势**：时间自由，可以随时停车拍照，适合情侣出行
+- **包车渠道**：酒店前台、OTA平台、当地旅行社
+
+### 自驾建议
+- **租车价格**：约¥200-400/天（SUV）
+- **路况**：伊宁-赛里木湖路况良好，但山路较多，需有一定驾驶经验
+- **加油**：沿途加油站较少，建议提前加满油
+
+**避雷提示**：
+- 包车前确认价格、行程、用车时间，避免临时加价
+- 自驾需注意山路安全，尤其是雨雾天气
+- 新疆地域辽阔，导航可能不准确，建议提前下载离线地图
+
+**来源**：Web-Rooter cited（搜狐伊犁自驾攻略）
+
+## 行程建议
+
+### 3天2夜精华路线
+**Day 1**：北京飞抵伊宁（晚上），喀赞其民俗区（2-3小时）
+**Day 2**：赛里木湖+果子沟大桥（全天，往返约4-5小时车程+游玩4-6小时）
+**Day 3**：伊宁市区（六星街、伊犁河大桥），下午返程北京
+
+**不推荐**：
+- ❌ 那拉提草原：距离伊宁约3-4小时车程，3天2夜时间过于紧凑
+- ❌ 霍城薰衣草：5月底尚未盛开，不建议专程前往
+
+**来源**：Web-Rooter cited（搜狐伊犁3天短途游精华攻略）
+
+## 总结与提醒
+
+### 值得去的理由
+1. 赛里木湖景色绝美，5月底正值最佳观赏期
+2. 喀赞其民俗区免费开放，蓝色小镇拍照出片率高
+3. 伊宁美食丰富，新疆特色浓郁
+4. 5月底游客相对暑期较少，体验更好
+
+### 需要注意的风险
+1. **薰衣草尚未盛开**：5月底薰衣草处于生长初期，若专为薰衣草而来建议改期至6月15日后
+2. **昼夜温差大**：需备冲锋衣或薄羽绒服，尤其是赛里木湖边
+3. **行程不宜贪多**：3天2夜建议聚焦伊宁市+赛里木湖，避免过于紧凑
+4. **包车/自驾必要性**：前往赛里木湖需包车或自驾，公共交通不便
+
+### 最终建议
+伊犁5月底值得去，但需调整对薰衣草的预期。建议聚焦赛里木湖+喀赞其+伊宁美食的精华线路，享受轻松浪漫的情侣之旅。
+
+**Research conducted**: 2026-05-10
+</code></pre>
+        </details>
+      </details>
+    
+    <section class="panel sources-panel" id="sources">
+      <div class="section-kicker">来源与可信度</div>
+      <h2>所有价格、票务、天气和口碑均需按来源理解</h2>
+      <p>来源未单独列出，请以各章节标注为准。</p>
+      
+      <p class="source-note">Research conducted: 2026-05-10</p>
+    </section>
+  </main>
+<div class="drawer-backdrop" id="drawerBackdrop"></div>
+<aside class="drawer" id="atlasDrawer" aria-label="地点详情">
+    <div class="drawer-head"><h2 id="drawerTitle">地点详情</h2><button class="drawer-close" id="drawerClose" type="button" aria-label="关闭">×</button></div>
+    <div class="drawer-body" id="drawerBody"></div>
+  </aside>
+  </div>
+  <script>window.__ROAMMATE_ATLAS__ = {"trip":{"destination":"新疆伊犁","dateRange":"2026-05-27 至 2026-05-29","duration":"3天2夜","travelers":"4人（两对情侣）","origin":"北京","generatedAt":"2026-05-10"},"days":[{"day":1,"date":"2026-05-27","theme":"初见伊犁·蓝色小镇","area":"伊宁市区","intensity":"低","highlights":[],"meals":"晚餐：六星街美食街（烤包子、手抓饭、大盘鸡、面肺子）","rest":"酒店入住后稍作休整，适应时差（新疆比北京晚约2小时）","budget":"约¥2523-2770/人","reservations":["无需预约，喀赞其免费开放"],"backup":"若航班延误或疲劳，可直接回酒店休息，次日早起前往赛里木湖","reminders":[],"activities":[{"time":"15:35","title":"北京首都T3/大兴机场出发","poiName":"北京首都T3/大兴机场出发","transport":"CA1255/CZ8894","cost":"¥2260-2350/人","notes":"提前2小时到机场","tags":[]},{"time":"20:45","title":"抵达伊宁机场","poiName":"抵达伊宁机场","notes":"新疆时间约18:45","tags":[]},{"time":"21:00-21:30","title":"机场→酒店","poiName":"机场→酒店","transport":"打车/接机","cost":"¥50-80","notes":"距离约20-30分钟","tags":[]},{"time":"22:00-23:30","title":"喀赞其民俗旅游区夜游","poiName":"喀赞其民俗旅游区","transport":"步行/打车","cost":"免费","notes":"新疆日落约22:00，可拍夜景","tags":[]},{"time":"23:30-01:00","title":"六星街美食街晚餐","poiName":"六星街美食街","transport":"步行","cost":"¥100-150/人","notes":"烤包子、手抓饭、大盘鸡","tags":[]}]},{"day":2,"date":"2026-05-28","theme":"赛里木湖·大西洋最后一滴眼泪","area":"赛里木湖+果子沟","intensity":"中","highlights":[],"meals":"早餐：酒店含早；午餐：自备干粮和水；晚餐：伊宁市区本地餐厅","rest":"赛里木湖海拔约2000米，注意保暖，备冲锋衣或薄羽绒服","budget":"约¥275-470/人","reservations":["赛里木湖旺季建议提前在OTA平台预约门票"],"backup":"若天气不佳，可改为伊宁市区深度游：伊犁河大桥、六星街、汉人街","reminders":[],"activities":[{"time":"07:00-08:00","title":"酒店早餐，出发前往赛里木湖","poiName":"赛里木湖","notes":"建议早起，避开中午强光","tags":[]},{"time":"08:00-10:00","title":"伊宁→赛里木湖","poiName":"赛里木湖","transport":"包车","cost":"¥300-500/车/天","notes":"约2小时车程，沿途经过果子沟","tags":[]},{"time":"10:00-10:30","title":"果子沟大桥观景","poiName":"果子沟大桥","transport":"包车","cost":"免费","notes":"中国最美公路桥，拍照打卡","tags":[]},{"time":"10:30-11:00","title":"抵达赛里木湖，购票入园","poiName":"赛里木湖","cost":"¥70-145/人","notes":"门票+区间车或自驾套票","tags":[]},{"time":"11:00-16:00","title":"赛里木湖环湖游览","poiName":"赛里木湖","transport":"包车环湖","notes":"环湖约90公里，随时停车拍照","tags":[]},{"time":"16:00-17:00","title":"湖边休息，准备观赏日落","poiName":"湖边休息，准备观赏日落","notes":"日落约20:00（新疆时间）","tags":[]},{"time":"17:00-19:00","title":"赛里木湖→伊宁","poiName":"赛里木湖","transport":"包车","notes":"约2小时车程","tags":[]},{"time":"20:00-22:00","title":"伊宁市区晚餐","poiName":"伊宁市区晚餐","transport":"步行/打车","cost":"¥100-150/人","notes":"推荐本地餐厅","tags":[]}]},{"day":3,"date":"2026-05-29","theme":"伊宁漫步·返程","area":"伊宁市区","intensity":"低","highlights":[],"meals":"早餐：酒店含早；午餐：伊宁市区本地餐厅（最后一顿新疆美食）","rest":"上午轻松游览，避免过度疲劳","budget":"约¥2358-2998/人","reservations":["无需预约"],"backup":"若时间紧张，可直接前往机场，机场内也有特产店","reminders":[],"activities":[{"time":"08:00-09:00","title":"酒店早餐，退房","poiName":"酒店早餐，退房","tags":[]},{"time":"09:00-10:30","title":"伊犁河大桥、伊犁河畔漫步","poiName":"伊犁河大桥","transport":"打车","cost":"¥20-30","notes":"拍照打卡，欣赏河景","tags":[]},{"time":"10:30-12:00","title":"六星街采购特产","poiName":"六星街采购特产","transport":"步行","cost":"¥200-500","notes":"干果、薰衣草制品、手工艺品","tags":[]},{"time":"12:00-13:00","title":"午餐","poiName":"午餐","transport":"步行","cost":"¥80-120/人","notes":"最后一顿新疆美食","tags":[]},{"time":"13:00-14:00","title":"前往机场","poiName":"前往机场","transport":"打车","cost":"¥50-80","notes":"提前2小时到机场","tags":[]},{"time":"15:25-20:35","title":"伊宁→北京","poiName":"伊宁→北京","transport":"CZ8894","cost":"¥2060-2350/人","tags":[]}]}],"poiExperiences":[{"name":"赛里木湖","day":2,"whyGo":["被誉为'大西洋最后一滴眼泪'，景色震撼","5月底湖水湛蓝、雪山环绕，正值最佳观赏期","适合拍照打卡，尤其是日出/日落时分"],"recommendedDuration":"4-6小时","mustDo":["环湖自驾或乘区间车，随时停车拍照","观赏日落（约20:00新疆时间）","拍摄雪山湖泊美景"],"queueAndReservation":["旺季建议提前在OTA平台预约门票","门票+区间车约¥70-145，自驾套票约¥200+","5月底游客相对暑期较少，排队风险较低"],"preparation":["冲锋衣或薄羽绒服（海拔约2000米，早晚温差大，湖边风大）","防晒霜、墨镜、遮阳帽（紫外线强）","自备干粮和水（景区内餐饮选择少且贵）"],"familyNotes":[],"avoid":["不要只在中午前往，建议上午或傍晚，光线最佳","不要忘记保暖装备，即使白天温暖，湖边风大"],"commonComplaints":["门票+区间车价格较贵","景区内餐饮选择少且贵","中午光线过强，拍照效果一般"],"suitable":"情侣、年轻人、喜欢自然风光和拍照的旅行者","notSuitable":"不愿早起或对高海拔敏感的游客","source":"FlyAI semantic reference + Web-Rooter cited，2026-05-10"},{"name":"喀赞其民俗旅游区","day":1,"whyGo":["伊犁蓝色小镇，免费开放","蓝色建筑极具特色，拍照出片率高","原生态居住区，可以感受当地人真实生活"],"recommendedDuration":"2-4小时","mustDo":["乘坐哈迪克马车穿梭蓝色街巷","拍摄伊犁蓝建筑","体验维吾尔族民俗文化"],"queueAndReservation":["免费开放，无需预约","马车体验需单独付费，约¥50-100/人"],"preparation":["相机/手机（极具拍照价值）","尊重当地居民隐私，拍摄前需征得同意"],"familyNotes":[],"avoid":["不要在傍晚前往，光线较暗，拍照效果不佳","不要未经同意拍摄当地居民"],"commonComplaints":["部分民居不对外开放","马车价格需提前询问，避免被宰"],"suitable":"情侣、喜欢人文摄影和慢节奏旅行的游客","source":"FlyAI semantic reference + Web-Rooter cited，2026-05-10"},{"name":"果子沟大桥","day":2,"whyGo":["中国最美公路桥，壮观峡谷景观","前往赛里木湖必经之路，无需门票"],"recommendedDuration":"30分钟-1小时","mustDo":["观赏桥梁工程壮观景象","拍摄峡谷景观"],"queueAndReservation":["无需门票，无需预约","注意选择安全停车点"],"preparation":[],"familyNotes":[],"avoid":["不要只是路过，建议预留30分钟-1小时观景拍照"],"commonComplaints":[],"suitable":"所有游客","source":"Web-Rooter cited，2026-05-10"}],"hotels":[{"address":"八达赛里斯广场C1栋107号","brandName":null,"decorationTime":"2023-02-07","detailUrl":"https://a.feizhu.com/1MFxy3","interestsPoi":"近伊宁站","latitude":"43.95763718602061","longitude":"81.28046654416458","mainPic":"https://img.alicdn.com/imgextra/i2/6000000005152/O1CN01TSYoBd1nvfQIcWjvR_!!6000000005152-0-hotel.jpg","name":"永丹客栈","price":"¥116（代表性日期样例价，价格波动）","shId":"75562486","star":"","tier":"经济/交通优先","query_profile":"economy_price","area":"近伊宁站","booking_url":"https://a.feizhu.com/1MFxy3","room_type":"FlyAI未返回具体房型","room_type_status":"not_returned_by_flyai","room_type_note":"FlyAI search-hotel 仅返回酒店级价格，未返回具体房型；不得编造，需点击飞猪链接确认可订房型。","source":"FlyAI booking reference + Web-Rooter cited，2026-05-10","fit":"预算敏感、只需要基础住宿和可接受交通","tradeoffs":["价格优先，需额外核实隔音、房间面积和亲子舒适度"],"priceReference":"¥116（代表性日期样例价，价格波动）","roomType":"FlyAI未返回具体房型，需点击飞猪链接确认","bookingUrl":"https://a.feizhu.com/1MFxy3","url":"https://a.feizhu.com/1MFxy3","image":"https://img.alicdn.com/imgextra/i2/6000000005152/O1CN01TSYoBd1nvfQIcWjvR_!!6000000005152-0-hotel.jpg"},{"address":"伊宁市经济合作区广东路1号中原国际综合楼B座10–17层","brandName":null,"decorationTime":"2023","detailUrl":"https://a.feizhu.com/40Twoj","interestsPoi":"近伊犁哈萨克自治州博物馆","latitude":"43.913396","longitude":"81.267533","mainPic":"https://img.alicdn.com/imgextra/i3/6000000003002/O1CN01WCNeub1Y2y6KJQ1KC_!!6000000003002-0-hotel.jpg","name":"伊宁市行政服务中心广东路亚朵酒店","price":"¥637（代表性日期样例价，价格波动）","shId":"76424045","star":"高档型","tier":"舒适/情侣优先","query_profile":"comfort_family","area":"近伊犁哈萨克自治州博物馆","booking_url":"https://a.feizhu.com/40Twoj","room_type":"FlyAI未返回具体房型","room_type_status":"not_returned_by_flyai","room_type_note":"FlyAI search-hotel 仅返回酒店级价格，未返回具体房型；不得编造，需点击飞猪链接确认可订房型。","source":"FlyAI booking reference + Web-Rooter cited，2026-05-10","fit":"情侣出行、希望房间和早餐更稳妥、降低通勤和休息成本","tradeoffs":["价格通常高于经济型，热门日期需尽早确认房型"],"priceReference":"¥637（代表性日期样例价，价格波动）","roomType":"FlyAI未返回具体房型，需点击飞猪链接确认","bookingUrl":"https://a.feizhu.com/40Twoj","url":"https://a.feizhu.com/40Twoj","image":"https://img.alicdn.com/imgextra/i3/6000000003002/O1CN01WCNeub1Y2y6KJQ1KC_!!6000000003002-0-hotel.jpg"},{"address":"伊宁市军垦路37号","brandName":null,"decorationTime":"2025-01-01","detailUrl":"https://a.feizhu.com/0obw1o","interestsPoi":"近农四师客运站","latitude":"43.926051","longitude":"81.292164","mainPic":"https://img.alicdn.com/imgextra/i2/6000000000815/O1CN01ZwklEh1HtJuBoqCZM_!!6000000000815-2-hotel.png","name":"浦东假日酒店（伊宁六星街伊犁师范店）","price":"¥588（代表性日期样例价，价格波动）","shId":"85099702","star":"高档型","tier":"舒适/情侣优先","query_profile":"comfort_family","area":"近农四师客运站","booking_url":"https://a.feizhu.com/0obw1o","room_type":"FlyAI未返回具体房型","room_type_status":"not_returned_by_flyai","room_type_note":"FlyAI search-hotel 仅返回酒店级价格，未返回具体房型；不得编造，需点击飞猪链接确认可订房型。","source":"FlyAI booking reference + Web-Rooter cited，2026-05-10","fit":"情侣出行、希望房间和早餐更稳妥、降低通勤和休息成本","tradeoffs":["价格通常高于经济型，热门日期需尽早确认房型"],"priceReference":"¥588（代表性日期样例价，价格波动）","roomType":"FlyAI未返回具体房型，需点击飞猪链接确认","bookingUrl":"https://a.feizhu.com/0obw1o","url":"https://a.feizhu.com/0obw1o","image":"https://img.alicdn.com/imgextra/i2/6000000000815/O1CN01ZwklEh1HtJuBoqCZM_!!6000000000815-2-hotel.png"},{"address":"伊宁市江苏路辅路伊犁公路管理局东北50米","brandName":null,"decorationTime":"2025-05-01","detailUrl":"https://a.feizhu.com/4bS6RL","interestsPoi":"近六星美食街","latitude":"43.928921","longitude":"81.309333","mainPic":"https://img.alicdn.com/imgextra/i1/6000000005883/O1CN01RUoADH1tKT8UYTwOa_!!6000000005883-0-hotel.jpg","name":"喀秋莎民宿（伊宁六星街店）","price":"¥902（代表性日期样例价，价格波动）","shId":"87114183","star":"高档型","tier":"舒适/情侣优先","query_profile":"comfort_family","area":"近六星美食街","booking_url":"https://a.feizhu.com/4bS6RL","room_type":"FlyAI未返回具体房型","room_type_status":"not_returned_by_flyai","room_type_note":"FlyAI search-hotel 仅返回酒店级价格，未返回具体房型；不得编造，需点击飞猪链接确认可订房型。","source":"FlyAI booking reference + Web-Rooter cited，2026-05-10","fit":"情侣出行、希望房间和早餐更稳妥、降低通勤和休息成本","tradeoffs":["价格通常高于经济型，热门日期需尽早确认房型"],"priceReference":"¥902（代表性日期样例价，价格波动）","roomType":"FlyAI未返回具体房型，需点击飞猪链接确认","bookingUrl":"https://a.feizhu.com/4bS6RL","url":"https://a.feizhu.com/4bS6RL","image":"https://img.alicdn.com/imgextra/i1/6000000005883/O1CN01RUoADH1tKT8UYTwOa_!!6000000005883-0-hotel.jpg"},{"address":"伊宁市迎宾路8号。","brandName":null,"decorationTime":"2014","detailUrl":"https://a.feizhu.com/0u5rFL","interestsPoi":"近喀赞其民俗旅游区","latitude":"43.919773","longitude":"81.32898","mainPic":"https://img.alicdn.com/imgextra/i2/6000000000803/O1CN01LyBB5p1Hnp11pwpNW_!!6000000000803-0-hotel.jpg","name":"伊犁宾馆","price":"¥529（代表性日期样例价，价格波动）","shId":"50147124","star":"豪华型","tier":"舒适/情侣优先","query_profile":"comfort_family","area":"近喀赞其民俗旅游区","booking_url":"https://a.feizhu.com/0u5rFL","room_type":"FlyAI未返回具体房型","room_type_status":"not_returned_by_flyai","room_type_note":"FlyAI search-hotel 仅返回酒店级价格，未返回具体房型；不得编造，需点击飞猪链接确认可订房型。","source":"FlyAI booking reference + Web-Rooter cited，2026-05-10","fit":"情侣出行、希望房间和早餐更稳妥、降低通勤和休息成本","tradeoffs":["价格通常高于经济型，热门日期需尽早确认房型"],"priceReference":"¥529（代表性日期样例价，价格波动）","roomType":"FlyAI未返回具体房型，需点击飞猪链接确认","bookingUrl":"https://a.feizhu.com/0u5rFL","url":"https://a.feizhu.com/0u5rFL","image":"https://img.alicdn.com/imgextra/i2/6000000000803/O1CN01LyBB5p1Hnp11pwpNW_!!6000000000803-0-hotel.jpg"},{"address":"伊宁市利群路与十户街交汇处","brandName":null,"decorationTime":"2016","detailUrl":"https://a.feizhu.com/2x6rwm","interestsPoi":"近四川路","latitude":"43.93136","longitude":"81.288846","mainPic":"https://img.alicdn.com/imgextra/i4/6000000003935/O1CN01wWVHAy1ewHG7Du4qx_!!6000000003935-2-hotel.png","name":"伊宁利群大酒店","price":"¥407（代表性日期样例价，价格波动）","shId":"53466157","star":"经济型","tier":"位置优先","query_profile":"location_first","area":"近四川路","booking_url":"https://a.feizhu.com/2x6rwm","room_type":"FlyAI未返回具体房型","room_type_status":"not_returned_by_flyai","room_type_note":"FlyAI search-hotel 仅返回酒店级价格，未返回具体房型；不得编造，需点击飞猪链接确认可订房型。","source":"FlyAI booking reference + Web-Rooter cited，2026-05-10","fit":"晚间吃饭、返程、临时休息便利性优先","tradeoffs":["核心区可能更贵或房间偏小"],"priceReference":"¥407（代表性日期样例价，价格波动）","roomType":"FlyAI未返回具体房型，需点击飞猪链接确认","bookingUrl":"https://a.feizhu.com/2x6rwm","url":"https://a.feizhu.com/2x6rwm","image":"https://img.alicdn.com/imgextra/i4/6000000003935/O1CN01wWVHAy1ewHG7Du4qx_!!6000000003935-2-hotel.png"},{"address":"经济合作区北京路2568号金茂新天地B座","brandName":null,"decorationTime":"2018","detailUrl":"https://a.feizhu.com/3Wlwrc","interestsPoi":"近波尔多商业街","latitude":"43.927987","longitude":"81.271966","mainPic":"https://img.alicdn.com/imgextra/i3/6000000000045/O1CN01IkxYWA1CCexIsPCxT_!!6000000000045-2-hotel.png","name":"伊宁若安精品酒店","price":"¥229（代表性日期样例价，价格波动）","shId":"54505017","star":"舒适型","tier":"位置优先","query_profile":"location_first","area":"近波尔多商业街","booking_url":"https://a.feizhu.com/3Wlwrc","room_type":"FlyAI未返回具体房型","room_type_status":"not_returned_by_flyai","room_type_note":"FlyAI search-hotel 仅返回酒店级价格，未返回具体房型；不得编造，需点击飞猪链接确认可订房型。","source":"FlyAI booking reference + Web-Rooter cited，2026-05-10","fit":"晚间吃饭、返程、临时休息便利性优先","tradeoffs":["核心区可能更贵或房间偏小"],"priceReference":"¥229（代表性日期样例价，价格波动）","roomType":"FlyAI未返回具体房型，需点击飞猪链接确认","bookingUrl":"https://a.feizhu.com/3Wlwrc","url":"https://a.feizhu.com/3Wlwrc","image":"https://img.alicdn.com/imgextra/i3/6000000000045/O1CN01IkxYWA1CCexIsPCxT_!!6000000000045-2-hotel.png"},{"address":"新疆伊犁州伊宁市经济合作区北京路3222号一品墅B1栋商业楼1层、5-14层","brandName":null,"decorationTime":"2019","detailUrl":"https://a.feizhu.com/2hPRJu","interestsPoi":"近伊犁哈萨克自治州博物馆","latitude":"43.9151","longitude":"81.2579","mainPic":"https://img.alicdn.com/imgextra/i2/6000000005302/O1CN01sLC1UB1p2N3jEMieG_!!6000000005302-0-hotel.jpg","name":"全季伊宁北京路酒店","price":"¥450（代表性日期样例价，价格波动）","shId":"59173064","star":"舒适型","tier":"特色/民宿备选","query_profile":"special_stay","area":"近伊犁哈萨克自治州博物馆","booking_url":"https://a.feizhu.com/2hPRJu","room_type":"FlyAI未返回具体房型","room_type_status":"not_returned_by_flyai","room_type_note":"FlyAI search-hotel 仅返回酒店级价格，未返回具体房型；不得编造，需点击飞猪链接确认可订房型。","source":"FlyAI booking reference + Web-Rooter cited，2026-05-10","fit":"想要公寓、民宿、客栈等不同住宿体验时备选","tradeoffs":["服务稳定性、前台、早餐和亲子设施需逐项核实"],"priceReference":"¥450（代表性日期样例价，价格波动）","roomType":"FlyAI未返回具体房型，需点击飞猪链接确认","bookingUrl":"https://a.feizhu.com/2hPRJu","url":"https://a.feizhu.com/2hPRJu","image":"https://img.alicdn.com/imgextra/i2/6000000005302/O1CN01sLC1UB1p2N3jEMieG_!!6000000005302-0-hotel.jpg"}],"map":{"schemaVersion":"1.1","pois":[{"id":"poi-1","name":"伊犁老城文化旅游区","originalName":"喀赞其民俗旅游区","address":"胜利南路2号","location":[81.332587,43.912787],"day":1,"order":1,"category":"attraction","marker":"景","confidence":"verified","source":"amap_place_text"},{"id":"poi-2","name":"赛里木湖","originalName":"赛里木湖","address":"博乐市","location":[81.396476,44.601434],"day":2,"order":2,"category":"attraction","marker":"景","confidence":"verified","source":"amap_place_text"},{"id":"poi-3","name":"果子沟大桥","originalName":"果子沟大桥","address":"霍城县","location":[81.140191,44.475984],"day":2,"order":3,"category":"attraction","marker":"景","confidence":"verified","source":"amap_place_text"},{"id":"poi-4","name":"伊犁河大桥","originalName":"伊犁河大桥","address":"伊宁市","location":[81.263047,43.893896],"day":3,"order":4,"category":"attraction","marker":"景","confidence":"verified","source":"amap_place_text"}],"hotels":[{"id":"hotel-1","name":"永丹客栈","address":"八达赛里斯广场C1栋107号","location":[81.28046654416458,43.95763718602061],"day":"","order":1,"category":"hotel","marker":"住","confidence":"FlyAI booking reference + Web-Rooter cited，2026-05-10","source":"FlyAI booking reference + Web-Rooter cited，2026-05-10","price":"¥116（代表性日期样例价，价格波动）","url":"https://a.feizhu.com/1MFxy3","image":"https://img.alicdn.com/imgextra/i2/6000000005152/O1CN01TSYoBd1nvfQIcWjvR_!!6000000005152-0-hotel.jpg"},{"id":"hotel-2","name":"伊宁市行政服务中心广东路亚朵酒店","address":"伊宁市经济合作区广东路1号中原国际综合楼B座10–17层","location":[81.267533,43.913396],"day":"","order":2,"category":"hotel","marker":"住","confidence":"FlyAI booking reference + Web-Rooter cited，2026-05-10","source":"FlyAI booking reference + Web-Rooter cited，2026-05-10","price":"¥637（代表性日期样例价，价格波动）","url":"https://a.feizhu.com/40Twoj","image":"https://img.alicdn.com/imgextra/i3/6000000003002/O1CN01WCNeub1Y2y6KJQ1KC_!!6000000003002-0-hotel.jpg"},{"id":"hotel-3","name":"浦东假日酒店（伊宁六星街伊犁师范店）","address":"伊宁市军垦路37号","location":[81.292164,43.926051],"day":"","order":3,"category":"hotel","marker":"住","confidence":"FlyAI booking reference + Web-Rooter cited，2026-05-10","source":"FlyAI booking reference + Web-Rooter cited，2026-05-10","price":"¥588（代表性日期样例价，价格波动）","url":"https://a.feizhu.com/0obw1o","image":"https://img.alicdn.com/imgextra/i2/6000000000815/O1CN01ZwklEh1HtJuBoqCZM_!!6000000000815-2-hotel.png"},{"id":"hotel-4","name":"喀秋莎民宿（伊宁六星街店）","address":"伊宁市江苏路辅路伊犁公路管理局东北50米","location":[81.309333,43.928921],"day":"","order":4,"category":"hotel","marker":"住","confidence":"FlyAI booking reference + Web-Rooter cited，2026-05-10","source":"FlyAI booking reference + Web-Rooter cited，2026-05-10","price":"¥902（代表性日期样例价，价格波动）","url":"https://a.feizhu.com/4bS6RL","image":"https://img.alicdn.com/imgextra/i1/6000000005883/O1CN01RUoADH1tKT8UYTwOa_!!6000000005883-0-hotel.jpg"},{"id":"hotel-5","name":"伊犁宾馆","address":"伊宁市迎宾路8号。","location":[81.32898,43.919773],"day":"","order":5,"category":"hotel","marker":"住","confidence":"FlyAI booking reference + Web-Rooter cited，2026-05-10","source":"FlyAI booking reference + Web-Rooter cited，2026-05-10","price":"¥529（代表性日期样例价，价格波动）","url":"https://a.feizhu.com/0u5rFL","image":"https://img.alicdn.com/imgextra/i2/6000000000803/O1CN01LyBB5p1Hnp11pwpNW_!!6000000000803-0-hotel.jpg"},{"id":"hotel-6","name":"伊宁利群大酒店","address":"伊宁市利群路与十户街交汇处","location":[81.288846,43.93136],"day":"","order":6,"category":"hotel","marker":"住","confidence":"FlyAI booking reference + Web-Rooter cited，2026-05-10","source":"FlyAI booking reference + Web-Rooter cited，2026-05-10","price":"¥407（代表性日期样例价，价格波动）","url":"https://a.feizhu.com/2x6rwm","image":"https://img.alicdn.com/imgextra/i4/6000000003935/O1CN01wWVHAy1ewHG7Du4qx_!!6000000003935-2-hotel.png"},{"id":"hotel-7","name":"伊宁若安精品酒店","address":"经济合作区北京路2568号金茂新天地B座","location":[81.271966,43.927987],"day":"","order":7,"category":"hotel","marker":"住","confidence":"FlyAI booking reference + Web-Rooter cited，2026-05-10","source":"FlyAI booking reference + Web-Rooter cited，2026-05-10","price":"¥229（代表性日期样例价，价格波动）","url":"https://a.feizhu.com/3Wlwrc","image":"https://img.alicdn.com/imgextra/i3/6000000000045/O1CN01IkxYWA1CCexIsPCxT_!!6000000000045-2-hotel.png"},{"id":"hotel-8","name":"全季伊宁北京路酒店","address":"新疆伊犁州伊宁市经济合作区北京路3222号一品墅B1栋商业楼1层、5-14层","location":[81.2579,43.9151],"day":"","order":8,"category":"hotel","marker":"住","confidence":"FlyAI booking reference + Web-Rooter cited，2026-05-10","source":"FlyAI booking reference + Web-Rooter cited，2026-05-10","price":"¥450（代表性日期样例价，价格波动）","url":"https://a.feizhu.com/2hPRJu","image":"https://img.alicdn.com/imgextra/i2/6000000005302/O1CN01sLC1UB1p2N3jEMieG_!!6000000005302-0-hotel.jpg"}],"routes":[{"day":1,"from":"机场","to":"酒店","mode":"打车/接机","duration":"距离约20-30分钟","cost":"¥50-80","source":"itinerary-data"},{"day":1,"from":"","to":"喀赞其民俗旅游区夜游","mode":"步行/打车","duration":"新疆日落约22:00，可拍夜景","cost":"免费","source":"itinerary-data"},{"day":2,"from":"伊宁","to":"赛里木湖","mode":"包车","duration":"约2小时车程，沿途经过果子沟","cost":"¥300-500/车/天","source":"itinerary-data"},{"day":2,"from":"赛里木湖","to":"伊宁","mode":"包车","duration":"约2小时车程","cost":"","source":"itinerary-data"},{"day":2,"from":"","to":"伊宁市区晚餐","mode":"步行/打车","duration":"推荐本地餐厅","cost":"¥100-150/人","source":"itinerary-data"},{"day":3,"from":"","to":"伊犁河大桥、伊犁河畔漫步","mode":"打车","duration":"拍照打卡，欣赏河景","cost":"¥20-30","source":"itinerary-data"},{"day":3,"from":"","to":"前往机场","mode":"打车","duration":"提前2小时到机场","cost":"¥50-80","source":"itinerary-data"},{"day":3,"from":"伊宁","to":"北京","mode":"CZ8894","duration":"","cost":"¥2060-2350/人","source":"itinerary-data"}],"generatedAt":"2026-05-10"},"food":[{"name":"烤包子","area":"六星街美食街","dishes":[]},{"name":"手抓饭","area":"六星街美食街","dishes":[]},{"name":"大盘鸡","area":"六星街美食街","dishes":[],"note":"部分偏辣，不吃辣的游客需提前说明"},{"name":"面肺子","area":"喀赞其周边","dishes":[]},{"name":"手工冰淇淋","area":"喀赞其周边","dishes":[]}],"budget":{"rows":[{"item":"往返机票","amount":"¥4700"},{"item":"住宿（2晚）","amount":"¥1000"},{"item":"包车（1天）","amount":"¥500"},{"item":"景点门票","amount":"¥145"},{"item":"餐饮（3天）","amount":"¥900"},{"item":"市内交通","amount":"¥150"},{"item":"特产采购","amount":"¥500"}],"total":"economy: ¥6190；comfortable: ¥7895"},"sources":[],"amapKey":"fbb979dc813d025582af9ec422d33750"};</script>
+  <script>
+    const data = window.__ROAMMATE_ATLAS__;
+    const $ = (selector, root = document) => root.querySelector(selector);
+    const $$ = (selector, root = document) => [...root.querySelectorAll(selector)];
+    const esc = (value) => String(value ?? '').replace(/[&<>"']/g, (ch) => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[ch]));
+    const byName = new Map();
+    [...data.map.pois, ...data.map.hotels].forEach((item) => {
+      if (item.name) byName.set(item.name, item);
+      if (item.originalName) byName.set(item.originalName, item);
+    });
+    const experiences = new Map(data.poiExperiences.map((item) => [item.name, item]));
+    let map = null;
+    const markers = new Map();
+    const markerEntries = [];
+    let routeLine = null;
+
+    function matchExperience(name) {
+      if (!name) return null;
+      if (experiences.has(name)) return experiences.get(name);
+      return [...experiences.values()].find((item) => name.includes(item.name) || item.name.includes(name)) || null;
+    }
+
+    function markerClass(item) {
+      return 'atlas-marker ' + esc(item.category || 'attraction');
+    }
+
+    function initMap() {
+      const allPoints = [...data.map.pois, ...data.map.hotels].filter((item) => Array.isArray(item.location));
+      if (window.AMap && data.amapKey && allPoints.length) {
+        map = new AMap.Map('atlasMap', { zoom: 12, center: allPoints[0].location, mapStyle: 'amap://styles/fresh' });
+        const path = data.map.pois.filter((item) => Array.isArray(item.location)).map((item) => item.location);
+        if (path.length > 1) {
+          routeLine = new AMap.Polyline({ path, strokeColor: '#1d766f', strokeWeight: 6, strokeOpacity: .82, lineJoin: 'round' });
+          routeLine.setMap(map);
+        }
+        for (const item of allPoints) {
+          const marker = new AMap.Marker({
+            position: item.location,
+            title: item.name,
+            content: '<button class="' + markerClass(item) + '" type="button">' + esc(item.marker || '点') + '</button>',
+            anchor: 'center',
+          });
+          marker.setMap(map);
+          marker.on('click', () => openDrawer(item.name));
+          markers.set(item.name, marker);
+          markerEntries.push({ item, marker });
+        }
+        map.setFitView(null, false, [70, 70, 70, 70]);
+      } else {
+        renderFallbackMap(allPoints);
+      }
+    }
+
+    function renderFallbackMap(points) {
+      const canvas = $('#atlasMap');
+      const usable = points.length ? points : data.map.pois;
+      canvas.innerHTML = '<div class="fallback-map"><div class="fallback-route-line"></div></div>';
+      const fallback = $('.fallback-map', canvas);
+      usable.slice(0, 12).forEach((item, index) => {
+        const left = 10 + (index % 6) * 16;
+        const top = 28 + Math.floor(index / 6) * 32 + (index % 2) * 7;
+        const node = document.createElement('button');
+        node.className = 'fallback-node';
+        node.type = 'button';
+        node.style.left = left + '%';
+        node.style.top = top + '%';
+        node.innerHTML = '<i>' + esc(item.marker || '点') + '</i><span>' + esc(item.name) + '</span>';
+        node.addEventListener('click', () => openDrawer(item.name));
+        fallback.appendChild(node);
+      });
+    }
+
+    function focusPoi(name) {
+      if (!name) return;
+      const item = byName.get(name) || [...byName.values()].find((candidate) => name.includes(candidate.name) || candidate.name.includes(name));
+      $$('.activity-card').forEach((card) => card.classList.toggle('active', card.dataset.focusPoi === name));
+      if (item && map && Array.isArray(item.location)) {
+        map.setZoomAndCenter(14, item.location, true, 500);
+        const marker = markers.get(item.name);
+        if (marker?.setAnimation) {
+          marker.setAnimation('AMAP_ANIMATION_BOUNCE');
+          window.setTimeout(() => marker.setAnimation(null), 900);
+        }
+      }
+      if (item) openDrawer(item.name);
+    }
+
+    function field(label, value) {
+      if (!value || (Array.isArray(value) && !value.length)) return '';
+      const text = Array.isArray(value) ? '<ul>' + value.map((item) => '<li>' + esc(item) + '</li>').join('') + '</ul>' : esc(value);
+      return '<div class="drawer-field"><strong>' + esc(label) + '</strong>' + text + '</div>';
+    }
+
+    function openDrawer(name) {
+      const item = byName.get(name) || [...byName.values()].find((candidate) => name.includes(candidate.name) || candidate.name.includes(name)) || { name };
+      const exp = matchExperience(item.name);
+      const drawer = $('#atlasDrawer');
+      $('#drawerTitle').textContent = item.name || name;
+      $('#drawerBody').innerHTML = [
+        item.image ? '<img src="' + esc(item.image) + '" alt="' + esc(item.name) + '">' : '',
+        field('类型', [item.day ? 'Day ' + item.day : '', item.category, item.confidence].filter(Boolean).join(' · ')),
+        field('地址', item.address),
+        field('价格/链接', item.price ? item.price : ''),
+        item.url ? '<div class="drawer-field"><strong>跳转</strong><a href="' + esc(item.url) + '" target="_blank" rel="noopener noreferrer">飞猪查看</a></div>' : '',
+        exp ? field('口碑等级', exp.rating) : '',
+        exp ? field('推荐理由', exp.whyGo) : '',
+        exp ? field('核心判断', exp.tips) : '',
+        exp ? field('建议时长', exp.recommendedDuration) : '',
+        exp ? field('必玩/必看', exp.mustDo) : '',
+        exp ? field('排队与预约', exp.queueAndReservation) : '',
+        exp ? field('亲子提醒', exp.familyNotes) : '',
+        exp ? field('准备材料', exp.preparation) : '',
+        exp ? field('常见差评', exp.commonComplaints) : '',
+        exp ? field('避雷', exp.avoid) : '',
+        exp ? field('适合', exp.suitable) : '',
+        exp ? field('不适合', exp.notSuitable) : '',
+        field('来源', exp?.source || item.source),
+      ].filter(Boolean).join('');
+      drawer.classList.add('open');
+      $('#drawerBackdrop')?.classList.add('open');
+    }
+
+    function closeDrawer() {
+      $('#atlasDrawer')?.classList.remove('open');
+      $('#drawerBackdrop')?.classList.remove('open');
+    }
+
+    function setDay(day) {
+      $$('.day-tabs button').forEach((button) => button.classList.toggle('active', button.dataset.dayTab === day));
+      $$('.day-card').forEach((card) => card.classList.toggle('is-dimmed', day !== 'all' && card.dataset.dayCard !== day));
+      $$('.route-pill').forEach((pill) => pill.style.display = day === 'all' || !pill.dataset.routeDay || pill.dataset.routeDay === day ? '' : 'none');
+      if (map) {
+        const activePoints = day === 'all'
+          ? data.map.pois.filter((item) => Array.isArray(item.location))
+          : data.map.pois.filter((item) => String(item.day) === String(day) && Array.isArray(item.location));
+        markerEntries.forEach(({ item, marker }) => {
+          const visible = day === 'all' || String(item.day) === String(day) || item.category === 'hotel';
+          marker.setMap(visible ? map : null);
+        });
+        if (routeLine) {
+          if (activePoints.length > 1) {
+            routeLine.setPath(activePoints.map((item) => item.location));
+            routeLine.setMap(map);
+          } else {
+            routeLine.setMap(null);
+          }
+        }
+        const activeMarkers = activePoints.map((item) => markers.get(item.name)).filter(Boolean);
+        if (activeMarkers.length) map.setFitView(activeMarkers, false, [90, 90, 90, 90]);
+      }
+    }
+
+    $$('.day-tabs button').forEach((button) => button.addEventListener('click', () => setDay(button.dataset.dayTab)));
+    $$('[data-focus-poi]').forEach((button) => button.addEventListener('click', () => focusPoi(button.dataset.focusPoi)));
+    $$('[data-focus-hotel]').forEach((card) => card.addEventListener('click', () => focusPoi(card.dataset.focusHotel)));
+    $$('.mode-nav a, .doc-jump a').forEach((link) => link.addEventListener('click', closeDrawer));
+    $('#drawerClose')?.addEventListener('click', closeDrawer);
+    $('#drawerBackdrop')?.addEventListener('click', closeDrawer);
+    document.addEventListener('keydown', (event) => {
+      if (event.key === 'Escape') closeDrawer();
+    });
+    initMap();
+  </script>
+</body>
+</html>

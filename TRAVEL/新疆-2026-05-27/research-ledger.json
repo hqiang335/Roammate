@@ -1,0 +1,18 @@
+{
+  "schema_version": "1.0",
+  "artifact_type": "research-ledger",
+  "trip": {
+    "destination": "新疆伊犁",
+    "date_range": "2026-05-27 至 2026-05-29",
+    "duration": "3天2夜",
+    "origin": "北京",
+    "travelers": "4人（两对情侣）",
+    "assumptions": [
+      "用户只说'新疆'，根据季节、时长和人群特点，选择伊犁地区作为具体目的地",
+      "5月底薰衣草尚未盛开，聚焦那拉提草原、赛里木湖等自然风光"
+    ]
+  },
+  "generated_at": "2026-05-10",
+  "tool_runs": [],
+  "facts": []
+}
