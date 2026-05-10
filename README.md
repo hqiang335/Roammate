@@ -254,13 +254,15 @@ npm run --silent wr -- web "{城市} {区域} 酒店 推荐 亲子 早餐 隔音
 
 4. 所有产出物保存在 `TRAVEL/{目的地}-{日期}/` 目录
 
-流程会先把可复用事实写入 `research-ledger.json`，再生成 `itinerary-data.json`、`map-data.json` 和 `guidebook-data.json`。正式 `guidebook.html` 不应由模型手写：地图数据由 `map-route-builder/scripts/build_real_map.py` 生成并校验，主交付物 `guidebook.html` 由 `guidebook-maker/scripts/build-guidebook.mjs` 生成 dashboard 型 Travel Atlas，并自动合并同目录的 `map-data.json`。如果外部工具或密钥不可用，应输出降级说明，而不是把占位内容冒充正式手册。完整流程不得在第 3 步行程规划后输出最终总结；只有地图数据、手册、来源索引和 `validate:trip` 全部完成或明确降级后，才算交付。
+流程会先把可复用事实写入 `research-ledger.json`，再生成 `itinerary-data.json`、`map-data.json` 和 `guidebook-data.json`。正式 `guidebook.html` 不应由模型手写：地图数据由 `map-route-builder/scripts/build_real_map.py` 生成并校验，主交付物 `guidebook.html` 由 `guidebook-maker/scripts/build-guidebook.mjs` 生成 dashboard 型 Travel Atlas，并自动合并同目录的 `map-data.json`。如果外部工具或密钥不可用，应输出降级说明，而不是把占位内容冒充正式手册。完整流程不得在第 3 步行程规划后输出最终总结；`sources.md` 也不是交付终点。只有地图数据、手册、来源索引和 `finalize:trip` 全部完成或明确降级后，才算交付。
 
 完整产物可用以下命令检查：
 
 ```bash
-npm run validate:trip -- TRAVEL/西安-20260515
+npm run finalize:trip -- TRAVEL/西安-20260515
 ```
+
+`finalize:trip` 会刷新 `sources.md` 并运行最终整包校验；缺少 `guidebook-data.json` 或 `guidebook.html` 时会直接失败。
 
 如果需要单独重建来源索引：
 

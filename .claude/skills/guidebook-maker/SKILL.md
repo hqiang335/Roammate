@@ -19,6 +19,7 @@ Use this nested skill when the user wants the final interactive travel atlas, pr
 8. Generate `guidebook.html` with `scripts/build-guidebook.mjs`. The renderer produces a dashboard-style Travel Atlas and automatically reads sibling `map-data.json` when present, so map, day timeline, POI dossiers, hotels, food, budget, checklist, and sources can be used together.
 9. Validate `guidebook.html` with `scripts/validate-guidebook.mjs`.
 10. Run `scripts/qa-guidebook.mjs` when Playwright is available to check desktop/mobile rendering, drawer navigation, and horizontal overflow.
+11. Return control to the top-level concierge only after `guidebook-data.json` and `guidebook.html` both exist. Source documentation or markdown summaries are not substitutes for the guidebook.
 
 ## Required Commands
 
@@ -73,6 +74,7 @@ These are base capabilities, not a fixed length requirement. Optional modules sh
 - Mobile rendering is part of completion: no horizontal scrolling at common phone widths, and drawers must close on navigation or ESC.
 - Do not hand-write the final `guidebook.html`.
 - Do not create temporary Python, Bash heredoc, or ad hoc scripts to assemble long guidebook HTML.
+- Do not stop after writing `sources.md` or markdown summaries. The guidebook maker is complete only after the renderer and validators pass.
 - If direct `Write` of `guidebook-data.json` fails, reduce or split the JSON data, then run the fixed renderer; do not switch to hand-written HTML.
 - If `validate-guidebook.mjs` fails, fix `guidebook-data.json` or the renderer and rerun validation before delivering.
 - The visual style is owned by `scripts/build-guidebook.mjs`; do not invent a new CSS theme per trip. Use stable layout, components, spacing, marker categories, day tabs, drawers, cards, and print behavior across all destinations. Destination personality may affect data and labels, not the page skeleton.

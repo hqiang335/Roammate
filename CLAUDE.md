@@ -46,11 +46,13 @@ Web-Rooter 网络搜索统一使用 Quark：优先使用 `wr web --engine=quark 
 - `guidebook-data.json`：Travel Atlas 渲染输入，保留每日卡片、POI 攻略档案、酒店组合、美食、预算、清单和来源标签。
 - `guidebook.html`：必须由 `guidebook-maker/scripts/build-guidebook.mjs` 生成并通过校验；这是主交付的 dashboard 型交互旅行地图册，会合并 `guidebook-data.json` 和同目录 `map-data.json`。
 
-最终交付前运行：
+最终交付前必须运行：
 
 ```bash
-npm run validate:trip -- TRAVEL/{目的地}-{日期}
+npm run finalize:trip -- TRAVEL/{目的地}-{日期}
 ```
+
+`sources.md` 不是最终交付终点；没有 `guidebook-data.json`、`guidebook.html` 和通过的 `finalize:trip`，不得输出“完成规划”或最终交付总结。
 
 ## 主路由兜底规则
 
@@ -62,7 +64,7 @@ npm run validate:trip -- TRAVEL/{目的地}-{日期}
 4. `map-route-builder`：POI、路线、地图、酒店参考
 5. `guidebook-maker`：dashboard 型 HTML Travel Atlas 旅行地图册
 
-不要在第 3 步后停止，也不要再问用户是否需要地图或手册；除非缺少会影响规划的关键信息，否则直接写入 `TRAVEL/{目的地}-{日期}/`。中间步骤只能输出简短进度，不得在 `itinerary-data.json` 验证通过后说“完整规划已完成”或给最终总结；只有第 4 步地图、第 5 步手册、`sources.md` 和 `npm run validate:trip -- TRAVEL/{目的地}-{日期}` 全部完成或明确降级失败后，才能输出最终交付说明。
+不要在第 3 步后停止，也不要再问用户是否需要地图或手册；除非缺少会影响规划的关键信息，否则直接写入 `TRAVEL/{目的地}-{日期}/`。中间步骤只能输出简短进度，不得在 `itinerary-data.json`、地图数据、`sources.md` 生成后说“完整规划已完成”或给最终总结；只有第 4 步地图数据、第 5 步手册、`sources.md` 和 `npm run finalize:trip -- TRAVEL/{目的地}-{日期}` 全部完成或明确降级失败后，才能输出最终交付说明。
 
 ## 规则
 
@@ -71,5 +73,6 @@ npm run validate:trip -- TRAVEL/{目的地}-{日期}
 - 不代替用户预订、付款或登录
 - 高德和 FlyAI 不可用时降级继续，标注估算
 - 不手写正式 `guidebook.html`；失败时写明降级原因，而不是生成占位正式产物
+- 不手写占位 `map-data.json`；必须由 `map-route-builder/scripts/build_real_map.py` 生成并通过 `validate:map`，或写明 `map-error.md`
 - 不重复查询已经在 `research-ledger.json` 中有新鲜高可信记录的事实
 - 需要公共网页证据时优先使用 Web-Rooter CLI；Claude Code 内置 Web Search 只能在用户明确要求时使用

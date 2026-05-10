@@ -153,7 +153,7 @@ TRAVEL/{destination}-{date}/
 Validate a generated trip package:
 
 ```bash
-npm run validate:trip -- TRAVEL/新疆-2026-05-27
+npm run finalize:trip -- TRAVEL/新疆-2026-05-27
 ```
 
 Rebuild a guidebook from existing data:
@@ -176,10 +176,11 @@ npm run generate:sources -- TRAVEL/新疆-2026-05-27/research-ledger.json
 npm run validate:ledger -- TRAVEL/新疆-2026-05-27/research-ledger.json
 npm run validate:map -- TRAVEL/新疆-2026-05-27/map-data.json
 npm run validate:guidebook -- TRAVEL/新疆-2026-05-27/guidebook-data.json TRAVEL/新疆-2026-05-27/guidebook.html
+npm run finalize:trip -- TRAVEL/新疆-2026-05-27
 npm run validate:trip -- TRAVEL/新疆-2026-05-27
 ```
 
-`validate:trip` is the main final check. It validates the generated trip directory and runs guidebook browser QA when Playwright is available.
+`finalize:trip` is the main final delivery gate. It regenerates `sources.md`, then runs `validate:trip`; it fails if `guidebook-data.json` or `guidebook.html` is missing. `sources.md` alone is not a complete delivery.
 
 ## StudyClawHub Submission
 
