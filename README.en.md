@@ -1,101 +1,80 @@
 # Roammate Travel Concierge
 
-[Simplified Chinese](README.md) | English
+[简体中文](README.zh-CN.md) | English
 
-Roammate is an AI-assisted travel planning agent for mainland China. It coordinates destination briefing, local reputation research, itinerary planning, route data, hotel and ticket references, source tracking, and a dashboard-style interactive HTML travel atlas.
-
-The project is designed for Claude Code, Codex, and StudyClawHub-style agent/skill workflows. It can run as a multi-skill travel planning agent, while each skill can also be inspected or submitted independently.
+Roammate is an AI travel planning assistant for mainland China. Given a destination, date, duration, and travelers, it generates a complete trip package: destination brief, local reputation research, itinerary, route/map data, and a dashboard-style `guidebook.html`.
 
 ## Online Demo
 
-After GitHub Pages is enabled for this repository, the demo can be opened directly in a desktop or mobile browser. The current demo is the Chengdu package stored at `TRAVEL/成都-2026-06-01/guidebook.html`:
-
 - [Chengdu 2026-06-01 Travel Atlas](https://hqiang335.github.io/Roammate/TRAVEL/%E6%88%90%E9%83%BD-2026-06-01/guidebook.html)
-- [Local source file](TRAVEL/成都-2026-06-01/guidebook.html)
-
-If the links return 404, enable GitHub Pages for the repository and wait for the Pages deployment to finish.
-
-The demo HTML includes an Amap Web JS API demo key and `securityJsCode`, which is normal for browser-side map APIs. The demo key is intended for the GitHub Pages domain:
-
-```text
-hqiang335.github.io
-```
 
 ## What It Does
 
-Roammate turns a natural-language trip request into a complete travel package:
+- Destination brief: season fit, city overview, transport samples, and cautions
+- Reputation research: attractions, restaurants, hotel areas, and avoid notes
+- Itinerary planning: daily schedule, transport, budget, reservations, and backup plans
+- Route data: POI coordinates, hotel coordinates, route summaries, and map data
+- Travel atlas: a browsable and printable `guidebook.html`
 
-1. `destination-brief` creates a destination overview, best-season notes, transport gateways, traveler fit, cautions, and source-backed assumptions.
-2. `local-reputation-research` studies attraction, restaurant, hotel-area, and tourist-trap reputation using public web evidence and structured travel data.
-3. `itinerary-planner` builds the authoritative `itinerary.md`, then runs the lossless extractor that creates `itinerary-structured.json`.
-4. `map-route-builder` consumes `itinerary-structured.json` where available, normalizes accepted POIs/hotels, geocodes places, builds routes, and writes `map-data.json`.
-5. `guidebook-maker` generates `guidebook-data.json` and the dashboard-style `guidebook.html` from the Markdown reports, `itinerary-structured.json`, and `map-data.json`.
-
-The main `roammate-travel-concierge` skill is a lightweight serial router. It does not spawn subagents, preload every child skill, hand-write final guidebook files, or report completion before `validate:trip` passes.
-
-## Project Structure
+## Skill Directory
 
 ```text
-Roammate/
-├── .claude/
-│   ├── skills/                    # Primary Claude Code skill implementation
-│   │   ├── roammate-travel-concierge/
-│   │   ├── destination-brief/
-│   │   ├── local-reputation-research/
-│   │   ├── itinerary-planner/
-│   │   ├── map-route-builder/
-│   │   └── guidebook-maker/
-│   └── settings.json.example      # Example local config
-├── TRAVEL/
-│   └── {destination}-{date}/
-│       ├── research-ledger.json
-│       ├── destination-brief.md
-│       ├── reputation.md
-│       ├── itinerary.md
-│       ├── itinerary-structured.json
-│       ├── map-data.json
-│       ├── guidebook-data.json
-│       └── guidebook.html
-├── AGENTS.md                      # General agent instructions
-├── CLAUDE.md                      # Claude Code project instructions
-├── README.md
-├── README.en.md
-├── package.json
-└── package-lock.json
+.claude/skills/
+├── roammate-travel-concierge/     # Main router for the full serial workflow
+├── destination-brief/             # Destination brief
+├── local-reputation-research/     # Local reputation research
+├── itinerary-planner/             # Itinerary planning and lossless extraction
+├── map-route-builder/             # POIs, coordinates, and route data
+└── guidebook-maker/               # Guidebook data and HTML generation
 ```
 
-## Requirements
+A full run writes:
 
-- Claude Code CLI/Desktop or Codex
-- Node.js 18+ and npm
-- Python 3.10+
-- Network access for Amap, FlyAI, and public web research
-- Amap Web Service API key for POI search, geocoding, and route planning
-- Amap Web JS API key plus `securityJsCode` for browser map rendering
-- Optional FlyAI CLI/API key for flight, rail, hotel, ticket, and product references
-- Recommended Web-Rooter `wr` CLI for cited public web evidence
+```text
+TRAVEL/{destination}-{YYYY-MM-DD}/
+├── research-ledger.json
+├── destination-brief.md
+├── reputation.md
+├── itinerary.md
+├── itinerary-structured.json
+├── map-data.json
+├── guidebook-data.json
+└── guidebook.html
+```
 
-Text-only planning can still run without all external tools, but maps, route quality, hotel references, and cited web evidence depend on the optional services above.
+## Quick Start
 
-## Installation
+### 1. Install Dependencies
 
 ```bash
 npm install
 ```
 
-If you want to run browser rendering QA for `guidebook.html`, install Playwright's Chromium browser:
+To run browser QA for the generated guidebook, install Playwright Chromium:
 
 ```bash
 npx playwright install chromium
 ```
 
-## Local Configuration
+### 2. Configure Keys And Tools
 
-Create a local `.env` file in the repository root, or use `~/.codex/.env`.
+Text-only planning can degrade when some tools are missing. For complete maps, routes, hotels, and cited web evidence, configure the following.
+
+| Name | Status | Purpose |
+| --- | --- | --- |
+| `AMAP_MAPS_API_KEY` | Recommended | Amap Web Service API for POI search, geocoding, and routes |
+| `AMAP_WEB_JS_API_KEY` | Recommended | Amap Web JS API for the map inside `guidebook.html` |
+| `AMAP_SECURITY_JS_CODE` | Recommended | Browser-side security config for Amap Web JS API |
+| `FLYAI_API_KEY` | Recommended | FlyAI flight, train, hotel, ticket, and package references |
+| `flyai` CLI | Recommended | FlyAI travel search |
+| Playwright Chromium | Recommended | Browser QA for `guidebook.html` |
+| Web-Rooter `wr` CLI | Required for full workflow | Public web evidence, official notices, reputation checks, and conflict review |
+
+You can create a `.env` file in the repository root:
 
 ```bash
-AMAP_MAPS_API_KEY=your_amap_web_service_key_here
-AMAP_WEB_JS_API_KEY=your_amap_web_js_key_here
+AMAP_MAPS_API_KEY=your_amap_maps_api_key_here
+AMAP_WEB_JS_API_KEY=your_amap_web_js_api_key_here
 AMAP_SECURITY_JS_CODE=your_amap_security_js_code_here
 FLYAI_API_KEY=your_flyai_api_key_here
 WEB_ROOTER_HOME=/absolute/path/to/web-rooter
@@ -103,25 +82,17 @@ WEB_ROOTER_NO_RICH=1
 WEB_ROOTER_MAX_OUTPUT_CHARS=8000
 ```
 
-The scripts look for configuration in this order:
+Configuration may also come from the current shell environment, `~/.codex/.env`, or `~/.flyai/config.json`.
 
-- current shell environment variables
-- repository root `.env`
-- `~/.codex/.env`
-- `~/.flyai/config.json`
+### 3. Set Up Web-Rooter
 
-## Web-Rooter Setup
-
-Web-Rooter is used as the public web evidence layer. It is especially useful for official pages, policy notices, attraction reputation, hotel-area strategy, restaurant notes, tourist traps, and source-backed citations.
-
-Recommended installation:
+Web-Rooter provides public web search and cited evidence. Install it outside this repository:
 
 ```bash
 git clone https://github.com/baojiachen0214/web-rooter.git ~/tools/web-rooter
 cd ~/tools/web-rooter
 bash install.sh
 wr doctor
-wr help
 ```
 
 Then verify it from Roammate:
@@ -131,52 +102,39 @@ cd /path/to/Roammate
 npm run doctor:webrooter
 ```
 
-Inside this project, use the npm wrapper instead of bare `wr` commands. Stages run `npm run doctor:webrooter` once before the first Web-Rooter call, then use compact Quark searches such as:
+Inside this project, call Web-Rooter through the npm wrapper:
 
 ```bash
-WEB_ROOTER_NO_RICH=1 WEB_ROOTER_MAX_OUTPUT_CHARS=8000 \
-npm run --silent wr -- web "{query}" --engine=quark --no-crawl --num-results=3 --command-timeout-sec=60 \
+npm run --silent wr -- web "{query}" --engine=quark --no-crawl --num-results=3 \
   | npm run --silent wr:compact
 ```
 
-The project intentionally avoids login-only scraping, account operations, booking, payment, posting, liking, or commenting. It also avoids Xiaohongshu-specific tooling. Web-Rooter is a sparse public-evidence layer; broad `deep` or `do` runs are reserved for conflicts or explicit user requests.
+## Example Output
+
+For a 4-day, 3-night Chengdu family trip starting on 2026-06-01, Roammate generates:
+
+- `destination-brief.md` - Chengdu overview with best travel season, transport options, and core experiences
+- `reputation.md` - Reputation and avoid notes for places such as Chengdu Research Base of Giant Panda Breeding, Dujiangyan, Kuanzhai Alley, People's Park, and Du Fu Thatched Cottage
+- `itinerary.md` - Detailed 4-day itinerary with schedule, transport, costs, and reservation reminders
+- `itinerary-structured.json` - Script-generated lossless index from `itinerary.md`, preserving table cells, notes, links, and daily details
+- `research-ledger.json` - Source ledger for Amap, FlyAI, official pages, Web-Rooter public web evidence, confidence, decisions, and downstream usage
+- `map-data.json` - Structured map data for attractions, coordinates, routes, and hotels
+- `guidebook-data.json` - Travel Atlas rendering input for daily cards, POI dossiers, hotel options, food, budget, and checklists
+- `guidebook.html` - Main deliverable: a dashboard-style interactive travel atlas with map, daily itinerary, place details, hotels, budget, and checklists
 
 ## Usage
 
-Open this repository in Claude Code or Codex, then start with the main routing skill:
+Open the repository in Claude Code or Codex, then provide a complete trip request:
 
 ```text
-/roammate-travel-concierge Plan a relaxed 4-day, 3-night Chengdu family trip from Guangzhou starting June 1, 2026, for two adults and a 7-year-old child. Use round-trip flights and generate the full travel package plus guidebook.
+/roammate-travel-concierge 计划今年6月1日去成都玩，一家三口带7岁小朋友，4天3夜，从广州出发，帮我制定旅游攻略。
 ```
 
-If slash commands are not available, provide the same request in natural language and ask Roammate to run the complete five-step workflow.
+If slash commands are unavailable, write the same request in natural language and ask Roammate to run the complete workflow.
 
-The final artifacts will be written under:
+## Useful Commands
 
-```text
-TRAVEL/{destination}-{date}/
-```
-
-For example, the current demo package uses:
-
-```text
-TRAVEL/成都-2026-06-01/
-```
-
-Required full-package files:
-
-```text
-research-ledger.json
-destination-brief.md
-reputation.md
-itinerary.md
-itinerary-structured.json
-map-data.json
-guidebook-data.json
-guidebook.html
-```
-
-Validate a generated trip package:
+Validate a full trip package:
 
 ```bash
 npm run validate:trip -- TRAVEL/成都-2026-06-01
@@ -193,72 +151,25 @@ node .claude/skills/guidebook-maker/scripts/build-guidebook.mjs \
   TRAVEL/成都-2026-06-01/guidebook.html
 ```
 
-## Validation Scripts
+Other checks:
 
 ```bash
 npm run validate:ledger -- TRAVEL/成都-2026-06-01/research-ledger.json
 npm run validate:map -- TRAVEL/成都-2026-06-01/map-data.json
 npm run validate:guidebook -- TRAVEL/成都-2026-06-01/guidebook-data.json TRAVEL/成都-2026-06-01/guidebook.html
-npm run validate:trip -- TRAVEL/成都-2026-06-01
-```
-
-`validate:trip` is the main final check. It validates the generated trip directory and runs guidebook browser QA when Playwright is available.
-
-## StudyClawHub Submission
-
-Submit the full project as an Agent:
-
-```text
-Type: Agent
-Name: roammate-travel-concierge
-Description: Mainland China travel planning agent that coordinates destination briefing, reputation research, itinerary planning, route mapping, and interactive guidebook generation.
-Version: 0.1.0
-Tags: travel, recommendation, itinerary, map, agent
-GitHub Repo URL: https://github.com/hqiang335/Roammate
-Path to Skill Folder: .
-GitHub Username: hqiang335
-```
-
-Why `Path to Skill Folder` is `.`:
-
-- `.` means the repository root.
-- The repository root contains `AGENTS.md` and `CLAUDE.md`.
-- StudyClawHub uses that path to locate the Agent metadata/instructions.
-
-You can also register individual skills. For example:
-
-```text
-Type: Skill
-Name: guidebook-maker
-GitHub Repo URL: https://github.com/hqiang335/Roammate
-Path to Skill Folder: .claude/skills/guidebook-maker
-Agent name: roammate-travel-concierge
-GitHub Username: hqiang335
-```
-
-Other skill paths:
-
-```text
-.claude/skills/destination-brief
-.claude/skills/local-reputation-research
-.claude/skills/itinerary-planner
-.claude/skills/map-route-builder
-.claude/skills/guidebook-maker
-.claude/skills/roammate-travel-concierge
+npm test
 ```
 
 ## Notes
 
-- Roammate is focused on mainland China travel planning.
-- Travel prices, hotel inventory, routes, opening hours, and ticket policies change over time.
-- Generated travel materials are for planning and demonstration only.
-- The project does not book, pay, log in, or act on behalf of the user.
-- If external APIs are unavailable, Roammate should degrade gracefully and mark data as estimated or pending verification.
-- New runs should not create or depend on `itinerary-data.json`; `itinerary-structured.json` is the script-generated lossless index of `itinerary.md`.
+- Roammate defaults to Simplified Chinese and focuses on mainland China travel.
+- `itinerary.md` is the authoritative itinerary; `itinerary-structured.json` is a script-generated lossless index.
+- Prices, inventory, weather, opening hours, tickets, and routes can change and should be rechecked before travel.
+- Roammate does not log in, book, pay, post, like, or comment on behalf of the user.
 
 ## Acknowledgements
 
-- Built for Claude Code / Codex style agent workflows
-- Uses Amap APIs for maps, geocoding, and route references
-- Integrates FlyAI travel search where available
-- Uses Web-Rooter for cited public web evidence
+- Built with [Claude Code](https://claude.ai/code)
+- Uses [Amap APIs](https://lbs.amap.com/)
+- Integrates FlyAI-CLI travel search
+- Uses [Web-Rooter](https://github.com/baojiachen0214/web-rooter) for public web evidence
