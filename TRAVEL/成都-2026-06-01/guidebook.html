@@ -1,0 +1,1702 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>成都旅行地图册</title>
+  <style>
+    :root {
+      --bg: #f4efe6;
+      --paper: #fffdf8;
+      --panel: #ffffff;
+      --ink: #202823;
+      --muted: #69736d;
+      --line: #e7dccd;
+      --accent: #1d766f;
+      --accent-2: #c7563b;
+      --amber: #b7791f;
+      --blue: #2f6f9f;
+      --rose: #a43e57;
+      --shadow: 0 18px 50px rgba(38, 30, 20, 0.11);
+      --radius: 8px;
+      --day-1: #c7563b;
+      --day-2: #2f8f5b;
+      --day-3: #5276b7;
+      --day-4: #b7791f;
+      --day-5: #8461a8;
+      --day-6: #1d766f;
+    }
+    * { box-sizing: border-box; }
+    html { max-width: 100%; overflow-x: hidden; background: var(--bg); color: var(--ink); scroll-behavior: smooth; }
+    body { max-width: 100%; overflow-x: hidden; margin: 0; font-family: "PingFang SC", "Hiragino Sans GB", "Microsoft YaHei", sans-serif; font-size: 15px; line-height: 1.6; letter-spacing: 0; }
+    a { color: var(--accent); text-decoration: none; font-weight: 700; }
+    a:hover { text-decoration: underline; }
+    h1, h2, h3, h4, p { margin-top: 0; }
+    h1 { max-width: 760px; margin-bottom: 14px; font-size: 40px; line-height: 1.12; }
+    h2 { margin-bottom: 12px; font-size: 22px; line-height: 1.25; }
+    h3 { margin-bottom: 8px; font-size: 16px; line-height: 1.35; }
+    h4 { margin: 14px 0 6px; font-size: 13px; color: var(--accent); }
+    button, input { font: inherit; }
+    .atlas { min-height: 100vh; }
+    .hero { position: relative; display: grid; grid-template-columns: minmax(0, 1fr) auto; gap: 24px; align-items: end; padding: 34px clamp(18px, 4vw, 52px) 28px; background: #233029; color: #fff8ed; overflow: hidden; }
+    .hero::after { content: ""; position: absolute; inset: auto -8% -42% 35%; height: 280px; background: linear-gradient(90deg, rgba(199,86,59,0.42), rgba(29,118,111,0.38)); transform: rotate(-6deg); opacity: .45; }
+    .hero-copy { position: relative; z-index: 1; }
+    .eyebrow, .section-kicker { margin: 0 0 10px; font-size: 12px; font-weight: 800; letter-spacing: .08em; text-transform: uppercase; color: var(--accent-2); }
+    .hero .eyebrow { color: #f3c287; }
+    .hero-meta, .assumption { margin: 0; color: #e7dccd; }
+    .assumption { margin-top: 8px; color: #f3c287; font-weight: 700; }
+    .mode-nav { position: relative; z-index: 30; display: flex; flex-wrap: wrap; gap: 8px; justify-content: flex-end; }
+    .mode-nav a { display: inline-flex; min-height: 36px; align-items: center; padding: 7px 12px; border: 1px solid rgba(255,255,255,.25); border-radius: 999px; color: #fff8ed; background: rgba(255,255,255,.08); }
+    img, canvas, svg, video { max-width: 100%; }
+    .content { display: grid; gap: 18px; min-width: 0; padding: 18px clamp(14px, 3vw, 36px) 40px; }
+    .content > * { min-width: 0; }
+    .panel, .map-panel { background: rgba(255,253,248,.94); border: 1px solid var(--line); border-radius: var(--radius); box-shadow: var(--shadow); }
+    .panel { padding: 22px; }
+    .overview-grid { display: grid; grid-template-columns: minmax(0, 1.1fr) minmax(280px, .9fr); gap: 22px; align-items: start; min-width: 0; }
+    .lead { color: #3d4842; font-size: 16px; }
+    .quick-facts, .hotel-meta { display: flex; flex-wrap: wrap; gap: 8px; }
+    .chip { display: inline-flex; min-height: 26px; align-items: center; padding: 3px 9px; border-radius: 999px; background: #eef7f4; color: var(--accent); font-size: 12px; font-weight: 800; }
+    .chip.amber { background: #fff4da; color: var(--amber); }
+    .chip.blue { background: #e8f1fb; color: var(--blue); }
+    .chip.rose { background: #fdecef; color: var(--rose); }
+    .metric-grid { display: grid; grid-template-columns: repeat(5, minmax(0, 1fr)); gap: 9px; }
+    .metric { padding: 12px; border: 1px solid var(--line); border-radius: var(--radius); background: #fff; }
+    .metric span { display: block; color: var(--muted); font-size: 12px; }
+    .metric strong { display: block; margin-top: 2px; font-size: 22px; line-height: 1; }
+    .metric.warning strong { color: var(--accent-2); }
+    .insight-strip { display: flex; flex-wrap: wrap; gap: 8px; margin-top: 18px; }
+    .insight-strip span { padding: 8px 10px; border-radius: var(--radius); background: #f7efe2; color: #4b4034; }
+    .alert-block { margin-top: 18px; padding: 14px 16px; border-left: 4px solid var(--accent-2); border-radius: 0 var(--radius) var(--radius) 0; background: #fff1e9; }
+    .plan-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 10px; }
+    .plan-card { border: 1px solid var(--line); border-radius: var(--radius); background: #fff; padding: 12px; }
+    .plan-card span, .plan-card em { display: block; color: var(--accent-2); font-size: 12px; font-style: normal; font-weight: 800; }
+    .plan-card p { margin: 0 0 6px; color: var(--muted); font-size: 13px; }
+    .plan-card strong { display: block; }
+    .dashboard-grid { display: grid; grid-template-columns: minmax(0, .86fr) minmax(0, 1.14fr); gap: 18px; align-items: start; min-width: 0; }
+    .timeline-panel { position: sticky; top: 14px; max-height: calc(100vh - 28px); overflow: auto; }
+    .day-tabs { position: sticky; top: -22px; z-index: 3; display: flex; gap: 8px; margin: 12px -4px 14px; padding: 8px 4px; background: rgba(255,253,248,.96); border-bottom: 1px solid var(--line); }
+    .day-tabs button { min-height: 34px; border: 1px solid var(--line); border-radius: 999px; padding: 6px 12px; background: #fff; color: var(--muted); cursor: pointer; }
+    .day-tabs button.active { border-color: var(--accent); background: var(--accent); color: #fff; }
+    .day-stack { display: grid; gap: 12px; }
+    .day-card { border: 1px solid var(--line); border-radius: var(--radius); background: #fff; overflow: hidden; transition: transform .18s ease, box-shadow .18s ease, opacity .18s ease; }
+    .day-card:hover { transform: translateY(-1px); box-shadow: 0 10px 28px rgba(31, 24, 17, .1); }
+    .day-card.is-dimmed { display: none; }
+    .day-card-head { padding: 14px; background: #f7f3ea; border-bottom: 1px solid var(--line); }
+    .day-card-head p { margin: 2px 0 0; color: var(--muted); font-size: 13px; }
+    .day-badge { display: inline-flex; margin-bottom: 8px; padding: 3px 8px; border-radius: 999px; background: var(--accent-2); color: #fff; font-size: 12px; font-weight: 800; }
+    .activity-list { display: grid; gap: 0; }
+    .activity-card { display: grid; grid-template-columns: 74px minmax(0, 1fr) auto; gap: 10px; width: 100%; padding: 12px 14px; border: 0; border-bottom: 1px solid var(--line); background: #fff; text-align: left; cursor: pointer; }
+    .activity-card:hover, .activity-card.active { background: #eef7f4; }
+    .activity-card .time { color: var(--accent); font-weight: 800; font-size: 13px; }
+    .activity-main strong, .activity-main span { display: block; }
+    .activity-main span { color: var(--muted); font-size: 13px; }
+    .cost { color: var(--amber); font-weight: 800; white-space: nowrap; }
+    .day-notes { padding: 12px 14px; background: #fffdf8; color: var(--muted); font-size: 13px; }
+    .day-notes p { margin: 5px 0; }
+    .day-notes strong { margin-right: 8px; color: var(--ink); }
+    .map-panel { position: sticky; top: 14px; min-width: 0; max-width: 100%; overflow: hidden; }
+    .map-toolbar { display: flex; justify-content: space-between; gap: 16px; padding: 16px 16px 10px; align-items: start; }
+    .map-toolbar h2 { margin-bottom: 0; }
+    .map-legend { display: flex; flex-wrap: wrap; justify-content: flex-end; gap: 7px; color: var(--muted); font-size: 12px; }
+    .map-legend span { display: inline-flex; align-items: center; gap: 5px; }
+    .map-legend i { display: inline-grid; width: 22px; height: 22px; place-items: center; border-radius: 999px; background: var(--ink); color: #fff; font-style: normal; font-size: 12px; }
+    .map-canvas { position: relative; width: 100%; min-width: 0; min-height: 540px; overflow: hidden; background: #dfe7df; }
+    #atlasMap, #atlasMap .amap-container { max-width: 100%; overflow: hidden; }
+    #atlasMap .amap-container { background: #dfe7df; }
+    .map-empty, .fallback-map { position: absolute; inset: 0; display: grid; place-items: center; padding: 24px; color: var(--muted); text-align: center; }
+    .map-empty strong { display: block; color: var(--ink); font-size: 18px; }
+    .fallback-map { display: block; background: linear-gradient(135deg, #e4eadf, #f6efe2); overflow: hidden; }
+    .fallback-route-line { position: absolute; left: 10%; right: 10%; top: 50%; height: 4px; background: rgba(29,118,111,.42); transform: rotate(-8deg); }
+    .fallback-node { position: absolute; transform: translate(-50%, -50%); display: grid; gap: 6px; justify-items: center; max-width: 150px; }
+    .fallback-node i, .atlas-marker { display: grid; width: 34px; height: 34px; place-items: center; border: 2px solid #fff; border-radius: 999px; background: var(--accent); color: #fff; box-shadow: 0 8px 20px rgba(0,0,0,.18); font-style: normal; font-weight: 900; }
+    .fallback-node span { padding: 4px 7px; border-radius: 999px; background: rgba(255,255,255,.88); color: var(--ink); font-size: 12px; white-space: nowrap; }
+    .atlas-marker.hotel { background: var(--amber); }
+    .atlas-marker.transport { background: var(--blue); }
+    .atlas-marker.food { background: var(--rose); }
+    .atlas-marker.culture { background: #8461a8; }
+    .atlas-marker.city { background: var(--accent-2); }
+    .route-summary { display: flex; gap: 8px; max-width: 100%; min-width: 0; padding: 12px 16px 16px; overflow-x: auto; border-top: 1px solid var(--line); background: #fffdf8; }
+    .route-pill { flex: 0 0 auto; max-width: 300px; display: grid; gap: 2px; padding: 8px 10px; border: 1px solid var(--line); border-radius: var(--radius); background: #fff; text-align: left; cursor: pointer; }
+    .route-pill span { overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+    .route-pill strong { color: var(--accent); font-size: 12px; }
+    .transport-groups { display: grid; gap: 16px; }
+    .transport-group { padding: 14px; border: 1px solid var(--line); border-radius: var(--radius); background: #fffdf8; }
+    .transport-group-head { display: flex; align-items: baseline; justify-content: space-between; gap: 12px; margin-bottom: 10px; }
+    .transport-group-head h3 { margin: 0; font-size: 18px; }
+    .transport-group-head span { color: var(--muted); font-size: 13px; }
+    .transport-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(230px, 1fr)); gap: 12px; }
+    .transport-card { padding: 14px; border: 1px solid var(--line); border-radius: var(--radius); background: #fff; }
+    .transport-card span { color: var(--accent-2); font-size: 12px; font-weight: 900; }
+    .transport-card h4 { margin: 4px 0 6px; font-size: 15px; line-height: 1.45; }
+    .transport-card p { margin: 0; color: var(--accent); font-weight: 800; }
+    .transport-card small { display: block; margin-top: 8px; color: var(--muted); }
+    .dossier-grid, .hotel-grid, .check-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(260px, 1fr)); gap: 14px; }
+    .dossier-card, .hotel-card, .check-card, .split-card { border: 1px solid var(--line); border-radius: var(--radius); background: #fff; overflow: hidden; }
+    .dossier-button { width: 100%; min-height: 148px; display: grid; gap: 4px; align-content: start; padding: 0 14px 14px; text-align: left; cursor: pointer; color: inherit; transition: transform .18s ease, box-shadow .18s ease, border-color .18s ease; }
+    .dossier-button:hover, .dossier-button:focus-visible { transform: translateY(-2px); border-color: rgba(29,118,111,.38); box-shadow: 0 12px 28px rgba(31, 24, 17, .12); outline: none; }
+    .dossier-button img, .dossier-image-fallback { width: calc(100% + 28px); max-width: none; height: 142px; margin: 0 -14px 10px; object-fit: cover; background: #efe4d5; }
+    .dossier-image-fallback { display: grid; place-items: center; color: var(--accent-2); font-size: 13px; font-weight: 900; }
+    .dossier-button span { margin-top: 14px; color: var(--accent-2); font-size: 12px; font-weight: 800; }
+    .dossier-button img + span, .dossier-image-fallback + span { margin-top: 0; }
+    .dossier-button em { color: var(--muted); font-size: 12px; font-style: normal; }
+    .dossier-button p { margin: 2px 0 0; color: #3d4842; font-size: 13px; }
+    .dossier-button small { color: var(--accent-2); font-size: 12px; }
+    ul { margin: 6px 0 0; padding-left: 19px; }
+    li { margin: 3px 0; }
+    .source-note, .muted { color: var(--muted); font-size: 13px; }
+    .hotel-card { transition: transform .18s ease, box-shadow .18s ease; }
+    .hotel-card:hover { transform: translateY(-2px); box-shadow: 0 12px 28px rgba(31, 24, 17, .12); }
+    .hotel-card img, .hotel-image-fallback { width: 100%; height: 160px; object-fit: cover; background: #efe4d5; display: grid; place-items: center; color: var(--amber); font-weight: 900; }
+    .hotel-card-body { padding: 14px; }
+    .tier { color: var(--accent-2); font-size: 12px; font-weight: 900; }
+    .tradeoff { color: var(--muted); }
+    .card-actions { margin-top: 10px; }
+    .split-panel { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 14px; background: transparent; border: 0; box-shadow: none; padding: 0; }
+    .split-card { padding: 20px; box-shadow: var(--shadow); }
+    .mini-row { padding: 10px 0; border-bottom: 1px solid var(--line); }
+    .mini-row:last-child { border-bottom: 0; }
+    .mini-row strong, .mini-row span { display: block; }
+    .mini-row span { color: var(--muted); font-size: 13px; }
+    .total { margin: 14px 0 0; color: var(--amber); font-weight: 900; }
+    .check-card { padding: 14px; }
+    .check-card label { display: flex; gap: 8px; align-items: flex-start; padding: 6px 0; color: #3d4842; }
+    .docs-intro { scroll-margin-top: 18px; }
+    .doc-jump { display: flex; flex-wrap: wrap; gap: 8px; margin-top: 14px; }
+    .doc-jump a { display: inline-flex; min-height: 34px; align-items: center; padding: 6px 10px; border: 1px solid var(--line); border-radius: 999px; background: #fff; }
+    .source-doc { scroll-margin-top: 18px; }
+    .source-doc-summary { display: grid; gap: 4px; cursor: pointer; list-style: none; }
+    .source-doc-summary::-webkit-details-marker { display: none; }
+    .source-doc-summary strong { font-size: 20px; }
+    .source-doc-summary em { color: var(--muted); font-style: normal; }
+    .source-doc .markdown-body { max-width: 1080px; margin-top: 18px; }
+    .markdown-body h3 { margin-top: 22px; font-size: 22px; line-height: 1.28; color: var(--ink); }
+    .markdown-body h4 { margin-top: 20px; font-size: 18px; color: var(--accent); }
+    .markdown-body h5 { margin: 18px 0 8px; font-size: 16px; color: var(--accent-2); }
+    .markdown-body h6 { margin: 16px 0 7px; font-size: 14px; color: var(--muted); }
+    .markdown-body p { margin: 8px 0; }
+    .markdown-body strong { color: #17221d; }
+    .markdown-body code { padding: 1px 5px; border-radius: 6px; background: #f1eadf; font-size: .92em; }
+    .markdown-body pre { overflow: auto; padding: 12px; border-radius: var(--radius); background: #233029; color: #fff8ed; }
+    .markdown-body blockquote { margin: 12px 0; padding: 10px 14px; border-left: 4px solid var(--accent); background: #eef7f4; color: #3d4842; }
+    .markdown-body hr { border: 0; border-top: 1px solid var(--line); margin: 20px 0; }
+    .markdown-body .md-table-wrap { overflow-x: auto; margin: 12px 0 16px; border: 1px solid var(--line); border-radius: var(--radius); background: #fff; }
+    .markdown-body table { width: 100%; border-collapse: collapse; min-width: 680px; }
+    .markdown-body th, .markdown-body td { padding: 9px 10px; border-bottom: 1px solid var(--line); vertical-align: top; text-align: left; }
+    .markdown-body th { background: #f7f3ea; color: #3d4842; font-weight: 900; }
+    .markdown-body tr:last-child td { border-bottom: 0; }
+    .raw-markdown { margin-top: 18px; border-top: 1px solid var(--line); padding-top: 12px; }
+    .raw-markdown summary { cursor: pointer; color: var(--accent); font-weight: 900; }
+    .raw-markdown pre { max-height: 420px; overflow: auto; padding: 12px; border-radius: var(--radius); background: #233029; color: #fff8ed; white-space: pre-wrap; }
+    .drawer-backdrop { position: fixed; inset: 0; z-index: 19; background: rgba(32,40,35,.28); opacity: 0; pointer-events: none; transition: opacity .18s ease; }
+    .drawer-backdrop.open { opacity: 1; pointer-events: auto; }
+    .drawer { position: fixed; top: 0; right: 0; z-index: 20; width: min(420px, 100vw); height: 100vh; background: var(--paper); border-left: 1px solid var(--line); box-shadow: -20px 0 60px rgba(0,0,0,.16); transform: translateX(105%); transition: transform .22s ease; overflow: auto; }
+    .drawer.open { transform: translateX(0); }
+    .drawer-head { display: flex; align-items: center; justify-content: space-between; gap: 12px; padding: 18px; border-bottom: 1px solid var(--line); background: #233029; color: #fff8ed; }
+    .drawer-head h2 { margin: 0; font-size: 20px; }
+    .drawer-close { width: 34px; height: 34px; border: 1px solid rgba(255,255,255,.28); border-radius: 999px; background: rgba(255,255,255,.1); color: #fff; cursor: pointer; }
+    .drawer-body { padding: 18px; }
+    .drawer-body img { width: 100%; max-height: 220px; object-fit: cover; border-radius: var(--radius); margin-bottom: 12px; }
+    .drawer-field { padding: 10px 0; border-bottom: 1px solid var(--line); }
+    .drawer-field strong { display: block; color: var(--accent); font-size: 12px; }
+    @page { size: A4; margin: 12mm; }
+    @media print {
+      html, body { background: #fff; }
+      .hero, .panel, .map-panel, .split-card { box-shadow: none; }
+      .mode-nav, .map-canvas, .drawer, .day-tabs, .doc-jump { display: none !important; }
+      .content, .dashboard-grid, .overview-grid, .split-panel { display: block; padding: 0; }
+      .panel, .map-panel, .day-card, .dossier-card, .hotel-card, .check-card { break-inside: avoid; margin-bottom: 12px; }
+      .timeline-panel, .map-panel { position: static; max-height: none; overflow: visible; }
+    }
+    @media (max-width: 1100px) {
+      .hero, .overview-grid, .dashboard-grid, .split-panel { grid-template-columns: 1fr; }
+      .mode-nav { justify-content: flex-start; }
+      .timeline-panel, .map-panel { position: static; max-height: none; }
+      .map-canvas { min-height: 420px; }
+    }
+    @media (max-width: 680px) {
+      h1 { font-size: 28px; overflow-wrap: anywhere; }
+      h2 { font-size: 20px; }
+      .hero { display: block; padding: 28px 18px 22px; }
+      .mode-nav { justify-content: flex-start; margin-top: 22px; }
+      .mode-nav a { min-height: 34px; padding: 6px 10px; }
+      .content { padding: 12px; }
+      .panel { padding: 16px; }
+      .metric-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+      .plan-grid, .dossier-grid, .hotel-grid, .check-grid { grid-template-columns: 1fr; }
+      .day-tabs { overflow-x: auto; padding-bottom: 9px; }
+      .day-tabs button { flex: 0 0 auto; }
+      .activity-card { grid-template-columns: 62px minmax(0, 1fr); }
+      .cost { grid-column: 2; }
+      .map-toolbar { display: block; }
+      .map-legend { justify-content: flex-start; margin-top: 10px; }
+      .map-canvas { min-height: 360px; }
+      .route-pill { max-width: min(280px, calc(100vw - 58px)); }
+      .markdown-body table { min-width: 560px; }
+      .drawer { top: auto; bottom: 0; width: 100%; height: auto; max-height: 86vh; border-left: 0; border-top: 1px solid var(--line); border-radius: 12px 12px 0 0; transform: translateY(105%); }
+      .drawer.open { transform: translateY(0); }
+    }
+  </style>
+  <script>window._AMapSecurityConfig = { securityJsCode: "e244a2946f6a6943e42edf7f9e363133" };</script>
+  <script src="https://webapi.amap.com/maps?v=2.0&key=fbb979dc813d025582af9ec422d33750"></script>
+</head>
+<body>
+  <div class="atlas">
+
+    <header class="hero">
+      <div class="hero-copy">
+        <p class="eyebrow">Roammate Travel Atlas</p>
+        <h1>成都旅行地图册</h1>
+        <p class="hero-meta">2026年6月1日（周一）– 6月4日（周四） · 4天 · 一家三口，含7岁小朋友 · 广州出发</p>
+
+      </div>
+      <nav class="mode-nav" aria-label="页面导航">
+        <a href="#plan-overview">行程总览</a>
+        <a href="#transport-board">交通参考</a>
+        <a href="#dashboard">地图工作台</a>
+        <a href="#poi-dossier">地点档案</a>
+        <a href="#hotel-board">酒店组合</a>
+        <a href="#full-docs">完整资料</a>
+      </nav>
+    </header>
+<main class="content">
+
+    <section class="panel overview-panel" id="overview">
+      <div class="section-kicker">行程总览</div>
+      <div class="overview-grid">
+        <div>
+          <h2>成都怎么轻松玩</h2>
+          <p class="lead">适合带7岁孩子的三口之家，4天3夜节奏舒适，6月初是旺季前的好窗口，但需提前预约熊猫基地和自然博物馆。</p>
+          <div class="quick-facts">
+            <span class="chip emerald">轻松亲子，每天3–4个活动，午间留休息</span>
+
+            <span class="chip blue">飞机往返，市内地铁+打车</span>
+            <span class="chip rose">舒适型（含机票约¥5000–7000/家庭）</span>
+          </div>
+        </div>
+
+    <div class="metric-grid" aria-label="行程总览指标">
+      <div class="metric"><span>天数</span><strong>4</strong></div>
+      <div class="metric"><span>地图点位</span><strong>20</strong></div>
+      <div class="metric"><span>路线段</span><strong>7</strong></div>
+      <div class="metric"><span>酒店候选</span><strong>4</strong></div>
+      <div class="metric warning"><span>重点提醒</span><strong>6</strong></div>
+    </div>
+      </div>
+      <div class="insight-strip"><span>成都大熊猫繁育研究基地 — 早7:30入园看熊猫吃早饭，7岁孩子必打卡</span><span>都江堰景区 — 2300年水利奇迹，鱼嘴+安澜索桥，半日游足够</span><span>宽窄巷子+人民公园 — 老成都街巷、变脸表演、糖画、盖碗茶</span><span>成都自然博物馆 — 恐龙化石大厅，孩子最爱，需提前预约</span><span>春熙路/太古里 — IFS爬墙熊猫、夜市美食、火锅收尾</span></div>
+      <div class="alert-block"><strong>重点提醒</strong><ul><li>天气：6月多阵雨，每人备折叠雨衣；午后尽量安排室内景点</li><li>儿童节人流：6月1日当天熊猫基地、自然博物馆人满为患，务必提前预约并早到</li><li>火锅辣度：带孩子点鸳鸯锅，提前说明不辣</li><li>高温：午间11:00–14:00避免长时间户外，备防晒和补水</li><li>都江堰体力：全程步行约5–8公里，7岁孩子可完成，但节奏要慢</li><li>预约提醒：熊猫基地、自然博物馆、都江堰门票均需提前在官方渠道预约，旺季可能提前数天售罄</li></ul></div>
+    </section>
+
+    <section class="panel plan-overview" id="plan-overview">
+      <div class="section-kicker">总体安排</div>
+      <h2>每天的主题、强度和关键提醒</h2>
+      <div class="plan-grid">
+
+          <article class="plan-card">
+            <span>Day 1</span>
+            <h3>抵达·老成都初体验</h3>
+            <p>锦江区/青羊区 · 强度：低</p>
+            <strong>宽窄巷子、人民公园盖碗茶、春熙路夜游</strong>
+            <em>儿童节当天，宽窄巷子傍晚人少</em>
+          </article>
+          <article class="plan-card">
+            <span>Day 2</span>
+            <h3>国宝熊猫日</h3>
+            <p>成华区 · 强度：中</p>
+            <strong>熊猫基地（早场）、成都自然博物馆</strong>
+            <em>两处均须提前预约；周一自然博物馆闭馆→改备选</em>
+          </article>
+          <article class="plan-card">
+            <span>Day 3</span>
+            <h3>都江堰一日游</h3>
+            <p>都江堰市 · 强度：中高</p>
+            <strong>都江堰水利工程、安澜索桥、伏龙观</strong>
+            <em>城际铁路提前购票；午间避暑</em>
+          </article>
+          <article class="plan-card">
+            <span>Day 4</span>
+            <h3>文化收尾·返程</h3>
+            <p>锦江区/武侯区 · 强度：低</p>
+            <strong>杜甫草堂/浣花溪、春熙路购物、返程</strong>
+            <em>根据航班时间控制行程</em>
+          </article>
+      </div>
+    </section>
+
+    <section class="panel transport-panel" id="transport-board">
+      <div class="section-kicker">交通参考</div>
+      <h2>城际航班/车次与市内移动</h2>
+      <div class="transport-groups">
+
+          <article class="transport-group">
+            <div class="transport-group-head">
+              <h3>去程</h3>
+              <span>抵达目的地的城际交通</span>
+            </div>
+            <div class="transport-grid">
+
+                <article class="transport-card">
+                  <span>城际交通</span>
+                  <h4>去程（推荐） · MU6141 东航 · 白云 06:40 → 天府 09:05</h4>
+                  <p>2h25m · ¥429/人</p>
+                  <div><a href="https://a.feizhu.com/1nbkbu" target="_blank" rel="noopener noreferrer">查看链接</a></div>
+                  <small>itinerary-structured.json 交通表</small>
+                </article>
+                <article class="transport-card">
+                  <span>城际交通</span>
+                  <h4>去程（备选） · AQ1115 九元 · 白云 12:20 → 天府 14:50</h4>
+                  <p>2h30m · ¥409/人</p>
+                  <div><a href="https://a.feizhu.com/2rKOrC" target="_blank" rel="noopener noreferrer">查看链接</a></div>
+                  <small>itinerary-structured.json 交通表</small>
+                </article>
+                <article class="transport-card">
+                  <span>城际交通</span>
+                  <h4>去程（备选） · CA4310 国航 · 白云 07:55 → 天府 10:15</h4>
+                  <p>2h20m · ¥480/人</p>
+                  <div><a href="https://a.feizhu.com/0eqUu7" target="_blank" rel="noopener noreferrer">查看链接</a></div>
+                  <small>itinerary-structured.json 交通表</small>
+                </article>
+            </div>
+          </article>
+          <article class="transport-group">
+            <div class="transport-group-head">
+              <h3>返程</h3>
+              <span>离开目的地的城际交通</span>
+            </div>
+            <div class="transport-grid">
+
+                <article class="transport-card">
+                  <span>城际交通</span>
+                  <h4>返程（备选） · AQ1116 九元 · 天府 16:00 → 白云 18:25</h4>
+                  <p>2h25m · ¥409/人</p>
+                  <div><a href="https://a.feizhu.com/0wlRn3" target="_blank" rel="noopener noreferrer">查看链接</a></div>
+                  <small>itinerary-structured.json 交通表</small>
+                </article>
+                <article class="transport-card">
+                  <span>城际交通</span>
+                  <h4>返程（备选） · CZ3476 南航 · 天府 21:00 → 白云 23:25</h4>
+                  <p>2h25m · ¥460/人</p>
+                  <div><a href="https://a.feizhu.com/0RTgze" target="_blank" rel="noopener noreferrer">查看链接</a></div>
+                  <small>itinerary-structured.json 交通表</small>
+                </article>
+                <article class="transport-card">
+                  <span>城际交通</span>
+                  <h4>返程（推荐） · 3U6701 川航 · 天府 16:00→08:00 → 白云 18:25→10:25</h4>
+                  <p>2h25m · ¥400/人</p>
+                  <div><a href="https://a.feizhu.com/0dlkvn" target="_blank" rel="noopener noreferrer">查看链接</a></div>
+                  <small>itinerary-structured.json 交通表</small>
+                </article>
+            </div>
+          </article>
+      </div>
+    </section>
+    <div class="dashboard-grid">
+
+    <section class="panel timeline-panel" aria-label="每日安排">
+      <div class="section-kicker">每日安排</div>
+      <h2>按天切换，地图同步看路线</h2>
+
+    <div class="day-tabs" role="tablist" aria-label="每日行程">
+      <button class="active" type="button" data-day-tab="all">全部</button>
+      <button type="button" data-day-tab="1">Day 1</button><button type="button" data-day-tab="2">Day 2</button><button type="button" data-day-tab="3">Day 3</button><button type="button" data-day-tab="4">Day 4</button>
+    </div>
+      <div class="day-stack">
+
+          <article class="day-card" data-day-card="1">
+            <div class="day-card-head">
+              <div>
+                <span class="day-badge">Day 1</span>
+                <h3>抵达·老成都初体验</h3>
+                <p>2026-06-01 周一 · 锦江区/青羊区 · 强度：低</p>
+              </div>
+            </div>
+            <div class="activity-list">
+
+    <button class="activity-card has-detail" type="button" data-focus-poi="广州白云机场出发（MU6141 东航）" data-day="1">
+      <span class="time">06:40</span>
+      <span class="activity-main">
+        <strong>广州白云机场出发（MU6141 东航）</strong>
+        <span>机场自行前往 · 购票；早班到成都后直接出行</span>
+      </span>
+      <span class="cost">¥429/人</span>
+    </button>
+    <button class="activity-card has-detail" type="button" data-focus-poi="抵达成都天府机场" data-day="1">
+      <span class="time">09:05</span>
+      <span class="activity-main">
+        <strong>抵达成都天府机场</strong>
+        <span>— · 代表性样例数据</span>
+      </span>
+      <span class="cost">—</span>
+    </button>
+    <button class="activity-card has-detail" type="button" data-focus-poi="天府机场→酒店 check-in" data-day="1">
+      <span class="time">09:05–10:30</span>
+      <span class="activity-main">
+        <strong>天府机场→酒店 check-in</strong>
+        <span>耗时 约1小时25分钟 · 地铁18号线约50分钟 · 行李寄存后出发</span>
+      </span>
+      <span class="cost">¥10/人</span>
+    </button>
+    <button class="activity-card has-detail" type="button" data-focus-poi="宽窄巷子" data-day="1">
+      <span class="time">11:00–13:00</span>
+      <span class="activity-main">
+        <strong>宽窄巷子（宽巷子+窄巷子+井巷子）</strong>
+        <span>停留 约2小时 · 打车约¥20 · 上午人少；变脸表演约¥50–100；糖画、三大炮小吃</span>
+      </span>
+      <span class="cost">免费入园</span>
+    </button>
+    <button class="activity-card has-detail" type="button" data-focus-poi="午餐：宽窄巷子附近本地餐厅" data-day="1">
+      <span class="time">13:00–14:00</span>
+      <span class="activity-main">
+        <strong>午餐：宽窄巷子附近本地餐厅</strong>
+        <span>停留 约1小时 · 步行 · 避开景区内高价餐厅；推荐附近苍蝇馆子</span>
+      </span>
+      <span class="cost">¥80–120</span>
+    </button>
+    <button class="activity-card has-detail" type="button" data-focus-poi="人民公园·鹤鸣茶社盖碗茶" data-day="1">
+      <span class="time">14:00–15:30</span>
+      <span class="activity-main">
+        <strong>人民公园·鹤鸣茶社盖碗茶</strong>
+        <span>停留 约1小时30分钟 · 步行约10分钟 · 孩子可喂鱼、看荷花；成都慢生活体验</span>
+      </span>
+      <span class="cost">¥20–30/人</span>
+    </button>
+    <button class="activity-card has-detail" type="button" data-focus-poi="酒店休息" data-day="1">
+      <span class="time">15:30–17:00</span>
+      <span class="activity-main">
+        <strong>酒店休息（孩子午睡/补觉）</strong>
+        <span>停留 约1小时30分钟 · 打车约¥15 · 儿童节当天体力消耗大，必须休息</span>
+      </span>
+      <span class="cost">—</span>
+    </button>
+    <button class="activity-card has-detail" type="button" data-focus-poi="春熙路/太古里夜游·IFS爬墙熊猫" data-day="1">
+      <span class="time">17:30–20:00</span>
+      <span class="activity-main">
+        <strong>春熙路/太古里夜游·IFS爬墙熊猫打卡</strong>
+        <span>停留 约2小时30分钟 · 打车约¥20 · 拍照打卡；太古里夜景</span>
+      </span>
+      <span class="cost">免费</span>
+    </button>
+    <button class="activity-card has-detail" type="button" data-focus-poi="晚餐：火锅（推荐大龙燚/海底捞）" data-day="1">
+      <span class="time">20:00–21:30</span>
+      <span class="activity-main">
+        <strong>晚餐：火锅（推荐大龙燚/海底捞）</strong>
+        <span>停留 约1小时30分钟 · 步行 · 点鸳鸯锅，孩子吃清汤区</span>
+      </span>
+      <span class="cost">¥150–250</span>
+    </button>
+            </div>
+            <div class="day-notes">
+              <p><strong>核心</strong>宽窄巷子变脸表演、人民公园盖碗茶、IFS爬墙熊猫拍照</p>
+              <p><strong>餐食</strong>午餐宽窄巷子附近本地馆子（¥80–120）；晚餐春熙路火锅（¥150–250）；小吃预算¥50</p>
+              <p><strong>休息</strong>14:00–15:30 酒店休息；人民公园有遮阴座位；备水和防晒</p>
+              <p><strong>预算</strong>机票¥429×3=¥1287 + 市内交通¥80 + 餐饮¥350 + 门票/小吃¥150 ≈ ¥1867</p>
+              <p><strong>预约</strong>宽窄巷子无需预约；变脸表演现场购票</p>
+              <p><strong>备选</strong>宽窄巷子有室内店铺；春熙路全室内商场；可缩短人民公园改室内休息</p>
+              <div><strong>提醒</strong><ul><li>儿童节当天，宽窄巷子傍晚人少</li></ul></div>
+            </div>
+          </article>
+          <article class="day-card" data-day-card="2">
+            <div class="day-card-head">
+              <div>
+                <span class="day-badge">Day 2</span>
+                <h3>国宝熊猫日</h3>
+                <p>2026-06-02 周二 · 成华区 · 强度：中</p>
+              </div>
+            </div>
+            <div class="activity-list">
+
+    <button class="activity-card has-detail" type="button" data-focus-poi="酒店出发" data-day="2">
+      <span class="time">07:00</span>
+      <span class="activity-main">
+        <strong>酒店出发</strong>
+        <span>— · 早餐在酒店或外带</span>
+      </span>
+      <span class="cost">—</span>
+    </button>
+    <button class="activity-card has-detail" type="button" data-focus-poi="成都大熊猫繁育研究基地开园入场" data-day="2">
+      <span class="time">07:30</span>
+      <span class="activity-main">
+        <strong>成都大熊猫繁育研究基地开园入场</strong>
+        <span>打车约¥30–40（约30分钟） · 必须提前预约；早场熊猫最活跃</span>
+      </span>
+      <span class="cost">成人¥55，儿童1.2m以下免票</span>
+    </button>
+    <button class="activity-card has-detail" type="button" data-focus-poi="熊猫基地" data-day="2">
+      <span class="time">07:30–11:30</span>
+      <span class="activity-main">
+        <strong>熊猫基地游览（4小时）</strong>
+        <span>停留 约4小时 · 园内观光车¥10 · 幼年熊猫区→大熊猫博物馆→小熊猫区；乘观光车省体力</span>
+      </span>
+      <span class="cost">观光车¥10</span>
+    </button>
+    <button class="activity-card has-detail" type="button" data-focus-poi="午餐：熊猫基地附近或返回市区" data-day="2">
+      <span class="time">11:30–12:30</span>
+      <span class="activity-main">
+        <strong>午餐：熊猫基地附近或返回市区</strong>
+        <span>耗时 约1小时 · 打车约¥30 · 基地内餐饮贵，建议出园后吃</span>
+      </span>
+      <span class="cost">¥80–120</span>
+    </button>
+    <button class="activity-card has-detail" type="button" data-focus-poi="成都自然博物馆" data-day="2">
+      <span class="time">13:00–15:30</span>
+      <span class="activity-main">
+        <strong>成都自然博物馆（2.5小时）</strong>
+        <span>停留 约2小时30分钟 · 打车约¥20（十里店地铁站B口） · 必须提前预约；恐龙化石大厅；互动展区</span>
+      </span>
+      <span class="cost">免费（需预约）</span>
+    </button>
+    <button class="activity-card has-detail" type="button" data-focus-poi="酒店休息" data-day="2">
+      <span class="time">15:30–16:30</span>
+      <span class="activity-main">
+        <strong>酒店休息</strong>
+        <span>停留 约1小时 · 打车约¥20 · 孩子下午体力下降，必须休息</span>
+      </span>
+      <span class="cost">—</span>
+    </button>
+    <button class="activity-card has-detail" type="button" data-focus-poi="成都博物馆" data-day="2">
+      <span class="time">17:30–19:00</span>
+      <span class="activity-main">
+        <strong>成都博物馆（可选，天府广场旁）</strong>
+        <span>停留 约1小时30分钟 · 地铁约20分钟 · 皮影木偶展，孩子喜欢；或直接晚餐</span>
+      </span>
+      <span class="cost">免费</span>
+    </button>
+    <button class="activity-card has-detail" type="button" data-focus-poi="晚餐：天府广场附近川菜" data-day="2">
+      <span class="time">19:00–21:00</span>
+      <span class="activity-main">
+        <strong>晚餐：天府广场附近川菜</strong>
+        <span>停留 约2小时 · 步行/打车 · 夫妻肺片、麻婆豆腐、回锅肉</span>
+      </span>
+      <span class="cost">¥100–180</span>
+    </button>
+            </div>
+            <div class="day-notes">
+              <p><strong>核心</strong>早7:30看熊猫吃早饭（最活跃）、幼年熊猫区、自然博物馆恐龙化石大厅</p>
+              <p><strong>餐食</strong>早餐酒店（¥0–50）；午餐熊猫基地外（¥80–120）；晚餐天府广场川菜（¥100–180）</p>
+              <p><strong>休息</strong>15:30–17:30 酒店强制休息；熊猫基地内有遮阴休息区；备防蚊液</p>
+              <p><strong>预算</strong>门票¥55×2=¥110 + 观光车¥20 + 交通¥100 + 餐饮¥350 ≈ ¥580</p>
+              <p><strong>预约</strong>熊猫基地：官网/公众号提前3–5天预约，旺季可能售罄；自然博物馆：公众号&quot;成都自然博物馆&quot;提前2–3天预约</p>
+              <p><strong>备选</strong>自然博物馆全室内；成都博物馆全室内；雨天行程不受影响</p>
+              <div><strong>提醒</strong><ul><li>两处均须提前预约</li><li>周一自然博物馆闭馆→改备选</li></ul></div>
+            </div>
+          </article>
+          <article class="day-card" data-day-card="3">
+            <div class="day-card-head">
+              <div>
+                <span class="day-badge">Day 3</span>
+                <h3>都江堰一日游</h3>
+                <p>2026-06-03 周三 · 都江堰市 · 强度：中高</p>
+              </div>
+            </div>
+            <div class="activity-list">
+
+    <button class="activity-card has-detail" type="button" data-focus-poi="酒店出发→犀浦站" data-day="3">
+      <span class="time">07:30</span>
+      <span class="activity-main">
+        <strong>酒店出发→犀浦站</strong>
+        <span>地铁2号线约30分钟 · 犀浦站换乘成灌城际铁路</span>
+      </span>
+      <span class="cost">¥5</span>
+    </button>
+    <button class="activity-card has-detail" type="button" data-focus-poi="犀浦→都江堰站（城际铁路）" data-day="3">
+      <span class="time">08:00–08:50</span>
+      <span class="activity-main">
+        <strong>犀浦→都江堰站（城际铁路）</strong>
+        <span>耗时 约50分钟 · 城际铁路约50分钟 · 提前购票；到站后打车/步行约10分钟到景区</span>
+      </span>
+      <span class="cost">¥15–20/人</span>
+    </button>
+    <button class="activity-card has-detail" type="button" data-focus-poi="都江堰景区" data-day="3">
+      <span class="time">09:00–13:00</span>
+      <span class="activity-main">
+        <strong>都江堰景区游览（4小时）</strong>
+        <span>停留 约4小时 · 景区内步行/电瓶车 · 鱼嘴→飞沙堰→宝瓶口→安澜索桥→伏龙观；租讲解器¥20</span>
+      </span>
+      <span class="cost">成人¥80，儿童1.2m以下免票</span>
+    </button>
+    <button class="activity-card has-detail" type="button" data-focus-poi="午餐：都江堰市区餐厅" data-day="3">
+      <span class="time">13:00–14:00</span>
+      <span class="activity-main">
+        <strong>午餐：都江堰市区餐厅</strong>
+        <span>停留 约1小时 · 步行 · 都江堰本地豆腐、肥肠粉</span>
+      </span>
+      <span class="cost">¥80–120</span>
+    </button>
+    <button class="activity-card has-detail" type="button" data-focus-poi="南桥/玉垒山公园" data-day="3">
+      <span class="time">14:00–15:00</span>
+      <span class="activity-main">
+        <strong>南桥/玉垒山公园（可选，轻松散步）</strong>
+        <span>停留 约1小时 · 步行 · 孩子体力允许则游览；否则直接返程</span>
+      </span>
+      <span class="cost">免费</span>
+    </button>
+    <button class="activity-card has-detail" type="button" data-focus-poi="都江堰站→犀浦→酒店" data-day="3">
+      <span class="time">15:00–16:00</span>
+      <span class="activity-main">
+        <strong>都江堰站→犀浦→酒店</strong>
+        <span>耗时 约1小时 · 城际铁路+地铁 · 返程约1.5小时</span>
+      </span>
+      <span class="cost">¥20–25/人</span>
+    </button>
+    <button class="activity-card has-detail" type="button" data-focus-poi="酒店休息" data-day="3">
+      <span class="time">16:00–18:00</span>
+      <span class="activity-main">
+        <strong>酒店休息</strong>
+        <span>停留 约2小时 · — · 一日游体力消耗大，必须休息</span>
+      </span>
+      <span class="cost">—</span>
+    </button>
+    <button class="activity-card has-detail" type="button" data-focus-poi="晚餐：成都串串香/冒菜" data-day="3">
+      <span class="time">18:30–20:30</span>
+      <span class="activity-main">
+        <strong>晚餐：成都串串香/冒菜</strong>
+        <span>停留 约2小时 · 打车约¥15 · 孩子喜欢串串；推荐锦江区本地馆子</span>
+      </span>
+      <span class="cost">¥80–150</span>
+    </button>
+            </div>
+            <div class="day-notes">
+              <p><strong>核心</strong>安澜索桥（孩子喜欢晃桥）、鱼嘴分水堤俯瞰、伏龙观全景</p>
+              <p><strong>餐食</strong>早餐酒店（¥0–50）；午餐都江堰本地餐厅（¥80–120）；晚餐串串香（¥80–150）</p>
+              <p><strong>休息</strong>景区内有遮阴休息区；午餐后可在餐厅休息；备折叠雨衣（夏季阵雨）；充足饮水</p>
+              <p><strong>预算</strong>城际铁路¥40×3=¥120 + 门票¥80×2=¥160 + 讲解器¥20 + 交通¥60 + 餐饮¥300 ≈ ¥660</p>
+              <p><strong>预约</strong>都江堰门票需提前预约（官方渠道）；城际铁路票提前在12306购买</p>
+              <p><strong>备选</strong>都江堰景区雨天可游览（备雨衣）；若孩子疲劳可缩短至鱼嘴+安澜索桥主线（2小时）；极端天气改成都博物馆+欢乐谷</p>
+              <div><strong>提醒</strong><ul><li>城际铁路提前购票</li><li>午间避暑</li></ul></div>
+            </div>
+          </article>
+          <article class="day-card" data-day-card="4">
+            <div class="day-card-head">
+              <div>
+                <span class="day-badge">Day 4</span>
+                <h3>文化收尾·返程</h3>
+                <p>2026-06-04 周四 · 锦江区/武侯区 · 强度：低</p>
+              </div>
+            </div>
+            <div class="activity-list">
+
+    <button class="activity-card has-detail" type="button" data-focus-poi="杜甫草堂+浣花溪公园" data-day="4">
+      <span class="time">08:00–10:00</span>
+      <span class="activity-main">
+        <strong>杜甫草堂+浣花溪公园（2小时）</strong>
+        <span>停留 约2小时 · 打车约¥20 · 环境清幽；浣花溪公园免费；孩子可背诗实地教学</span>
+      </span>
+      <span class="cost">成人¥50，儿童1.2m以下免票</span>
+    </button>
+    <button class="activity-card has-detail" type="button" data-focus-poi="酒店 check-out，行李寄存" data-day="4">
+      <span class="time">10:00–11:00</span>
+      <span class="activity-main">
+        <strong>酒店 check-out，行李寄存</strong>
+        <span>停留 约1小时 · 打车约¥15 · 行李寄存后轻装购物</span>
+      </span>
+      <span class="cost">—</span>
+    </button>
+    <button class="activity-card has-detail" type="button" data-focus-poi="春熙路/太古里购物·伴手礼" data-day="4">
+      <span class="time">11:00–12:30</span>
+      <span class="activity-main">
+        <strong>春熙路/太古里购物·伴手礼</strong>
+        <span>停留 约1小时30分钟 · 步行 · 熊猫周边、郫县豆瓣、花椒、藤椒油</span>
+      </span>
+      <span class="cost">按需</span>
+    </button>
+    <button class="activity-card has-detail" type="button" data-focus-poi="午餐：春熙路附近" data-day="4">
+      <span class="time">12:30–13:30</span>
+      <span class="activity-main">
+        <strong>午餐：春熙路附近</strong>
+        <span>停留 约1小时 · 步行 · 钟水饺、龙抄手、担担面</span>
+      </span>
+      <span class="cost">¥80–150</span>
+    </button>
+    <button class="activity-card has-detail" type="button" data-focus-poi="取行李→天府机场" data-day="4">
+      <span class="time">14:00</span>
+      <span class="activity-main">
+        <strong>取行李→天府机场</strong>
+        <span>打车约¥100–130（约60分钟） · 提前2小时到机场</span>
+      </span>
+      <span class="cost">¥100–130</span>
+    </button>
+    <button class="activity-card has-detail" type="button" data-focus-poi="天府机场出发（3U6701 川航）" data-day="4">
+      <span class="time">16:00</span>
+      <span class="activity-main">
+        <strong>天府机场出发（3U6701 川航）</strong>
+        <span>— · 购票；代表性样例数据</span>
+      </span>
+      <span class="cost">¥400/人</span>
+    </button>
+    <button class="activity-card has-detail" type="button" data-focus-poi="抵达广州白云机场" data-day="4">
+      <span class="time">18:25</span>
+      <span class="activity-main">
+        <strong>抵达广州白云机场</strong>
+        <span>—</span>
+      </span>
+      <span class="cost">—</span>
+    </button>
+            </div>
+            <div class="day-notes">
+              <p><strong>核心</strong>杜甫草堂实地背诗、浣花溪公园散步、春熙路伴手礼</p>
+              <p><strong>餐食</strong>早餐酒店（¥0–50）；午餐春熙路小吃（¥80–150）</p>
+              <p><strong>休息</strong>杜甫草堂环境清幽，节奏慢；浣花溪公园有草坪休息区</p>
+              <p><strong>预算</strong>门票¥50×2=¥100 + 交通¥250 + 餐饮¥200 + 购物按需 ≈ ¥550+购物</p>
+              <p><strong>预约</strong>杜甫草堂建议提前预约（旺季）；返程航班提前值机</p>
+              <p><strong>备选</strong>杜甫草堂有室内展厅；可缩短改为直接购物+早去机场</p>
+              <div><strong>提醒</strong><ul><li>根据航班时间控制行程</li></ul></div>
+            </div>
+          </article>
+      </div>
+    </section>
+
+    <section class="map-panel" id="dashboard" aria-label="地图与交通">
+      <div class="map-toolbar">
+        <div>
+          <div class="section-kicker">地图与交通</div>
+          <h2>每日点位、交通和酒店位置</h2>
+        </div>
+        <div class="map-legend">
+          <span><i>景</i>景点</span><span><i>文</i>文化</span><span><i>街</i>街区</span><span><i>食</i>餐饮</span><span><i>住</i>住宿</span><span><i>交</i>交通</span>
+        </div>
+      </div>
+      <div class="map-canvas" id="atlasMap">
+        <div class="map-empty">
+          <strong>地图加载中</strong>
+          <span>地图线用于点位方位示意，真实交通以每日交通提示为准。</span>
+        </div>
+      </div>
+      <div class="route-summary">
+
+          <button class="route-pill" type="button" data-focus-poi="广州白云机场出发（MU6141 东航）" data-route-day="1">
+            <span>Day 1 · 广州白云机场出发（MU6141 东航）</span>
+            <strong>机场自行前往 · 购票；早班到成都后直接出行 · ¥429/人</strong>
+          </button>
+          <button class="route-pill" type="button" data-focus-poi="酒店 check-in" data-route-day="1">
+            <span>Day 1 · 天府机场 → 酒店 check-in</span>
+            <strong>地铁18号线约50分钟 · 约1小时25分钟 · ¥10/人</strong>
+          </button>
+          <button class="route-pill" type="button" data-focus-poi="午餐：熊猫基地附近或返回市区" data-route-day="2">
+            <span>Day 2 · 午餐：熊猫基地附近或返回市区</span>
+            <strong>打车约¥30 · 约1小时 · ¥80–120</strong>
+          </button>
+          <button class="route-pill" type="button" data-focus-poi="犀浦站" data-route-day="3">
+            <span>Day 3 · 酒店出发 → 犀浦站</span>
+            <strong>地铁2号线约30分钟 · 犀浦站换乘成灌城际铁路 · ¥5</strong>
+          </button>
+          <button class="route-pill" type="button" data-focus-poi="都江堰站（城际铁路）" data-route-day="3">
+            <span>Day 3 · 犀浦 → 都江堰站（城际铁路）</span>
+            <strong>城际铁路约50分钟 · 约50分钟 · ¥15–20/人</strong>
+          </button>
+          <button class="route-pill" type="button" data-focus-poi="犀浦" data-route-day="3">
+            <span>Day 3 · 都江堰站 → 犀浦</span>
+            <strong>城际铁路+地铁 · 约1小时 · ¥20–25/人</strong>
+          </button>
+          <button class="route-pill" type="button" data-focus-poi="天府机场" data-route-day="4">
+            <span>Day 4 · 取行李 → 天府机场</span>
+            <strong>打车约¥100–130（约60分钟） · 提前2小时到机场 · ¥100–130</strong>
+          </button>
+      </div>
+    </section>
+    </div>
+
+    <section class="panel dossier-panel" id="poi-dossier">
+      <div class="section-kicker">重点景点怎么玩</div>
+      <h2>地点档案：点击卡片查看完整攻略</h2>
+      <div class="dossier-grid">
+
+          <button class="dossier-card dossier-button" type="button" data-focus-poi="成都大熊猫繁育研究基地" data-dossier="成都大熊猫繁育研究基地">
+            <img src="https://aos-comment.amap.com/B001C7WE5S/comment/content_media_external_file_100006799_1767191789906_56269281.jpg" alt="成都大熊猫繁育研究基地">
+            <span>地点档案 · Day 2</span>
+            <strong>成都大熊猫繁育研究基地</strong>
+            <em>必去 · 3–4小时</em>
+            <p>主要风险：旺季必须提前预约，早去否则熊猫睡觉</p>
+            <small>官网/公众号提前预约（旺季可能提前3–5天售罄）</small>
+          </button>
+          <button class="dossier-card dossier-button" type="button" data-focus-poi="都江堰景区" data-dossier="都江堰景区">
+            <img src="http://store.is.autonavi.com/showpic/31fab45390b5932dfa51a67dbf8548f4" alt="都江堰景区">
+            <span>地点档案 · Day 3</span>
+            <strong>都江堰景区</strong>
+            <em>必去 · 4–5小时（含往返交通约2小时）</em>
+            <p>主要风险：步行量大，需预约门票</p>
+            <small>成人票约¥80，儿童1.2m以下免票</small>
+          </button>
+          <button class="dossier-card dossier-button" type="button" data-focus-poi="成都自然博物馆" data-dossier="成都自然博物馆">
+            <img src="http://store.is.autonavi.com/showpic/31a0b4d97a84e7c1fd81262bbcddaef4" alt="成都自然博物馆">
+            <span>地点档案 · Day 2</span>
+            <strong>成都自然博物馆</strong>
+            <em>必去 · 2–3小时</em>
+            <p>主要风险：必须提前预约，周一闭馆</p>
+            <small>免费（需预约）</small>
+          </button>
+          <button class="dossier-card dossier-button" type="button" data-focus-poi="宽窄巷子" data-dossier="宽窄巷子">
+            <img src="https://aos-comment.amap.com/B0FFHJ46ZK/comment/content_media_external_images_media_1000056554_ss__1770378381522_09529369.jpg" alt="宽窄巷子">
+            <span>地点档案 · Day 1</span>
+            <strong>宽窄巷子</strong>
+            <em>值得 · 2小时</em>
+            <p>主要风险：商业化重，节假日极拥挤</p>
+            <small>免费入园</small>
+          </button>
+          <button class="dossier-card dossier-button" type="button" data-focus-poi="春熙路/太古里" data-dossier="春熙路/太古里">
+            <img src="http://store.is.autonavi.com/showpic/4E377E858534426097901E10EEAFCD8E" alt="春熙路/太古里">
+            <span>地点档案 · Day 1</span>
+            <strong>春熙路/太古里</strong>
+            <em>值得 · 2–3小时（晚餐+逛街）</em>
+            <p>主要风险：人多，消费高</p>
+            <small>不要在太古里内餐厅吃饭（性价比低）</small>
+          </button>
+      </div>
+    </section>
+
+    <section class="panel hotel-panel" id="hotel-board">
+      <div class="section-kicker">住宿决策</div>
+      <h2>酒店组合：不同档次、位置和取舍</h2>
+      <div class="hotel-grid">
+
+          <article class="hotel-card" data-focus-hotel="成都九眼桥voco酒店">
+            <img src="https://store.is.autonavi.com/showpic/31c02e7d3152ed08186e46046179c896" alt="成都九眼桥voco酒店">
+            <div class="hotel-card-body">
+              <span class="tier">高档型</span>
+              <h3>成都九眼桥voco酒店</h3>
+              <p>近春熙路步行街（锦江区）</p>
+              <div class="hotel-meta">
+                <span class="chip amber">¥1194</span>
+                <span class="chip blue">按上游已接受酒店候选展示；房型以订票/查询链接实时页面为准。</span>
+              </div>
+              <p>亲子，位置极佳，步行春熙路</p>
+              <p class="tradeoff">旺季价格高</p>
+              <div class="card-actions"><a href="https://a.feizhu.com/2BRNCn" target="_blank" rel="noopener noreferrer">飞猪查看</a></div>
+            </div>
+          </article>
+          <article class="hotel-card" data-focus-hotel="西子礼白酒店（天府熊猫塔建设路店）">
+            <img src="https://store.is.autonavi.com/showpic/6b7767cd4dfd2e6478397e0b0f2b2048" alt="西子礼白酒店（天府熊猫塔建设路店）">
+            <div class="hotel-card-body">
+              <span class="tier">高档型</span>
+              <h3>西子礼白酒店（天府熊猫塔建设路店）</h3>
+              <p>近建设路（成华区）</p>
+              <div class="hotel-meta">
+                <span class="chip amber">¥426</span>
+                <span class="chip blue">按上游已接受酒店候选展示；房型以订票/查询链接实时页面为准。</span>
+              </div>
+              <p>近自然博物馆和熊猫基地</p>
+              <p class="tradeoff">距宽窄巷子需打车约20分钟</p>
+              <div class="card-actions"><a href="https://a.feizhu.com/0cd7Px" target="_blank" rel="noopener noreferrer">飞猪查看</a></div>
+            </div>
+          </article>
+          <article class="hotel-card" data-focus-hotel="恩季S·VIBRANT设计师酒店（春熙路太古里店）">
+            <img src="https://store.is.autonavi.com/showpic/c5a1078c03b0f15e815b6c4ca1009859" alt="恩季S·VIBRANT设计师酒店（春熙路太古里店）">
+            <div class="hotel-card-body">
+              <span class="tier">中档型</span>
+              <h3>恩季S·VIBRANT设计师酒店（春熙路太古里店）</h3>
+              <p>近春熙路步行街（锦江区）</p>
+              <div class="hotel-meta">
+                <span class="chip amber">¥277</span>
+                <span class="chip blue">按上游已接受酒店候选展示；房型以订票/查询链接实时页面为准。</span>
+              </div>
+              <p>亲子，位置极佳，性价比高</p>
+              <p class="tradeoff">设计师酒店，房间可能较小</p>
+              <div class="card-actions"><a href="https://a.feizhu.com/2S9eyq" target="_blank" rel="noopener noreferrer">飞猪查看</a></div>
+            </div>
+          </article>
+          <article class="hotel-card" data-focus-hotel="汉庭酒店（太古里春熙路步行街店）">
+            <img src="https://store.is.autonavi.com/showpic/7f8e8d258ef3acdc6c2a899b626798fc" alt="汉庭酒店（太古里春熙路步行街店）">
+            <div class="hotel-card-body">
+              <span class="tier">中档型</span>
+              <h3>汉庭酒店（太古里春熙路步行街店）</h3>
+              <p>近春熙路步行街（锦江区）</p>
+              <div class="hotel-meta">
+                <span class="chip amber">¥297</span>
+                <span class="chip blue">按上游已接受酒店候选展示；房型以订票/查询链接实时页面为准。</span>
+              </div>
+              <p>连锁品质稳定，位置好</p>
+              <p class="tradeoff">标准连锁，无特色亲子设施</p>
+              <div class="card-actions"><a href="https://a.feizhu.com/3k3cF7" target="_blank" rel="noopener noreferrer">飞猪查看</a></div>
+            </div>
+          </article>
+      </div>
+    </section>
+
+    <section class="panel split-panel">
+      <div class="split-card">
+        <div class="section-kicker">美食与口碑避雷</div>
+        <h2>吃什么、哪里谨慎</h2>
+
+          <div class="mini-row">
+            <strong>宽窄巷子周边用餐</strong>
+            <span>宽窄巷子 · ¥80–120 · 宽窄巷子附近本地餐厅；避开景区内高价餐厅；推荐附近苍蝇馆子；¥80–120</span>
+          </div>
+          <div class="mini-row">
+            <strong>熊猫基地午餐策略</strong>
+            <span>熊猫基地/返回市区 · ¥80–120 · 基地内餐厅容易排队且偏贵，建议自带水和零食，或回市区午餐。</span>
+          </div>
+          <div class="mini-row">
+            <strong>火锅初体验</strong>
+            <span>春熙路/太古里或酒店周边 · ¥150–250 · 推荐大龙燚/海底捞</span>
+          </div>
+          <div class="mini-row">
+            <strong>火锅初体验</strong>
+            <span>春熙路 · ¥80–120） · ¥80–120</span>
+          </div>
+          <div class="mini-row">
+            <strong>都江堰市区午餐</strong>
+            <span>都江堰市区 · ¥80–120 · 景区内餐厅偏贵，午餐优先放在都江堰市区。</span>
+          </div>
+          <div class="mini-row">
+            <strong>早餐酒店</strong>
+            <span>春熙路 · ¥0–50） · ¥0–50</span>
+          </div>
+          <div class="mini-row">
+            <strong>锦里/宽窄巷子小吃</strong>
+            <span>锦里、宽窄巷子 · 适合快速尝鲜和拍照，正餐优先放到街区外。</span>
+          </div>
+          <div class="mini-row">
+            <strong>不辣/少辣小吃</strong>
+            <span>全城小吃店 · 带孩子点鸳鸯锅、提前说明不辣 · 适合小朋友垫肚子；点餐时明确说不辣或少辣。</span>
+          </div>
+      </div>
+      <div class="split-card">
+        <div class="section-kicker">预算</div>
+        <h2>费用参考</h2>
+
+          <div class="mini-row">
+            <strong>机票（广州↔成都，3人）</strong>
+            <span>¥2880 · 代表性样例数据；早班经济舱</span>
+          </div>
+          <div class="mini-row">
+            <strong>住宿（3晚，1间）</strong>
+            <span>¥3582 · 经济：汉庭¥277/晚；舒适：voco¥1194/晚</span>
+          </div>
+          <div class="mini-row">
+            <strong>景区门票（3人）</strong>
+            <span>¥600 · 熊猫基地¥110+都江堰¥160+杜甫草堂¥100+自然博物馆免费</span>
+          </div>
+          <div class="mini-row">
+            <strong>市内交通</strong>
+            <span>¥500 · 地铁+打车；都江堰城际¥120</span>
+          </div>
+          <div class="mini-row">
+            <strong>餐饮（4天）</strong>
+            <span>¥2000 · 经济：本地馆子；舒适：含火锅+川菜</span>
+          </div>
+          <div class="mini-row">
+            <strong>购物/伴手礼</strong>
+            <span>¥500 · 按需</span>
+          </div>
+        <p class="total">合计参考：约¥10062（不含个人消费和意外支出）</p>
+      </div>
+    </section>
+
+    <section class="panel checklist-panel">
+      <div class="section-kicker">行前检查</div>
+      <h2>出发前别漏掉</h2>
+      <div class="check-grid">
+
+          <div class="check-card">
+            <h3>预约</h3>
+            <label><input type="checkbox"> <span>（出发前至少3–5天）：</span></label><label><input type="checkbox"> <span>成都大熊猫繁育研究基地：官网 panda.org.cn 或公众号，选最早场次</span></label><label><input type="checkbox"> <span>成都自然博物馆：公众号&quot;成都自然博物馆&quot;，周一闭馆</span></label><label><input type="checkbox"> <span>都江堰景区：官方渠道预约门票</span></label><label><input type="checkbox"> <span>杜甫草堂：旺季建议预约</span></label><label><input type="checkbox"> <span>城际铁路（都江堰）：12306 提前购票</span></label><label><input type="checkbox"> <span>返程航班：提前值机选座</span></label>
+          </div>
+          <div class="check-card">
+            <h3>证件</h3>
+            <label><input type="checkbox"> <span>身份证（成人）；儿童户口本或身份证（景区入园/购票）</span></label>
+          </div>
+          <div class="check-card">
+            <h3>装备</h3>
+            <label><input type="checkbox"> <span>折叠雨衣（每人）；防蚊液；防晒霜；舒适运动鞋；充电宝；水杯</span></label>
+          </div>
+          <div class="check-card">
+            <h3>APP</h3>
+            <label><input type="checkbox"> <span>高德地图（导航）；飞猪/携程（订票）；12306（城际铁路）；各景区官方公众号（预约）</span></label>
+          </div>
+      </div>
+    </section>
+
+    <section class="panel docs-intro" id="full-docs">
+      <div class="section-kicker">完整资料库</div>
+      <h2>原文归档：需要核对时再展开</h2>
+      <p class="lead">主页面优先呈现可执行信息；原始简报、行程和口碑保留为折叠归档，方便核对来源。</p>
+      <div class="doc-jump">
+        <a href="#doc-destination-brief">完整目的地简报</a><a href="#doc-itinerary">完整行程原文</a><a href="#doc-reputation">完整口碑与避雷原文</a>
+      </div>
+    </section>
+
+      <details class="panel source-doc" id="doc-destination-brief">
+        <summary class="source-doc-summary">
+          <span class="section-kicker">destination-brief.md</span>
+          <strong>完整目的地简报</strong>
+          <em>成都旅行简报</em>
+        </summary>
+        <div class="markdown-body">
+          <h3>成都旅行简报</h3>
+<h4>一句话判断</h4>
+<p>适合带7岁孩子的三口之家，4天3夜节奏舒适，6月初是旺季前的好窗口，但需提前预约熊猫基地和自然博物馆。</p>
+<h4>目的地概览</h4>
+<ul><li><strong>城市定位</strong>：西南核心城市，美食之都、熊猫之城、古蜀文明发源地</li><li><strong>适合人群</strong>：亲子家庭、文化爱好者、美食控；7岁孩子体力适中，全程无高强度爬山</li><li><strong>旅行强度</strong>：低中等，市区景点集中，公共交通便利，无需自驾</li></ul>
+<h4>最佳旅行时间</h4>
+<ul><li><strong>推荐月份</strong>：3–5月（春）、9–11月（秋）最佳；6月已入初夏</li><li><strong>6月1日出发提醒</strong>：</li><li>气温 22–30°C，湿热，午后有阵雨，需备轻薄雨衣</li><li>儿童节（6月1日）当天景区人流激增，熊猫基地、自然博物馆须提前预约</li><li>端午节2026年为5月28–30日，6月1日节后人流略有回落，但仍属旺季</li></ul>
+<h4>怎么到达</h4>
+<h5>城际交通（代表性日期样例数据）</h5>
+<div class="md-table-wrap"><table><thead><tr><th>方向</th><th>班次</th><th>出发</th><th>到达</th><th>时长</th><th>价格参考</th><th>订票</th></tr></thead><tbody><tr><td>去程</td><td>MU6141 东航</td><td>白云 06:40</td><td>天府 09:05</td><td>2h25m</td><td>¥429</td><td><a href="https://a.feizhu.com/1nbkbu" target="_blank" rel="noopener noreferrer">购票</a></td></tr><tr><td>去程</td><td>CA4310 国航</td><td>白云 07:55</td><td>天府 10:15</td><td>2h20m</td><td>¥480</td><td><a href="https://a.feizhu.com/0eqUu7" target="_blank" rel="noopener noreferrer">购票</a></td></tr><tr><td>去程</td><td>AQ1115 九元</td><td>白云 12:20</td><td>天府 14:50</td><td>2h30m</td><td>¥409</td><td><a href="https://a.feizhu.com/2rKOrC" target="_blank" rel="noopener noreferrer">购票</a></td></tr><tr><td>返程</td><td>3U6701 川航</td><td>天府 08:00</td><td>白云 10:25</td><td>2h25m</td><td>¥400</td><td><a href="https://a.feizhu.com/0dlkvn" target="_blank" rel="noopener noreferrer">购票</a></td></tr><tr><td>返程</td><td>AQ1116 九元</td><td>天府 16:00</td><td>白云 18:25</td><td>2h25m</td><td>¥409</td><td><a href="https://a.feizhu.com/0wlRn3" target="_blank" rel="noopener noreferrer">购票</a></td></tr><tr><td>返程</td><td>CZ3476 南航</td><td>天府 21:00</td><td>白云 23:25</td><td>2h25m</td><td>¥460</td><td><a href="https://a.feizhu.com/0RTgze" target="_blank" rel="noopener noreferrer">购票</a></td></tr></tbody></table></div>
+<blockquote><p>以上为代表性日期样例数据，实际价格以购票时为准。建议选早班去程（06:40/07:55），到成都后直接前往熊猫基地。</p></blockquote>
+<h5>市内及景区交通</h5>
+<ul><li><strong>天府机场→市区</strong>：地铁18号线直达天府广场约50分钟，票价约¥10；打车约¥100–130</li><li><strong>双流机场→市区</strong>：地铁10号线约30分钟；打车约¥60–80</li><li><strong>市区内</strong>：地铁覆盖主要景点（熊猫基地需转公交/打车），打车方便，不建议自驾</li><li><strong>熊猫基地</strong>：地铁3号线熊猫大道站+公交/打车约10分钟，或直接打车约¥30–40</li><li><strong>都江堰</strong>：成灌城际铁路（天府广场→都江堰约50分钟，¥15–20）</li></ul>
+<h4>核心体验</h4>
+<ol><li><strong>成都大熊猫繁育研究基地</strong> — 早7:30入园看熊猫吃早饭，7岁孩子必打卡</li><li><strong>都江堰景区</strong> — 2300年水利奇迹，鱼嘴+安澜索桥，半日游足够</li><li><strong>宽窄巷子+人民公园</strong> — 老成都街巷、变脸表演、糖画、盖碗茶</li><li><strong>成都自然博物馆</strong> — 恐龙化石大厅，孩子最爱，需提前预约</li><li><strong>春熙路/太古里</strong> — IFS爬墙熊猫、夜市美食、火锅收尾</li></ol>
+<h4>体验情报初筛</h4>
+<div class="md-table-wrap"><table><thead><tr><th>景点</th><th>建议时长</th><th>预约/排队</th><th>亲子提醒</th></tr></thead><tbody><tr><td>熊猫基地</td><td>3–4小时</td><td><strong>必须提前预约</strong>，旺季排队30min+</td><td>早去！带防蚊液、轻便鞋</td></tr><tr><td>都江堰</td><td>4–5小时</td><td>需预约门票，城际票提前买</td><td>舒适运动鞋，备雨衣</td></tr><tr><td>自然博物馆</td><td>2–3小时</td><td><strong>必须预约</strong>（公众号），周一闭馆</td><td>充电宝、水</td></tr><tr><td>宽窄巷子</td><td>2小时</td><td>无需预约，傍晚人少</td><td>小吃多，控制零食量</td></tr><tr><td>极地海洋公园</td><td>4–5小时</td><td>网上预订即可</td><td>室内场馆，雨天备选</td></tr></tbody></table></div>
+<h4>风险与注意</h4>
+<ul><li><strong>天气</strong>：6月多阵雨，每人备折叠雨衣；午后尽量安排室内景点</li><li><strong>儿童节人流</strong>：6月1日当天熊猫基地、自然博物馆人满为患，务必提前预约并早到</li><li><strong>火锅辣度</strong>：带孩子点鸳鸯锅，提前说明不辣</li><li><strong>高温</strong>：午间11:00–14:00避免长时间户外，备防晒和补水</li><li><strong>都江堰体力</strong>：全程步行约5–8公里，7岁孩子可完成，但节奏要慢</li><li><strong>预约提醒</strong>：熊猫基地、自然博物馆、都江堰门票均需提前在官方渠道预约，旺季可能提前数天售罄</li></ul>
+        </div>
+        <details class="raw-markdown">
+          <summary>查看原始 Markdown</summary>
+          <pre><code># 成都旅行简报
+
+## 一句话判断
+适合带7岁孩子的三口之家，4天3夜节奏舒适，6月初是旺季前的好窗口，但需提前预约熊猫基地和自然博物馆。
+
+## 目的地概览
+- **城市定位**：西南核心城市，美食之都、熊猫之城、古蜀文明发源地
+- **适合人群**：亲子家庭、文化爱好者、美食控；7岁孩子体力适中，全程无高强度爬山
+- **旅行强度**：低中等，市区景点集中，公共交通便利，无需自驾
+
+## 最佳旅行时间
+- **推荐月份**：3–5月（春）、9–11月（秋）最佳；6月已入初夏
+- **6月1日出发提醒**：
+  - 气温 22–30°C，湿热，午后有阵雨，需备轻薄雨衣
+  - 儿童节（6月1日）当天景区人流激增，熊猫基地、自然博物馆须提前预约
+  - 端午节2026年为5月28–30日，6月1日节后人流略有回落，但仍属旺季
+
+## 怎么到达
+
+### 城际交通（代表性日期样例数据）
+
+| 方向 | 班次 | 出发 | 到达 | 时长 | 价格参考 | 订票 |
+| --- | --- | --- | --- | --- | --- | --- |
+| 去程 | MU6141 东航 | 白云 06:40 | 天府 09:05 | 2h25m | ¥429 | [购票](https://a.feizhu.com/1nbkbu) |
+| 去程 | CA4310 国航 | 白云 07:55 | 天府 10:15 | 2h20m | ¥480 | [购票](https://a.feizhu.com/0eqUu7) |
+| 去程 | AQ1115 九元 | 白云 12:20 | 天府 14:50 | 2h30m | ¥409 | [购票](https://a.feizhu.com/2rKOrC) |
+| 返程 | 3U6701 川航 | 天府 08:00 | 白云 10:25 | 2h25m | ¥400 | [购票](https://a.feizhu.com/0dlkvn) |
+| 返程 | AQ1116 九元 | 天府 16:00 | 白云 18:25 | 2h25m | ¥409 | [购票](https://a.feizhu.com/0wlRn3) |
+| 返程 | CZ3476 南航 | 天府 21:00 | 白云 23:25 | 2h25m | ¥460 | [购票](https://a.feizhu.com/0RTgze) |
+
+&gt; 以上为代表性日期样例数据，实际价格以购票时为准。建议选早班去程（06:40/07:55），到成都后直接前往熊猫基地。
+
+### 市内及景区交通
+- **天府机场→市区**：地铁18号线直达天府广场约50分钟，票价约¥10；打车约¥100–130
+- **双流机场→市区**：地铁10号线约30分钟；打车约¥60–80
+- **市区内**：地铁覆盖主要景点（熊猫基地需转公交/打车），打车方便，不建议自驾
+- **熊猫基地**：地铁3号线熊猫大道站+公交/打车约10分钟，或直接打车约¥30–40
+- **都江堰**：成灌城际铁路（天府广场→都江堰约50分钟，¥15–20）
+
+## 核心体验
+1. **成都大熊猫繁育研究基地** — 早7:30入园看熊猫吃早饭，7岁孩子必打卡
+2. **都江堰景区** — 2300年水利奇迹，鱼嘴+安澜索桥，半日游足够
+3. **宽窄巷子+人民公园** — 老成都街巷、变脸表演、糖画、盖碗茶
+4. **成都自然博物馆** — 恐龙化石大厅，孩子最爱，需提前预约
+5. **春熙路/太古里** — IFS爬墙熊猫、夜市美食、火锅收尾
+
+## 体验情报初筛
+
+| 景点 | 建议时长 | 预约/排队 | 亲子提醒 |
+| --- | --- | --- | --- |
+| 熊猫基地 | 3–4小时 | **必须提前预约**，旺季排队30min+ | 早去！带防蚊液、轻便鞋 |
+| 都江堰 | 4–5小时 | 需预约门票，城际票提前买 | 舒适运动鞋，备雨衣 |
+| 自然博物馆 | 2–3小时 | **必须预约**（公众号），周一闭馆 | 充电宝、水 |
+| 宽窄巷子 | 2小时 | 无需预约，傍晚人少 | 小吃多，控制零食量 |
+| 极地海洋公园 | 4–5小时 | 网上预订即可 | 室内场馆，雨天备选 |
+
+## 风险与注意
+- **天气**：6月多阵雨，每人备折叠雨衣；午后尽量安排室内景点
+- **儿童节人流**：6月1日当天熊猫基地、自然博物馆人满为患，务必提前预约并早到
+- **火锅辣度**：带孩子点鸳鸯锅，提前说明不辣
+- **高温**：午间11:00–14:00避免长时间户外，备防晒和补水
+- **都江堰体力**：全程步行约5–8公里，7岁孩子可完成，但节奏要慢
+- **预约提醒**：熊猫基地、自然博物馆、都江堰门票均需提前在官方渠道预约，旺季可能提前数天售罄</code></pre>
+        </details>
+      </details>
+      <details class="panel source-doc" id="doc-itinerary">
+        <summary class="source-doc-summary">
+          <span class="section-kicker">itinerary.md</span>
+          <strong>完整行程原文</strong>
+          <em>成都4天3夜亲子行程</em>
+        </summary>
+        <div class="markdown-body">
+          <h3>成都4天3夜亲子行程</h3>
+<h4>行程参数</h4>
+<ul><li>日期：2026年6月1日（周一）– 6月4日（周四）</li><li>出发地：广州</li><li>同行人：一家三口，含7岁小朋友</li><li>交通方式：飞机往返，市内地铁+打车</li><li>预算：舒适型（含机票约¥5000–7000/家庭）</li><li>节奏：轻松亲子，每天3–4个活动，午间留休息</li></ul>
+<h4>总体安排</h4>
+<div class="md-table-wrap"><table><thead><tr><th>天数</th><th>主题</th><th>区域</th><th>强度</th><th>核心体验</th><th>重点提醒</th></tr></thead><tbody><tr><td>Day 1</td><td>抵达·老成都初体验</td><td>锦江区/青羊区</td><td>低</td><td>宽窄巷子、人民公园盖碗茶、春熙路夜游</td><td>儿童节当天，宽窄巷子傍晚人少</td></tr><tr><td>Day 2</td><td>国宝熊猫日</td><td>成华区</td><td>中</td><td>熊猫基地（早场）、成都自然博物馆</td><td>两处均须提前预约；周一自然博物馆闭馆→改备选</td></tr><tr><td>Day 3</td><td>都江堰一日游</td><td>都江堰市</td><td>中高</td><td>都江堰水利工程、安澜索桥、伏龙观</td><td>城际铁路提前购票；午间避暑</td></tr><tr><td>Day 4</td><td>文化收尾·返程</td><td>锦江区/武侯区</td><td>低</td><td>杜甫草堂/浣花溪、春熙路购物、返程</td><td>根据航班时间控制行程</td></tr></tbody></table></div>
+<hr>
+<h4>每日行程</h4>
+<h5>Day 1 · 抵达·老成都初体验（2026-06-01 周一）</h5>
+<div class="md-table-wrap"><table><thead><tr><th>时间</th><th>安排</th><th>交通</th><th>费用</th><th>备注</th></tr></thead><tbody><tr><td>06:40</td><td>广州白云机场出发（MU6141 东航）</td><td>机场自行前往</td><td>¥429/人</td><td><a href="https://a.feizhu.com/1nbkbu" target="_blank" rel="noopener noreferrer">购票</a>；早班到成都后直接出行</td></tr><tr><td>09:05</td><td>抵达成都天府机场</td><td>—</td><td>—</td><td>代表性样例数据</td></tr><tr><td>09:05–10:30</td><td>天府机场→酒店 check-in</td><td>地铁18号线约50分钟</td><td>¥10/人</td><td>行李寄存后出发</td></tr><tr><td>11:00–13:00</td><td>宽窄巷子（宽巷子+窄巷子+井巷子）</td><td>打车约¥20</td><td>免费入园</td><td>上午人少；变脸表演约¥50–100；糖画、三大炮小吃</td></tr><tr><td>13:00–14:00</td><td>午餐：宽窄巷子附近本地餐厅</td><td>步行</td><td>¥80–120</td><td>避开景区内高价餐厅；推荐附近苍蝇馆子</td></tr><tr><td>14:00–15:30</td><td>人民公园·鹤鸣茶社盖碗茶</td><td>步行约10分钟</td><td>¥20–30/人</td><td>孩子可喂鱼、看荷花；成都慢生活体验</td></tr><tr><td>15:30–17:00</td><td>酒店休息（孩子午睡/补觉）</td><td>打车约¥15</td><td>—</td><td>儿童节当天体力消耗大，必须休息</td></tr><tr><td>17:30–20:00</td><td>春熙路/太古里夜游·IFS爬墙熊猫打卡</td><td>打车约¥20</td><td>免费</td><td>拍照打卡；太古里夜景</td></tr><tr><td>20:00–21:30</td><td>晚餐：火锅（推荐大龙燚/海底捞）</td><td>步行</td><td>¥150–250</td><td>点鸳鸯锅，孩子吃清汤区</td></tr></tbody></table></div>
+<p>今日餐食：午餐宽窄巷子附近本地馆子（¥80–120）；晚餐春熙路火锅（¥150–250）；小吃预算¥50<br>休息与补给：14:00–15:30 酒店休息；人民公园有遮阴座位；备水和防晒<br>核心体验/首推项目：宽窄巷子变脸表演；人民公园盖碗茶；IFS爬墙熊猫拍照<br>预算估算：机票¥429×3=¥1287 + 市内交通¥80 + 餐饮¥350 + 门票/小吃¥150 ≈ ¥1867<br>预约提醒：宽窄巷子无需预约；变脸表演现场购票<br>雨天/疲劳备用：宽窄巷子有室内店铺；春熙路全室内商场；可缩短人民公园改室内休息</p>
+<hr>
+<h5>Day 2 · 国宝熊猫日（2026-06-02 周二）</h5>
+<blockquote><p>注意：6月1日（Day 1）为周一，6月2日为周二，成都自然博物馆周一闭馆，本日安排无冲突。</p></blockquote>
+<div class="md-table-wrap"><table><thead><tr><th>时间</th><th>安排</th><th>交通</th><th>费用</th><th>备注</th></tr></thead><tbody><tr><td>07:00</td><td>酒店出发</td><td>—</td><td>—</td><td>早餐在酒店或外带</td></tr><tr><td>07:30</td><td>成都大熊猫繁育研究基地开园入场</td><td>打车约¥30–40（约30分钟）</td><td>成人¥55，儿童1.2m以下免票</td><td><strong>必须提前预约</strong>；早场熊猫最活跃</td></tr><tr><td>07:30–11:30</td><td>熊猫基地游览（4小时）</td><td>园内观光车¥10</td><td>观光车¥10</td><td>幼年熊猫区→大熊猫博物馆→小熊猫区；乘观光车省体力</td></tr><tr><td>11:30–12:30</td><td>午餐：熊猫基地附近或返回市区</td><td>打车约¥30</td><td>¥80–120</td><td>基地内餐饮贵，建议出园后吃</td></tr><tr><td>13:00–15:30</td><td>成都自然博物馆（2.5小时）</td><td>打车约¥20（十里店地铁站B口）</td><td>免费（需预约）</td><td><strong>必须提前预约</strong>；恐龙化石大厅；互动展区</td></tr><tr><td>15:30–16:30</td><td>酒店休息</td><td>打车约¥20</td><td>—</td><td>孩子下午体力下降，必须休息</td></tr><tr><td>17:30–19:00</td><td>成都博物馆（可选，天府广场旁）</td><td>地铁约20分钟</td><td>免费</td><td>皮影木偶展，孩子喜欢；或直接晚餐</td></tr><tr><td>19:00–21:00</td><td>晚餐：天府广场附近川菜</td><td>步行/打车</td><td>¥100–180</td><td>夫妻肺片、麻婆豆腐、回锅肉</td></tr></tbody></table></div>
+<p>今日餐食：早餐酒店（¥0–50）；午餐熊猫基地外（¥80–120）；晚餐天府广场川菜（¥100–180）<br>休息与补给：15:30–17:30 酒店强制休息；熊猫基地内有遮阴休息区；备防蚊液<br>核心体验/首推项目：早7:30看熊猫吃早饭（最活跃）；幼年熊猫区；自然博物馆恐龙化石大厅<br>预算估算：门票¥55×2=¥110 + 观光车¥20 + 交通¥100 + 餐饮¥350 ≈ ¥580<br>预约提醒：<strong>熊猫基地</strong>：官网/公众号提前3–5天预约，旺季可能售罄；<strong>自然博物馆</strong>：公众号&quot;成都自然博物馆&quot;提前2–3天预约<br>雨天/疲劳备用：自然博物馆全室内；成都博物馆全室内；雨天行程不受影响</p>
+<hr>
+<h5>Day 3 · 都江堰一日游（2026-06-03 周三）</h5>
+<div class="md-table-wrap"><table><thead><tr><th>时间</th><th>安排</th><th>交通</th><th>费用</th><th>备注</th></tr></thead><tbody><tr><td>07:30</td><td>酒店出发→犀浦站</td><td>地铁2号线约30分钟</td><td>¥5</td><td>犀浦站换乘成灌城际铁路</td></tr><tr><td>08:00–08:50</td><td>犀浦→都江堰站（城际铁路）</td><td>城际铁路约50分钟</td><td>¥15–20/人</td><td>提前购票；到站后打车/步行约10分钟到景区</td></tr><tr><td>09:00–13:00</td><td>都江堰景区游览（4小时）</td><td>景区内步行/电瓶车</td><td>成人¥80，儿童1.2m以下免票</td><td>鱼嘴→飞沙堰→宝瓶口→安澜索桥→伏龙观；租讲解器¥20</td></tr><tr><td>13:00–14:00</td><td>午餐：都江堰市区餐厅</td><td>步行</td><td>¥80–120</td><td>都江堰本地豆腐、肥肠粉</td></tr><tr><td>14:00–15:00</td><td>南桥/玉垒山公园（可选，轻松散步）</td><td>步行</td><td>免费</td><td>孩子体力允许则游览；否则直接返程</td></tr><tr><td>15:00–16:00</td><td>都江堰站→犀浦→酒店</td><td>城际铁路+地铁</td><td>¥20–25/人</td><td>返程约1.5小时</td></tr><tr><td>16:00–18:00</td><td>酒店休息</td><td>—</td><td>—</td><td>一日游体力消耗大，必须休息</td></tr><tr><td>18:30–20:30</td><td>晚餐：成都串串香/冒菜</td><td>打车约¥15</td><td>¥80–150</td><td>孩子喜欢串串；推荐锦江区本地馆子</td></tr></tbody></table></div>
+<p>今日餐食：早餐酒店（¥0–50）；午餐都江堰本地餐厅（¥80–120）；晚餐串串香（¥80–150）<br>休息与补给：景区内有遮阴休息区；午餐后可在餐厅休息；备折叠雨衣（夏季阵雨）；充足饮水<br>核心体验/首推项目：安澜索桥（孩子喜欢晃桥）；鱼嘴分水堤俯瞰；伏龙观全景<br>预算估算：城际铁路¥40×3=¥120 + 门票¥80×2=¥160 + 讲解器¥20 + 交通¥60 + 餐饮¥300 ≈ ¥660<br>预约提醒：都江堰门票需提前预约（官方渠道）；城际铁路票提前在12306购买<br>雨天/疲劳备用：都江堰景区雨天可游览（备雨衣）；若孩子疲劳可缩短至鱼嘴+安澜索桥主线（2小时）；极端天气改成都博物馆+欢乐谷</p>
+<hr>
+<h5>Day 4 · 文化收尾·返程（2026-06-04 周四）</h5>
+<div class="md-table-wrap"><table><thead><tr><th>时间</th><th>安排</th><th>交通</th><th>费用</th><th>备注</th></tr></thead><tbody><tr><td>08:00–10:00</td><td>杜甫草堂+浣花溪公园（2小时）</td><td>打车约¥20</td><td>成人¥50，儿童1.2m以下免票</td><td>环境清幽；浣花溪公园免费；孩子可背诗实地教学</td></tr><tr><td>10:00–11:00</td><td>酒店 check-out，行李寄存</td><td>打车约¥15</td><td>—</td><td>行李寄存后轻装购物</td></tr><tr><td>11:00–12:30</td><td>春熙路/太古里购物·伴手礼</td><td>步行</td><td>按需</td><td>熊猫周边、郫县豆瓣、花椒、藤椒油</td></tr><tr><td>12:30–13:30</td><td>午餐：春熙路附近</td><td>步行</td><td>¥80–150</td><td>钟水饺、龙抄手、担担面</td></tr><tr><td>14:00</td><td>取行李→天府机场</td><td>打车约¥100–130（约60分钟）</td><td>¥100–130</td><td>提前2小时到机场</td></tr><tr><td>16:00</td><td>天府机场出发（3U6701 川航）</td><td>—</td><td>¥400/人</td><td><a href="https://a.feizhu.com/0dlkvn" target="_blank" rel="noopener noreferrer">购票</a>；代表性样例数据</td></tr><tr><td>18:25</td><td>抵达广州白云机场</td><td>—</td><td>—</td><td></td></tr></tbody></table></div>
+<p>今日餐食：早餐酒店（¥0–50）；午餐春熙路小吃（¥80–150）<br>休息与补给：杜甫草堂环境清幽，节奏慢；浣花溪公园有草坪休息区<br>核心体验/首推项目：杜甫草堂实地背诗；浣花溪公园散步；春熙路伴手礼<br>预算估算：门票¥50×2=¥100 + 交通¥250 + 餐饮¥200 + 购物按需 ≈ ¥550+购物<br>预约提醒：杜甫草堂建议提前预约（旺季）；返程航班提前值机<br>雨天/疲劳备用：杜甫草堂有室内展厅；可缩短改为直接购物+早去机场</p>
+<hr>
+<h4>预算汇总</h4>
+<div class="md-table-wrap"><table><thead><tr><th>项目</th><th>经济</th><th>舒适</th><th>备注</th></tr></thead><tbody><tr><td>机票（广州↔成都，3人）</td><td>¥2454</td><td>¥2880</td><td>代表性样例数据；早班经济舱</td></tr><tr><td>住宿（3晚，1间）</td><td>¥831</td><td>¥3582</td><td>经济：汉庭¥277/晚；舒适：voco¥1194/晚</td></tr><tr><td>景区门票（3人）</td><td>¥500</td><td>¥600</td><td>熊猫基地¥110+都江堰¥160+杜甫草堂¥100+自然博物馆免费</td></tr><tr><td>市内交通</td><td>¥300</td><td>¥500</td><td>地铁+打车；都江堰城际¥120</td></tr><tr><td>餐饮（4天）</td><td>¥1200</td><td>¥2000</td><td>经济：本地馆子；舒适：含火锅+川菜</td></tr><tr><td>购物/伴手礼</td><td>¥200</td><td>¥500</td><td>按需</td></tr><tr><td><strong>合计（家庭）</strong></td><td><strong>约¥5485</strong></td><td><strong>约¥10062</strong></td><td>不含个人消费和意外支出</td></tr></tbody></table></div>
+<hr>
+<h4>交通与住宿参考</h4>
+<h5>城际交通</h5>
+<div class="md-table-wrap"><table><thead><tr><th>方向</th><th>班次/车次</th><th>出发</th><th>到达</th><th>时长</th><th>价格参考</th><th>订票/查询</th></tr></thead><tbody><tr><td>去程（推荐）</td><td>MU6141 东航</td><td>白云 06:40</td><td>天府 09:05</td><td>2h25m</td><td>¥429/人</td><td><a href="https://a.feizhu.com/1nbkbu" target="_blank" rel="noopener noreferrer">购票</a></td></tr><tr><td>去程（备选）</td><td>AQ1115 九元</td><td>白云 12:20</td><td>天府 14:50</td><td>2h30m</td><td>¥409/人</td><td><a href="https://a.feizhu.com/2rKOrC" target="_blank" rel="noopener noreferrer">购票</a></td></tr><tr><td>去程（备选）</td><td>CA4310 国航</td><td>白云 07:55</td><td>天府 10:15</td><td>2h20m</td><td>¥480/人</td><td><a href="https://a.feizhu.com/0eqUu7" target="_blank" rel="noopener noreferrer">购票</a></td></tr><tr><td>返程（推荐）</td><td>3U6701 川航</td><td>天府 16:00→08:00</td><td>白云 18:25→10:25</td><td>2h25m</td><td>¥400/人</td><td><a href="https://a.feizhu.com/0dlkvn" target="_blank" rel="noopener noreferrer">购票</a></td></tr><tr><td>返程（备选）</td><td>AQ1116 九元</td><td>天府 16:00</td><td>白云 18:25</td><td>2h25m</td><td>¥409/人</td><td><a href="https://a.feizhu.com/0wlRn3" target="_blank" rel="noopener noreferrer">购票</a></td></tr><tr><td>返程（备选）</td><td>CZ3476 南航</td><td>天府 21:00</td><td>白云 23:25</td><td>2h25m</td><td>¥460/人</td><td><a href="https://a.feizhu.com/0RTgze" target="_blank" rel="noopener noreferrer">购票</a></td></tr></tbody></table></div>
+<blockquote><p>以上为代表性日期样例数据，实际价格以购票时为准。推荐去程早班（06:40），到成都后直接游览；返程选16:00班次，Day 4 行程充裕。</p></blockquote>
+<h5>市内交通</h5>
+<ul><li><strong>天府机场→市区</strong>：地铁18号线约50分钟¥10；打车约¥100–130</li><li><strong>市区内日常</strong>：地铁+打车为主；熊猫基地打车约¥30–40；自然博物馆地铁十里店站B口</li><li><strong>都江堰</strong>：地铁2号线→犀浦站换乘成灌城际铁路，约50分钟¥15–20/人，提前在12306购票</li><li><strong>返程机场</strong>：打车约¥100–130，提前1.5小时出发</li></ul>
+<h5>住宿区域与候选</h5>
+<div class="md-table-wrap"><table><thead><tr><th>档次</th><th>酒店</th><th>位置/区域</th><th>价格/晚</th><th>适合</th><th>取舍</th><th>订票/查询</th></tr></thead><tbody><tr><td>高档型</td><td>成都九眼桥voco酒店</td><td>近春熙路步行街（锦江区）</td><td>¥1194</td><td>亲子，位置极佳，步行春熙路</td><td>旺季价格高</td><td><a href="https://a.feizhu.com/2BRNCn" target="_blank" rel="noopener noreferrer">查询</a></td></tr><tr><td>高档型</td><td>西子礼白酒店（天府熊猫塔建设路店）</td><td>近建设路（成华区）</td><td>¥426</td><td>近自然博物馆和熊猫基地</td><td>距宽窄巷子需打车约20分钟</td><td><a href="https://a.feizhu.com/0cd7Px" target="_blank" rel="noopener noreferrer">查询</a></td></tr><tr><td>中档型</td><td>恩季S·VIBRANT设计师酒店（春熙路太古里店）</td><td>近春熙路步行街（锦江区）</td><td>¥277</td><td>亲子，位置极佳，性价比高</td><td>设计师酒店，房间可能较小</td><td><a href="https://a.feizhu.com/2S9eyq" target="_blank" rel="noopener noreferrer">查询</a></td></tr><tr><td>中档型</td><td>汉庭酒店（太古里春熙路步行街店）</td><td>近春熙路步行街（锦江区）</td><td>¥297</td><td>连锁品质稳定，位置好</td><td>标准连锁，无特色亲子设施</td><td><a href="https://a.feizhu.com/3k3cF7" target="_blank" rel="noopener noreferrer">查询</a></td></tr></tbody></table></div>
+<blockquote><p>综合建议：首选春熙路/锦江区，地铁便利，步行宽窄巷子，打车熊猫基地约¥30–40。预算充足选voco九眼桥；性价比首选恩季S或汉庭（¥277–297/晚）。</p></blockquote>
+<hr>
+<h4>出行前检查</h4>
+<ul><li><strong>预约</strong>（出发前至少3–5天）：</li><li>成都大熊猫繁育研究基地：官网 panda.org.cn 或公众号，选最早场次</li><li>成都自然博物馆：公众号&quot;成都自然博物馆&quot;，周一闭馆</li><li>都江堰景区：官方渠道预约门票</li><li>杜甫草堂：旺季建议预约</li><li>城际铁路（都江堰）：12306 提前购票</li><li>返程航班：提前值机选座</li><li><strong>证件</strong>：身份证（成人）；儿童户口本或身份证（景区入园/购票）</li><li><strong>装备</strong>：折叠雨衣（每人）；防蚊液；防晒霜；舒适运动鞋；充电宝；水杯</li><li><strong>APP</strong>：高德地图（导航）；飞猪/携程（订票）；12306（城际铁路）；各景区官方公众号（预约）</li></ul>
+        </div>
+        <details class="raw-markdown">
+          <summary>查看原始 Markdown</summary>
+          <pre><code># 成都4天3夜亲子行程
+
+## 行程参数
+- 日期：2026年6月1日（周一）– 6月4日（周四）
+- 出发地：广州
+- 同行人：一家三口，含7岁小朋友
+- 交通方式：飞机往返，市内地铁+打车
+- 预算：舒适型（含机票约¥5000–7000/家庭）
+- 节奏：轻松亲子，每天3–4个活动，午间留休息
+
+## 总体安排
+
+| 天数 | 主题 | 区域 | 强度 | 核心体验 | 重点提醒 |
+| --- | --- | --- | --- | --- | --- |
+| Day 1 | 抵达·老成都初体验 | 锦江区/青羊区 | 低 | 宽窄巷子、人民公园盖碗茶、春熙路夜游 | 儿童节当天，宽窄巷子傍晚人少 |
+| Day 2 | 国宝熊猫日 | 成华区 | 中 | 熊猫基地（早场）、成都自然博物馆 | 两处均须提前预约；周一自然博物馆闭馆→改备选 |
+| Day 3 | 都江堰一日游 | 都江堰市 | 中高 | 都江堰水利工程、安澜索桥、伏龙观 | 城际铁路提前购票；午间避暑 |
+| Day 4 | 文化收尾·返程 | 锦江区/武侯区 | 低 | 杜甫草堂/浣花溪、春熙路购物、返程 | 根据航班时间控制行程 |
+
+---
+
+## 每日行程
+
+### Day 1 · 抵达·老成都初体验（2026-06-01 周一）
+
+| 时间 | 安排 | 交通 | 费用 | 备注 |
+| --- | --- | --- | --- | --- |
+| 06:40 | 广州白云机场出发（MU6141 东航） | 机场自行前往 | ¥429/人 | [购票](https://a.feizhu.com/1nbkbu)；早班到成都后直接出行 |
+| 09:05 | 抵达成都天府机场 | — | — | 代表性样例数据 |
+| 09:05–10:30 | 天府机场→酒店 check-in | 地铁18号线约50分钟 | ¥10/人 | 行李寄存后出发 |
+| 11:00–13:00 | 宽窄巷子（宽巷子+窄巷子+井巷子） | 打车约¥20 | 免费入园 | 上午人少；变脸表演约¥50–100；糖画、三大炮小吃 |
+| 13:00–14:00 | 午餐：宽窄巷子附近本地餐厅 | 步行 | ¥80–120 | 避开景区内高价餐厅；推荐附近苍蝇馆子 |
+| 14:00–15:30 | 人民公园·鹤鸣茶社盖碗茶 | 步行约10分钟 | ¥20–30/人 | 孩子可喂鱼、看荷花；成都慢生活体验 |
+| 15:30–17:00 | 酒店休息（孩子午睡/补觉） | 打车约¥15 | — | 儿童节当天体力消耗大，必须休息 |
+| 17:30–20:00 | 春熙路/太古里夜游·IFS爬墙熊猫打卡 | 打车约¥20 | 免费 | 拍照打卡；太古里夜景 |
+| 20:00–21:30 | 晚餐：火锅（推荐大龙燚/海底捞） | 步行 | ¥150–250 | 点鸳鸯锅，孩子吃清汤区 |
+
+今日餐食：午餐宽窄巷子附近本地馆子（¥80–120）；晚餐春熙路火锅（¥150–250）；小吃预算¥50
+休息与补给：14:00–15:30 酒店休息；人民公园有遮阴座位；备水和防晒
+核心体验/首推项目：宽窄巷子变脸表演；人民公园盖碗茶；IFS爬墙熊猫拍照
+预算估算：机票¥429×3=¥1287 + 市内交通¥80 + 餐饮¥350 + 门票/小吃¥150 ≈ ¥1867
+预约提醒：宽窄巷子无需预约；变脸表演现场购票
+雨天/疲劳备用：宽窄巷子有室内店铺；春熙路全室内商场；可缩短人民公园改室内休息
+
+---
+
+### Day 2 · 国宝熊猫日（2026-06-02 周二）
+
+&gt; 注意：6月1日（Day 1）为周一，6月2日为周二，成都自然博物馆周一闭馆，本日安排无冲突。
+
+| 时间 | 安排 | 交通 | 费用 | 备注 |
+| --- | --- | --- | --- | --- |
+| 07:00 | 酒店出发 | — | — | 早餐在酒店或外带 |
+| 07:30 | 成都大熊猫繁育研究基地开园入场 | 打车约¥30–40（约30分钟） | 成人¥55，儿童1.2m以下免票 | **必须提前预约**；早场熊猫最活跃 |
+| 07:30–11:30 | 熊猫基地游览（4小时） | 园内观光车¥10 | 观光车¥10 | 幼年熊猫区→大熊猫博物馆→小熊猫区；乘观光车省体力 |
+| 11:30–12:30 | 午餐：熊猫基地附近或返回市区 | 打车约¥30 | ¥80–120 | 基地内餐饮贵，建议出园后吃 |
+| 13:00–15:30 | 成都自然博物馆（2.5小时） | 打车约¥20（十里店地铁站B口） | 免费（需预约） | **必须提前预约**；恐龙化石大厅；互动展区 |
+| 15:30–16:30 | 酒店休息 | 打车约¥20 | — | 孩子下午体力下降，必须休息 |
+| 17:30–19:00 | 成都博物馆（可选，天府广场旁） | 地铁约20分钟 | 免费 | 皮影木偶展，孩子喜欢；或直接晚餐 |
+| 19:00–21:00 | 晚餐：天府广场附近川菜 | 步行/打车 | ¥100–180 | 夫妻肺片、麻婆豆腐、回锅肉 |
+
+今日餐食：早餐酒店（¥0–50）；午餐熊猫基地外（¥80–120）；晚餐天府广场川菜（¥100–180）
+休息与补给：15:30–17:30 酒店强制休息；熊猫基地内有遮阴休息区；备防蚊液
+核心体验/首推项目：早7:30看熊猫吃早饭（最活跃）；幼年熊猫区；自然博物馆恐龙化石大厅
+预算估算：门票¥55×2=¥110 + 观光车¥20 + 交通¥100 + 餐饮¥350 ≈ ¥580
+预约提醒：**熊猫基地**：官网/公众号提前3–5天预约，旺季可能售罄；**自然博物馆**：公众号&quot;成都自然博物馆&quot;提前2–3天预约
+雨天/疲劳备用：自然博物馆全室内；成都博物馆全室内；雨天行程不受影响
+
+---
+
+### Day 3 · 都江堰一日游（2026-06-03 周三）
+
+| 时间 | 安排 | 交通 | 费用 | 备注 |
+| --- | --- | --- | --- | --- |
+| 07:30 | 酒店出发→犀浦站 | 地铁2号线约30分钟 | ¥5 | 犀浦站换乘成灌城际铁路 |
+| 08:00–08:50 | 犀浦→都江堰站（城际铁路） | 城际铁路约50分钟 | ¥15–20/人 | 提前购票；到站后打车/步行约10分钟到景区 |
+| 09:00–13:00 | 都江堰景区游览（4小时） | 景区内步行/电瓶车 | 成人¥80，儿童1.2m以下免票 | 鱼嘴→飞沙堰→宝瓶口→安澜索桥→伏龙观；租讲解器¥20 |
+| 13:00–14:00 | 午餐：都江堰市区餐厅 | 步行 | ¥80–120 | 都江堰本地豆腐、肥肠粉 |
+| 14:00–15:00 | 南桥/玉垒山公园（可选，轻松散步） | 步行 | 免费 | 孩子体力允许则游览；否则直接返程 |
+| 15:00–16:00 | 都江堰站→犀浦→酒店 | 城际铁路+地铁 | ¥20–25/人 | 返程约1.5小时 |
+| 16:00–18:00 | 酒店休息 | — | — | 一日游体力消耗大，必须休息 |
+| 18:30–20:30 | 晚餐：成都串串香/冒菜 | 打车约¥15 | ¥80–150 | 孩子喜欢串串；推荐锦江区本地馆子 |
+
+今日餐食：早餐酒店（¥0–50）；午餐都江堰本地餐厅（¥80–120）；晚餐串串香（¥80–150）
+休息与补给：景区内有遮阴休息区；午餐后可在餐厅休息；备折叠雨衣（夏季阵雨）；充足饮水
+核心体验/首推项目：安澜索桥（孩子喜欢晃桥）；鱼嘴分水堤俯瞰；伏龙观全景
+预算估算：城际铁路¥40×3=¥120 + 门票¥80×2=¥160 + 讲解器¥20 + 交通¥60 + 餐饮¥300 ≈ ¥660
+预约提醒：都江堰门票需提前预约（官方渠道）；城际铁路票提前在12306购买
+雨天/疲劳备用：都江堰景区雨天可游览（备雨衣）；若孩子疲劳可缩短至鱼嘴+安澜索桥主线（2小时）；极端天气改成都博物馆+欢乐谷
+
+---
+
+### Day 4 · 文化收尾·返程（2026-06-04 周四）
+
+| 时间 | 安排 | 交通 | 费用 | 备注 |
+| --- | --- | --- | --- | --- |
+| 08:00–10:00 | 杜甫草堂+浣花溪公园（2小时） | 打车约¥20 | 成人¥50，儿童1.2m以下免票 | 环境清幽；浣花溪公园免费；孩子可背诗实地教学 |
+| 10:00–11:00 | 酒店 check-out，行李寄存 | 打车约¥15 | — | 行李寄存后轻装购物 |
+| 11:00–12:30 | 春熙路/太古里购物·伴手礼 | 步行 | 按需 | 熊猫周边、郫县豆瓣、花椒、藤椒油 |
+| 12:30–13:30 | 午餐：春熙路附近 | 步行 | ¥80–150 | 钟水饺、龙抄手、担担面 |
+| 14:00 | 取行李→天府机场 | 打车约¥100–130（约60分钟） | ¥100–130 | 提前2小时到机场 |
+| 16:00 | 天府机场出发（3U6701 川航） | — | ¥400/人 | [购票](https://a.feizhu.com/0dlkvn)；代表性样例数据 |
+| 18:25 | 抵达广州白云机场 | — | — | |
+
+今日餐食：早餐酒店（¥0–50）；午餐春熙路小吃（¥80–150）
+休息与补给：杜甫草堂环境清幽，节奏慢；浣花溪公园有草坪休息区
+核心体验/首推项目：杜甫草堂实地背诗；浣花溪公园散步；春熙路伴手礼
+预算估算：门票¥50×2=¥100 + 交通¥250 + 餐饮¥200 + 购物按需 ≈ ¥550+购物
+预约提醒：杜甫草堂建议提前预约（旺季）；返程航班提前值机
+雨天/疲劳备用：杜甫草堂有室内展厅；可缩短改为直接购物+早去机场
+
+---
+
+## 预算汇总
+
+| 项目 | 经济 | 舒适 | 备注 |
+| --- | --- | --- | --- |
+| 机票（广州↔成都，3人） | ¥2454 | ¥2880 | 代表性样例数据；早班经济舱 |
+| 住宿（3晚，1间） | ¥831 | ¥3582 | 经济：汉庭¥277/晚；舒适：voco¥1194/晚 |
+| 景区门票（3人） | ¥500 | ¥600 | 熊猫基地¥110+都江堰¥160+杜甫草堂¥100+自然博物馆免费 |
+| 市内交通 | ¥300 | ¥500 | 地铁+打车；都江堰城际¥120 |
+| 餐饮（4天） | ¥1200 | ¥2000 | 经济：本地馆子；舒适：含火锅+川菜 |
+| 购物/伴手礼 | ¥200 | ¥500 | 按需 |
+| **合计（家庭）** | **约¥5485** | **约¥10062** | 不含个人消费和意外支出 |
+
+---
+
+## 交通与住宿参考
+
+### 城际交通
+
+| 方向 | 班次/车次 | 出发 | 到达 | 时长 | 价格参考 | 订票/查询 |
+| --- | --- | --- | --- | --- | --- | --- |
+| 去程（推荐） | MU6141 东航 | 白云 06:40 | 天府 09:05 | 2h25m | ¥429/人 | [购票](https://a.feizhu.com/1nbkbu) |
+| 去程（备选） | AQ1115 九元 | 白云 12:20 | 天府 14:50 | 2h30m | ¥409/人 | [购票](https://a.feizhu.com/2rKOrC) |
+| 去程（备选） | CA4310 国航 | 白云 07:55 | 天府 10:15 | 2h20m | ¥480/人 | [购票](https://a.feizhu.com/0eqUu7) |
+| 返程（推荐） | 3U6701 川航 | 天府 16:00→08:00 | 白云 18:25→10:25 | 2h25m | ¥400/人 | [购票](https://a.feizhu.com/0dlkvn) |
+| 返程（备选） | AQ1116 九元 | 天府 16:00 | 白云 18:25 | 2h25m | ¥409/人 | [购票](https://a.feizhu.com/0wlRn3) |
+| 返程（备选） | CZ3476 南航 | 天府 21:00 | 白云 23:25 | 2h25m | ¥460/人 | [购票](https://a.feizhu.com/0RTgze) |
+
+&gt; 以上为代表性日期样例数据，实际价格以购票时为准。推荐去程早班（06:40），到成都后直接游览；返程选16:00班次，Day 4 行程充裕。
+
+### 市内交通
+
+- **天府机场→市区**：地铁18号线约50分钟¥10；打车约¥100–130
+- **市区内日常**：地铁+打车为主；熊猫基地打车约¥30–40；自然博物馆地铁十里店站B口
+- **都江堰**：地铁2号线→犀浦站换乘成灌城际铁路，约50分钟¥15–20/人，提前在12306购票
+- **返程机场**：打车约¥100–130，提前1.5小时出发
+
+### 住宿区域与候选
+
+| 档次 | 酒店 | 位置/区域 | 价格/晚 | 适合 | 取舍 | 订票/查询 |
+| --- | --- | --- | --- | --- | --- | --- |
+| 高档型 | 成都九眼桥voco酒店 | 近春熙路步行街（锦江区） | ¥1194 | 亲子，位置极佳，步行春熙路 | 旺季价格高 | [查询](https://a.feizhu.com/2BRNCn) |
+| 高档型 | 西子礼白酒店（天府熊猫塔建设路店） | 近建设路（成华区） | ¥426 | 近自然博物馆和熊猫基地 | 距宽窄巷子需打车约20分钟 | [查询](https://a.feizhu.com/0cd7Px) |
+| 中档型 | 恩季S·VIBRANT设计师酒店（春熙路太古里店） | 近春熙路步行街（锦江区） | ¥277 | 亲子，位置极佳，性价比高 | 设计师酒店，房间可能较小 | [查询](https://a.feizhu.com/2S9eyq) |
+| 中档型 | 汉庭酒店（太古里春熙路步行街店） | 近春熙路步行街（锦江区） | ¥297 | 连锁品质稳定，位置好 | 标准连锁，无特色亲子设施 | [查询](https://a.feizhu.com/3k3cF7) |
+
+&gt; 综合建议：首选春熙路/锦江区，地铁便利，步行宽窄巷子，打车熊猫基地约¥30–40。预算充足选voco九眼桥；性价比首选恩季S或汉庭（¥277–297/晚）。
+
+---
+
+## 出行前检查
+
+- **预约**（出发前至少3–5天）：
+  - 成都大熊猫繁育研究基地：官网 panda.org.cn 或公众号，选最早场次
+  - 成都自然博物馆：公众号&quot;成都自然博物馆&quot;，周一闭馆
+  - 都江堰景区：官方渠道预约门票
+  - 杜甫草堂：旺季建议预约
+  - 城际铁路（都江堰）：12306 提前购票
+  - 返程航班：提前值机选座
+- **证件**：身份证（成人）；儿童户口本或身份证（景区入园/购票）
+- **装备**：折叠雨衣（每人）；防蚊液；防晒霜；舒适运动鞋；充电宝；水杯
+- **APP**：高德地图（导航）；飞猪/携程（订票）；12306（城际铁路）；各景区官方公众号（预约）</code></pre>
+        </details>
+      </details>
+      <details class="panel source-doc" id="doc-reputation">
+        <summary class="source-doc-summary">
+          <span class="section-kicker">reputation.md</span>
+          <strong>完整口碑与避雷原文</strong>
+          <em>成都口碑与避雷研究</em>
+        </summary>
+        <div class="markdown-body">
+          <h3>成都口碑与避雷研究</h3>
+<h4>总体结论</h4>
+<div class="md-table-wrap"><table><thead><tr><th>对象</th><th>等级</th><th>适合谁</th><th>主要风险</th><th>可信度</th></tr></thead><tbody><tr><td>成都大熊猫繁育研究基地</td><td>必去</td><td>7岁亲子首选</td><td>旺季必须提前预约，早去否则熊猫睡觉</td><td>多源一致</td></tr><tr><td>都江堰景区</td><td>必去</td><td>文化+户外，全家适合</td><td>步行量大，需预约门票</td><td>多源一致</td></tr><tr><td>成都自然博物馆</td><td>必去</td><td>7岁孩子最爱恐龙展</td><td>必须提前预约，周一闭馆</td><td>FlyAI semantic + Amap verified</td></tr><tr><td>宽窄巷子</td><td>值得</td><td>感受老成都，小吃打卡</td><td>商业化重，节假日极拥挤</td><td>Amap verified + Web-Rooter cited</td></tr><tr><td>春熙路/太古里</td><td>值得</td><td>夜游+美食收尾</td><td>人多，消费高</td><td>Amap verified</td></tr><tr><td>成都极地海洋公园</td><td>可选</td><td>雨天备选，室内为主</td><td>距市区较远（双流区），餐饮贵</td><td>FlyAI semantic</td></tr></tbody></table></div>
+<hr>
+<h4>逐项分析</h4>
+<h5>成都大熊猫繁育研究基地</h5>
+<ul><li><strong>推荐理由</strong>：全球最大熊猫基地，成华区北郊，距市区约10公里；大熊猫博物馆、幼年熊猫区、小熊猫区一体；7岁孩子必打卡</li><li><strong>首推体验</strong>：早7:30开园即入，看熊猫吃早饭（最活跃时段）；幼年熊猫区；乘观光车省体力</li><li><strong>建议时长</strong>：3–4小时</li><li><strong>常见差评</strong>：中午后熊猫全部睡觉，晚去等于白去；节假日入园排队30分钟以上；园区大，走路多</li><li><strong>避雷点</strong>：不要10点后才到；不要不预约直接去（旺季可能无票）；不要错过幼年熊猫区</li><li><strong>适合</strong>：7岁孩子、亲子家庭、动物爱好者</li><li><strong>不适合</strong>：腿脚不便的老人（园区坡道多）</li><li><strong>准备材料/亲子提醒</strong>：身份证+儿童户口本；防蚊液；轻便运动鞋；备水和零食；早餐在外吃完再进园</li><li><strong>预约/排队/价格提醒</strong>：官网/公众号提前预约（旺季可能提前3–5天售罄）；成人票约¥55，儿童1.2m以下免票；6月1日儿童节人流激增，务必最早场次</li><li><strong>来源信号</strong>：Amap verified（坐标、地址）；FlyAI booking reference（票务链接）；Web-Rooter cited（panda.org.cn官方票务页 W1/W2，重庆日报预约指南 W3）；多源一致</li></ul>
+<hr>
+<h5>都江堰景区</h5>
+<ul><li><strong>推荐理由</strong>：2300年水利奇迹，UNESCO世界遗产；鱼嘴分水堤、飞沙堰、宝瓶口三大工程；安澜索桥体验感强；成灌城际铁路直达，半日可往返</li><li><strong>首推体验</strong>：鱼嘴→飞沙堰→宝瓶口主线；安澜索桥（孩子喜欢晃桥）；伏龙观俯瞰全景</li><li><strong>建议时长</strong>：4–5小时（含往返交通约2小时）</li><li><strong>常见差评</strong>：全程步行5–8公里，7岁孩子可完成但节奏要慢；夏季午间暴晒；讲解器值得租</li><li><strong>避雷点</strong>：不要同日叠加青城山（体力透支）；不要忘记预约门票</li><li><strong>适合</strong>：全家，7岁孩子体力可完成</li><li><strong>不适合</strong>：腿脚不便者（坡道多）</li><li><strong>准备材料/亲子提醒</strong>：舒适运动鞋；折叠雨衣（夏季阵雨）；防晒；充足饮水；讲解器¥20</li><li><strong>预约/排队/价格提醒</strong>：成人票约¥80，儿童1.2m以下免票；城际铁路票提前买（¥15–20/人）；景区内可租电瓶车</li><li><strong>来源信号</strong>：Amap verified（坐标、地址）；FlyAI booking reference；FlyAI semantic reference；多源一致</li></ul>
+<hr>
+<h5>成都自然博物馆</h5>
+<ul><li><strong>推荐理由</strong>：新晋网红，恐龙化石大厅震撼，互动性强；7岁孩子最爱；地铁十里店站B口步行110米，交通极便利</li><li><strong>首推体验</strong>：恐龙化石展厅（巨型骨架）；矿物岩石互动区；古生物演化展</li><li><strong>建议时长</strong>：2–3小时</li><li><strong>常见差评</strong>：周末人流大；周一闭馆；需提前预约，热门时段约满快</li><li><strong>避雷点</strong>：周一不要安排；不要不预约直接去</li><li><strong>适合</strong>：7岁孩子、科普爱好者</li><li><strong>不适合</strong>：对自然科学无兴趣的纯休闲游客</li><li><strong>准备材料/亲子提醒</strong>：提前关注&quot;成都自然博物馆&quot;公众号预约；充电宝；水</li><li><strong>预约/排队/价格提醒</strong>：免费（需预约）；周末约满需提前2–3天预约</li><li><strong>来源信号</strong>：Amap verified（坐标、地址）；FlyAI semantic reference；单源参考（预约细节需官方核实）</li></ul>
+<hr>
+<h5>宽窄巷子</h5>
+<ul><li><strong>推荐理由</strong>：成都保存最完整的清朝古街道，宽巷子+窄巷子+井巷子；变脸表演、糖画、三大炮等传统小吃；地铁宽窄巷子站B口步行60米</li><li><strong>首推体验</strong>：傍晚入园（人少、灯光好）；变脸表演；糖画DIY；人民公园盖碗茶（步行可达）</li><li><strong>建议时长</strong>：2小时</li><li><strong>常见差评</strong>：商业化重，餐厅价格偏高；节假日极拥挤；部分小吃质量参差</li><li><strong>避雷点</strong>：不要节假日白天去（人山人海）；不要在景区内高价餐厅吃正餐</li><li><strong>适合</strong>：全家，孩子喜欢小吃和变脸</li><li><strong>不适合</strong>：怕人多、怕商业化的游客</li><li><strong>准备材料/亲子提醒</strong>：无需预约；傍晚17:00后人少；控制孩子零食量</li><li><strong>预约/排队/价格提醒</strong>：免费入园；变脸表演约¥50–100/场</li><li><strong>来源信号</strong>：Amap verified（坐标、地址）；Web-Rooter cited（W2 大众点评经验）；多源一致</li></ul>
+<hr>
+<h5>春熙路/太古里</h5>
+<ul><li><strong>推荐理由</strong>：成都最繁华商圈，IFS爬墙熊猫打卡；夜市美食集中；火锅、串串、冒菜一条街</li><li><strong>首推体验</strong>：IFS外墙爬墙熊猫拍照；太古里夜景；附近火锅（推荐大龙燚、海底捞）</li><li><strong>建议时长</strong>：2–3小时（晚餐+逛街）</li><li><strong>常见差评</strong>：消费偏高；人多嘈杂</li><li><strong>避雷点</strong>：不要在太古里内餐厅吃饭（性价比低）；附近街巷有更多本地餐厅</li><li><strong>适合</strong>：全家，孩子喜欢爬墙熊猫</li><li><strong>不适合</strong>：预算有限的家庭（消费高）</li><li><strong>来源信号</strong>：Amap verified；FlyAI semantic reference</li></ul>
+<hr>
+<h4>酒店区域与候选</h4>
+<p><strong>区域判断</strong>：亲子家庭首选<strong>春熙路/天府广场/宽窄巷子</strong>三角核心区（锦江区/青羊区），地铁覆盖全，步行可达宽窄巷子，打车到熊猫基地约¥30–40，到自然博物馆约¥20。Quark证据显示春熙路周边有亲子主题酒店，带娃出行口碑好（W1 sohu.com，W2 page.sm.cn）。</p>
+<p><strong>推荐档次/类型</strong>：高档型（4星）为主，预算¥400–800/晚；亲子家庭优先选有家庭房/亲子房的酒店；避开天府新区（偏南，距核心景点远）和新都区（偏北，距市区远）。</p>
+<p><strong>适合</strong>：需要地铁便利、步行到宽窄巷子/春熙路、打车到熊猫基地的亲子家庭</p>
+<p><strong>不适合</strong>：天府新区（麓湖、西博城）——距熊猫基地、宽窄巷子、自然博物馆均需40分钟以上；新都区（凤凰山）——偏北，不在旅游核心区</p>
+<p><strong>FlyAI 库存/价格信号</strong>：核心区4–5星酒店旺季价格¥400–1200/晚；春熙路步行街附近有限，以中档连锁为主（¥277–297/晚）</p>
+<p><strong>Quark 经验信号</strong>：春熙路亲子酒店口碑好，带娃出行首选；天府广场地铁站周边选择多；建议选有家庭房的酒店（Web-Rooter cited W1/W2/W3）</p>
+<p><strong>降权或排除原因</strong>：</p>
+<ul><li>成都凤凰山希尔顿欢朋（新都区，lat 30.75）：偏北，不在旅游核心区，排除</li><li>成都麓湖希尔顿惠庭（天府新区，lat 30.46）：偏南，距核心景点远，排除</li><li>成都西博城城际酒店（天府新区，lat 30.44）：偏南，排除</li><li>成都新通大道希尔顿欢朋（高新区，lat 30.52）：偏南，排除</li></ul>
+<h5>候选与取舍（FlyAI 代表性样例数据）</h5>
+<div class="md-table-wrap"><table><thead><tr><th>档次</th><th>酒店</th><th>位置/区域</th><th>价格/晚</th><th>适合</th><th>取舍</th><th>订票/查询</th></tr></thead><tbody><tr><td>高档型</td><td>成都九眼桥voco酒店</td><td>近春熙路步行街（锦江区）</td><td>¥1194</td><td>亲子，位置极佳</td><td>价格偏高，旺季溢价明显</td><td><a href="https://a.feizhu.com/2BRNCn" target="_blank" rel="noopener noreferrer">查询</a></td></tr><tr><td>高档型</td><td>西子礼白酒店（天府熊猫塔建设路店）</td><td>近建设路（成华区，近自然博物馆）</td><td>¥426</td><td>亲子，近自然博物馆和熊猫基地</td><td>距宽窄巷子需打车约20分钟</td><td><a href="https://a.feizhu.com/0cd7Px" target="_blank" rel="noopener noreferrer">查询</a></td></tr><tr><td>中档型</td><td>恩季S·VIBRANT设计师酒店（春熙路太古里店）</td><td>近春熙路步行街（锦江区）</td><td>¥277</td><td>亲子，位置极佳，性价比高</td><td>设计师酒店，房间可能较小</td><td><a href="https://a.feizhu.com/2S9eyq" target="_blank" rel="noopener noreferrer">查询</a></td></tr><tr><td>中档型</td><td>汉庭酒店（太古里春熙路步行街店）</td><td>近春熙路步行街（锦江区）</td><td>¥297</td><td>连锁品质稳定，位置好</td><td>标准连锁，无特色亲子设施</td><td><a href="https://a.feizhu.com/3k3cF7" target="_blank" rel="noopener noreferrer">查询</a></td></tr></tbody></table></div>
+<blockquote><p>综合建议：预算充足选 voco 九眼桥（位置最佳）；性价比首选恩季S或汉庭（春熙路步行街，¥277–297）；若行程以熊猫基地+自然博物馆为主，可考虑西子礼白（成华区，¥426，近两大景点）。</p></blockquote>
+<hr>
+<h4>复核记录</h4>
+<ul><li>Research conducted: 2026-05-10</li><li>Key evidence:</li><li>panda.org.cn 官方票务页（W1/W2）：Official verified</li><li>重庆日报预约指南 2026-01-30（W3）：Web-Rooter cited</li><li>大众点评成都旅游经验（W2 dianping）：Web-Rooter cited</li><li>sohu.com 春熙路亲子酒店推荐（W1）：Web-Rooter cited</li><li>FlyAI ai-search 成都亲子攻略：FlyAI semantic reference</li><li>FlyAI search-poi 熊猫基地/都江堰/宽窄巷子/自然博物馆：FlyAI booking reference</li><li>FlyAI search-hotel 成都4–5星/3–4星：FlyAI booking reference（代表性样例数据）</li></ul>
+        </div>
+        <details class="raw-markdown">
+          <summary>查看原始 Markdown</summary>
+          <pre><code># 成都口碑与避雷研究
+
+## 总体结论
+
+| 对象 | 等级 | 适合谁 | 主要风险 | 可信度 |
+| --- | --- | --- | --- | --- |
+| 成都大熊猫繁育研究基地 | 必去 | 7岁亲子首选 | 旺季必须提前预约，早去否则熊猫睡觉 | 多源一致 |
+| 都江堰景区 | 必去 | 文化+户外，全家适合 | 步行量大，需预约门票 | 多源一致 |
+| 成都自然博物馆 | 必去 | 7岁孩子最爱恐龙展 | 必须提前预约，周一闭馆 | FlyAI semantic + Amap verified |
+| 宽窄巷子 | 值得 | 感受老成都，小吃打卡 | 商业化重，节假日极拥挤 | Amap verified + Web-Rooter cited |
+| 春熙路/太古里 | 值得 | 夜游+美食收尾 | 人多，消费高 | Amap verified |
+| 成都极地海洋公园 | 可选 | 雨天备选，室内为主 | 距市区较远（双流区），餐饮贵 | FlyAI semantic |
+
+---
+
+## 逐项分析
+
+### 成都大熊猫繁育研究基地
+
+- **推荐理由**：全球最大熊猫基地，成华区北郊，距市区约10公里；大熊猫博物馆、幼年熊猫区、小熊猫区一体；7岁孩子必打卡
+- **首推体验**：早7:30开园即入，看熊猫吃早饭（最活跃时段）；幼年熊猫区；乘观光车省体力
+- **建议时长**：3–4小时
+- **常见差评**：中午后熊猫全部睡觉，晚去等于白去；节假日入园排队30分钟以上；园区大，走路多
+- **避雷点**：不要10点后才到；不要不预约直接去（旺季可能无票）；不要错过幼年熊猫区
+- **适合**：7岁孩子、亲子家庭、动物爱好者
+- **不适合**：腿脚不便的老人（园区坡道多）
+- **准备材料/亲子提醒**：身份证+儿童户口本；防蚊液；轻便运动鞋；备水和零食；早餐在外吃完再进园
+- **预约/排队/价格提醒**：官网/公众号提前预约（旺季可能提前3–5天售罄）；成人票约¥55，儿童1.2m以下免票；6月1日儿童节人流激增，务必最早场次
+- **来源信号**：Amap verified（坐标、地址）；FlyAI booking reference（票务链接）；Web-Rooter cited（panda.org.cn官方票务页 W1/W2，重庆日报预约指南 W3）；多源一致
+
+---
+
+### 都江堰景区
+
+- **推荐理由**：2300年水利奇迹，UNESCO世界遗产；鱼嘴分水堤、飞沙堰、宝瓶口三大工程；安澜索桥体验感强；成灌城际铁路直达，半日可往返
+- **首推体验**：鱼嘴→飞沙堰→宝瓶口主线；安澜索桥（孩子喜欢晃桥）；伏龙观俯瞰全景
+- **建议时长**：4–5小时（含往返交通约2小时）
+- **常见差评**：全程步行5–8公里，7岁孩子可完成但节奏要慢；夏季午间暴晒；讲解器值得租
+- **避雷点**：不要同日叠加青城山（体力透支）；不要忘记预约门票
+- **适合**：全家，7岁孩子体力可完成
+- **不适合**：腿脚不便者（坡道多）
+- **准备材料/亲子提醒**：舒适运动鞋；折叠雨衣（夏季阵雨）；防晒；充足饮水；讲解器¥20
+- **预约/排队/价格提醒**：成人票约¥80，儿童1.2m以下免票；城际铁路票提前买（¥15–20/人）；景区内可租电瓶车
+- **来源信号**：Amap verified（坐标、地址）；FlyAI booking reference；FlyAI semantic reference；多源一致
+
+---
+
+### 成都自然博物馆
+
+- **推荐理由**：新晋网红，恐龙化石大厅震撼，互动性强；7岁孩子最爱；地铁十里店站B口步行110米，交通极便利
+- **首推体验**：恐龙化石展厅（巨型骨架）；矿物岩石互动区；古生物演化展
+- **建议时长**：2–3小时
+- **常见差评**：周末人流大；周一闭馆；需提前预约，热门时段约满快
+- **避雷点**：周一不要安排；不要不预约直接去
+- **适合**：7岁孩子、科普爱好者
+- **不适合**：对自然科学无兴趣的纯休闲游客
+- **准备材料/亲子提醒**：提前关注&quot;成都自然博物馆&quot;公众号预约；充电宝；水
+- **预约/排队/价格提醒**：免费（需预约）；周末约满需提前2–3天预约
+- **来源信号**：Amap verified（坐标、地址）；FlyAI semantic reference；单源参考（预约细节需官方核实）
+
+---
+
+### 宽窄巷子
+
+- **推荐理由**：成都保存最完整的清朝古街道，宽巷子+窄巷子+井巷子；变脸表演、糖画、三大炮等传统小吃；地铁宽窄巷子站B口步行60米
+- **首推体验**：傍晚入园（人少、灯光好）；变脸表演；糖画DIY；人民公园盖碗茶（步行可达）
+- **建议时长**：2小时
+- **常见差评**：商业化重，餐厅价格偏高；节假日极拥挤；部分小吃质量参差
+- **避雷点**：不要节假日白天去（人山人海）；不要在景区内高价餐厅吃正餐
+- **适合**：全家，孩子喜欢小吃和变脸
+- **不适合**：怕人多、怕商业化的游客
+- **准备材料/亲子提醒**：无需预约；傍晚17:00后人少；控制孩子零食量
+- **预约/排队/价格提醒**：免费入园；变脸表演约¥50–100/场
+- **来源信号**：Amap verified（坐标、地址）；Web-Rooter cited（W2 大众点评经验）；多源一致
+
+---
+
+### 春熙路/太古里
+
+- **推荐理由**：成都最繁华商圈，IFS爬墙熊猫打卡；夜市美食集中；火锅、串串、冒菜一条街
+- **首推体验**：IFS外墙爬墙熊猫拍照；太古里夜景；附近火锅（推荐大龙燚、海底捞）
+- **建议时长**：2–3小时（晚餐+逛街）
+- **常见差评**：消费偏高；人多嘈杂
+- **避雷点**：不要在太古里内餐厅吃饭（性价比低）；附近街巷有更多本地餐厅
+- **适合**：全家，孩子喜欢爬墙熊猫
+- **不适合**：预算有限的家庭（消费高）
+- **来源信号**：Amap verified；FlyAI semantic reference
+
+---
+
+## 酒店区域与候选
+
+**区域判断**：亲子家庭首选**春熙路/天府广场/宽窄巷子**三角核心区（锦江区/青羊区），地铁覆盖全，步行可达宽窄巷子，打车到熊猫基地约¥30–40，到自然博物馆约¥20。Quark证据显示春熙路周边有亲子主题酒店，带娃出行口碑好（W1 sohu.com，W2 page.sm.cn）。
+
+**推荐档次/类型**：高档型（4星）为主，预算¥400–800/晚；亲子家庭优先选有家庭房/亲子房的酒店；避开天府新区（偏南，距核心景点远）和新都区（偏北，距市区远）。
+
+**适合**：需要地铁便利、步行到宽窄巷子/春熙路、打车到熊猫基地的亲子家庭
+
+**不适合**：天府新区（麓湖、西博城）——距熊猫基地、宽窄巷子、自然博物馆均需40分钟以上；新都区（凤凰山）——偏北，不在旅游核心区
+
+**FlyAI 库存/价格信号**：核心区4–5星酒店旺季价格¥400–1200/晚；春熙路步行街附近有限，以中档连锁为主（¥277–297/晚）
+
+**Quark 经验信号**：春熙路亲子酒店口碑好，带娃出行首选；天府广场地铁站周边选择多；建议选有家庭房的酒店（Web-Rooter cited W1/W2/W3）
+
+**降权或排除原因**：
+- 成都凤凰山希尔顿欢朋（新都区，lat 30.75）：偏北，不在旅游核心区，排除
+- 成都麓湖希尔顿惠庭（天府新区，lat 30.46）：偏南，距核心景点远，排除
+- 成都西博城城际酒店（天府新区，lat 30.44）：偏南，排除
+- 成都新通大道希尔顿欢朋（高新区，lat 30.52）：偏南，排除
+
+### 候选与取舍（FlyAI 代表性样例数据）
+
+| 档次 | 酒店 | 位置/区域 | 价格/晚 | 适合 | 取舍 | 订票/查询 |
+| --- | --- | --- | --- | --- | --- | --- |
+| 高档型 | 成都九眼桥voco酒店 | 近春熙路步行街（锦江区） | ¥1194 | 亲子，位置极佳 | 价格偏高，旺季溢价明显 | [查询](https://a.feizhu.com/2BRNCn) |
+| 高档型 | 西子礼白酒店（天府熊猫塔建设路店） | 近建设路（成华区，近自然博物馆） | ¥426 | 亲子，近自然博物馆和熊猫基地 | 距宽窄巷子需打车约20分钟 | [查询](https://a.feizhu.com/0cd7Px) |
+| 中档型 | 恩季S·VIBRANT设计师酒店（春熙路太古里店） | 近春熙路步行街（锦江区） | ¥277 | 亲子，位置极佳，性价比高 | 设计师酒店，房间可能较小 | [查询](https://a.feizhu.com/2S9eyq) |
+| 中档型 | 汉庭酒店（太古里春熙路步行街店） | 近春熙路步行街（锦江区） | ¥297 | 连锁品质稳定，位置好 | 标准连锁，无特色亲子设施 | [查询](https://a.feizhu.com/3k3cF7) |
+
+&gt; 综合建议：预算充足选 voco 九眼桥（位置最佳）；性价比首选恩季S或汉庭（春熙路步行街，¥277–297）；若行程以熊猫基地+自然博物馆为主，可考虑西子礼白（成华区，¥426，近两大景点）。
+
+---
+
+## 复核记录
+
+- Research conducted: 2026-05-10
+- Key evidence:
+  - panda.org.cn 官方票务页（W1/W2）：Official verified
+  - 重庆日报预约指南 2026-01-30（W3）：Web-Rooter cited
+  - 大众点评成都旅游经验（W2 dianping）：Web-Rooter cited
+  - sohu.com 春熙路亲子酒店推荐（W1）：Web-Rooter cited
+  - FlyAI ai-search 成都亲子攻略：FlyAI semantic reference
+  - FlyAI search-poi 熊猫基地/都江堰/宽窄巷子/自然博物馆：FlyAI booking reference
+  - FlyAI search-hotel 成都4–5星/3–4星：FlyAI booking reference（代表性样例数据）</code></pre>
+        </details>
+      </details>
+  </main>
+<div class="drawer-backdrop" id="drawerBackdrop"></div>
+<aside class="drawer" id="atlasDrawer" aria-label="地点详情">
+    <div class="drawer-head"><h2 id="drawerTitle">地点详情</h2><button class="drawer-close" id="drawerClose" type="button" aria-label="关闭">×</button></div>
+    <div class="drawer-body" id="drawerBody"></div>
+  </aside>
+  </div>
+  <script>window.__ROAMMATE_ATLAS__ = {"trip":{"destination":"成都","dateRange":"2026年6月1日（周一）– 6月4日（周四）","duration":"4天","travelers":"一家三口，含7岁小朋友","origin":"广州","generatedAt":"2026-05-10"},"days":[{"day":1,"date":"2026-06-01 周一","theme":"抵达·老成都初体验","area":"锦江区/青羊区","intensity":"低","highlights":["宽窄巷子变脸表演","人民公园盖碗茶","IFS爬墙熊猫拍照"],"meals":"午餐宽窄巷子附近本地馆子（¥80–120）；晚餐春熙路火锅（¥150–250）；小吃预算¥50","rest":"14:00–15:30 酒店休息；人民公园有遮阴座位；备水和防晒","budget":"机票¥429×3=¥1287 + 市内交通¥80 + 餐饮¥350 + 门票/小吃¥150 ≈ ¥1867","reservations":"宽窄巷子无需预约；变脸表演现场购票","backup":"宽窄巷子有室内店铺；春熙路全室内商场；可缩短人民公园改室内休息","reminders":["儿童节当天，宽窄巷子傍晚人少"],"activities":[{"time":"06:40","title":"广州白云机场出发（MU6141 东航）","poiName":"广州白云机场出发（MU6141 东航）","transport":"机场自行前往","cost":"¥429/人","notes":"购票；早班到成都后直接出行","duration":"","source":"itinerary-structured.json:28","tags":[]},{"time":"09:05","title":"抵达成都天府机场","poiName":"抵达成都天府机场","transport":"—","cost":"—","notes":"代表性样例数据","duration":"","source":"itinerary-structured.json:29","tags":[]},{"time":"09:05–10:30","title":"天府机场→酒店 check-in","poiName":"天府机场→酒店 check-in","transport":"地铁18号线约50分钟","cost":"¥10/人","notes":"行李寄存后出发","duration":"约1小时25分钟","source":"itinerary-structured.json:30","tags":[]},{"time":"11:00–13:00","title":"宽窄巷子（宽巷子+窄巷子+井巷子）","poiName":"宽窄巷子","transport":"打车约¥20","cost":"免费入园","notes":"上午人少；变脸表演约¥50–100；糖画、三大炮小吃","duration":"约2小时","source":"itinerary-structured.json:31","tags":[]},{"time":"13:00–14:00","title":"午餐：宽窄巷子附近本地餐厅","poiName":"午餐：宽窄巷子附近本地餐厅","transport":"步行","cost":"¥80–120","notes":"避开景区内高价餐厅；推荐附近苍蝇馆子","duration":"约1小时","source":"itinerary-structured.json:32","tags":[]},{"time":"14:00–15:30","title":"人民公园·鹤鸣茶社盖碗茶","poiName":"人民公园·鹤鸣茶社盖碗茶","transport":"步行约10分钟","cost":"¥20–30/人","notes":"孩子可喂鱼、看荷花；成都慢生活体验","duration":"约1小时30分钟","source":"itinerary-structured.json:33","tags":[]},{"time":"15:30–17:00","title":"酒店休息（孩子午睡/补觉）","poiName":"酒店休息","transport":"打车约¥15","cost":"—","notes":"儿童节当天体力消耗大，必须休息","duration":"约1小时30分钟","source":"itinerary-structured.json:34","tags":[]},{"time":"17:30–20:00","title":"春熙路/太古里夜游·IFS爬墙熊猫打卡","poiName":"春熙路/太古里夜游·IFS爬墙熊猫","transport":"打车约¥20","cost":"免费","notes":"拍照打卡；太古里夜景","duration":"约2小时30分钟","source":"itinerary-structured.json:35","tags":[]},{"time":"20:00–21:30","title":"晚餐：火锅（推荐大龙燚/海底捞）","poiName":"晚餐：火锅（推荐大龙燚/海底捞）","transport":"步行","cost":"¥150–250","notes":"点鸳鸯锅，孩子吃清汤区","duration":"约1小时30分钟","source":"itinerary-structured.json:36","tags":[]}]},{"day":2,"date":"2026-06-02 周二","theme":"国宝熊猫日","area":"成华区","intensity":"中","highlights":["早7:30看熊猫吃早饭（最活跃）","幼年熊猫区","自然博物馆恐龙化石大厅"],"meals":"早餐酒店（¥0–50）；午餐熊猫基地外（¥80–120）；晚餐天府广场川菜（¥100–180）","rest":"15:30–17:30 酒店强制休息；熊猫基地内有遮阴休息区；备防蚊液","budget":"门票¥55×2=¥110 + 观光车¥20 + 交通¥100 + 餐饮¥350 ≈ ¥580","reservations":"熊猫基地：官网/公众号提前3–5天预约，旺季可能售罄；自然博物馆：公众号\"成都自然博物馆\"提前2–3天预约","backup":"自然博物馆全室内；成都博物馆全室内；雨天行程不受影响","reminders":["两处均须提前预约","周一自然博物馆闭馆→改备选"],"activities":[{"time":"07:00","title":"酒店出发","poiName":"酒店出发","transport":"—","cost":"—","notes":"早餐在酒店或外带","duration":"","source":"itinerary-structured.json:53","tags":[]},{"time":"07:30","title":"成都大熊猫繁育研究基地开园入场","poiName":"成都大熊猫繁育研究基地开园入场","transport":"打车约¥30–40（约30分钟）","cost":"成人¥55，儿童1.2m以下免票","notes":"必须提前预约；早场熊猫最活跃","duration":"","source":"itinerary-structured.json:54","tags":[]},{"time":"07:30–11:30","title":"熊猫基地游览（4小时）","poiName":"熊猫基地","transport":"园内观光车¥10","cost":"观光车¥10","notes":"幼年熊猫区→大熊猫博物馆→小熊猫区；乘观光车省体力","duration":"约4小时","source":"itinerary-structured.json:55","tags":[]},{"time":"11:30–12:30","title":"午餐：熊猫基地附近或返回市区","poiName":"午餐：熊猫基地附近或返回市区","transport":"打车约¥30","cost":"¥80–120","notes":"基地内餐饮贵，建议出园后吃","duration":"约1小时","source":"itinerary-structured.json:56","tags":[]},{"time":"13:00–15:30","title":"成都自然博物馆（2.5小时）","poiName":"成都自然博物馆","transport":"打车约¥20（十里店地铁站B口）","cost":"免费（需预约）","notes":"必须提前预约；恐龙化石大厅；互动展区","duration":"约2小时30分钟","source":"itinerary-structured.json:57","tags":[]},{"time":"15:30–16:30","title":"酒店休息","poiName":"酒店休息","transport":"打车约¥20","cost":"—","notes":"孩子下午体力下降，必须休息","duration":"约1小时","source":"itinerary-structured.json:58","tags":[]},{"time":"17:30–19:00","title":"成都博物馆（可选，天府广场旁）","poiName":"成都博物馆","transport":"地铁约20分钟","cost":"免费","notes":"皮影木偶展，孩子喜欢；或直接晚餐","duration":"约1小时30分钟","source":"itinerary-structured.json:59","tags":[]},{"time":"19:00–21:00","title":"晚餐：天府广场附近川菜","poiName":"晚餐：天府广场附近川菜","transport":"步行/打车","cost":"¥100–180","notes":"夫妻肺片、麻婆豆腐、回锅肉","duration":"约2小时","source":"itinerary-structured.json:60","tags":[]}]},{"day":3,"date":"2026-06-03 周三","theme":"都江堰一日游","area":"都江堰市","intensity":"中高","highlights":["安澜索桥（孩子喜欢晃桥）","鱼嘴分水堤俯瞰","伏龙观全景"],"meals":"早餐酒店（¥0–50）；午餐都江堰本地餐厅（¥80–120）；晚餐串串香（¥80–150）","rest":"景区内有遮阴休息区；午餐后可在餐厅休息；备折叠雨衣（夏季阵雨）；充足饮水","budget":"城际铁路¥40×3=¥120 + 门票¥80×2=¥160 + 讲解器¥20 + 交通¥60 + 餐饮¥300 ≈ ¥660","reservations":"都江堰门票需提前预约（官方渠道）；城际铁路票提前在12306购买","backup":"都江堰景区雨天可游览（备雨衣）；若孩子疲劳可缩短至鱼嘴+安澜索桥主线（2小时）；极端天气改成都博物馆+欢乐谷","reminders":["城际铁路提前购票","午间避暑"],"activities":[{"time":"07:30","title":"酒店出发→犀浦站","poiName":"酒店出发→犀浦站","transport":"地铁2号线约30分钟","cost":"¥5","notes":"犀浦站换乘成灌城际铁路","duration":"","source":"itinerary-structured.json:75","tags":[]},{"time":"08:00–08:50","title":"犀浦→都江堰站（城际铁路）","poiName":"犀浦→都江堰站（城际铁路）","transport":"城际铁路约50分钟","cost":"¥15–20/人","notes":"提前购票；到站后打车/步行约10分钟到景区","duration":"约50分钟","source":"itinerary-structured.json:76","tags":[]},{"time":"09:00–13:00","title":"都江堰景区游览（4小时）","poiName":"都江堰景区","transport":"景区内步行/电瓶车","cost":"成人¥80，儿童1.2m以下免票","notes":"鱼嘴→飞沙堰→宝瓶口→安澜索桥→伏龙观；租讲解器¥20","duration":"约4小时","source":"itinerary-structured.json:77","tags":[]},{"time":"13:00–14:00","title":"午餐：都江堰市区餐厅","poiName":"午餐：都江堰市区餐厅","transport":"步行","cost":"¥80–120","notes":"都江堰本地豆腐、肥肠粉","duration":"约1小时","source":"itinerary-structured.json:78","tags":[]},{"time":"14:00–15:00","title":"南桥/玉垒山公园（可选，轻松散步）","poiName":"南桥/玉垒山公园","transport":"步行","cost":"免费","notes":"孩子体力允许则游览；否则直接返程","duration":"约1小时","source":"itinerary-structured.json:79","tags":[]},{"time":"15:00–16:00","title":"都江堰站→犀浦→酒店","poiName":"都江堰站→犀浦→酒店","transport":"城际铁路+地铁","cost":"¥20–25/人","notes":"返程约1.5小时","duration":"约1小时","source":"itinerary-structured.json:80","tags":[]},{"time":"16:00–18:00","title":"酒店休息","poiName":"酒店休息","transport":"—","cost":"—","notes":"一日游体力消耗大，必须休息","duration":"约2小时","source":"itinerary-structured.json:81","tags":[]},{"time":"18:30–20:30","title":"晚餐：成都串串香/冒菜","poiName":"晚餐：成都串串香/冒菜","transport":"打车约¥15","cost":"¥80–150","notes":"孩子喜欢串串；推荐锦江区本地馆子","duration":"约2小时","source":"itinerary-structured.json:82","tags":[]}]},{"day":4,"date":"2026-06-04 周四","theme":"文化收尾·返程","area":"锦江区/武侯区","intensity":"低","highlights":["杜甫草堂实地背诗","浣花溪公园散步","春熙路伴手礼"],"meals":"早餐酒店（¥0–50）；午餐春熙路小吃（¥80–150）","rest":"杜甫草堂环境清幽，节奏慢；浣花溪公园有草坪休息区","budget":"门票¥50×2=¥100 + 交通¥250 + 餐饮¥200 + 购物按需 ≈ ¥550+购物","reservations":"杜甫草堂建议提前预约（旺季）；返程航班提前值机","backup":"杜甫草堂有室内展厅；可缩短改为直接购物+早去机场","reminders":["根据航班时间控制行程"],"activities":[{"time":"08:00–10:00","title":"杜甫草堂+浣花溪公园（2小时）","poiName":"杜甫草堂+浣花溪公园","transport":"打车约¥20","cost":"成人¥50，儿童1.2m以下免票","notes":"环境清幽；浣花溪公园免费；孩子可背诗实地教学","duration":"约2小时","source":"itinerary-structured.json:97","tags":[]},{"time":"10:00–11:00","title":"酒店 check-out，行李寄存","poiName":"酒店 check-out，行李寄存","transport":"打车约¥15","cost":"—","notes":"行李寄存后轻装购物","duration":"约1小时","source":"itinerary-structured.json:98","tags":[]},{"time":"11:00–12:30","title":"春熙路/太古里购物·伴手礼","poiName":"春熙路/太古里购物·伴手礼","transport":"步行","cost":"按需","notes":"熊猫周边、郫县豆瓣、花椒、藤椒油","duration":"约1小时30分钟","source":"itinerary-structured.json:99","tags":[]},{"time":"12:30–13:30","title":"午餐：春熙路附近","poiName":"午餐：春熙路附近","transport":"步行","cost":"¥80–150","notes":"钟水饺、龙抄手、担担面","duration":"约1小时","source":"itinerary-structured.json:100","tags":[]},{"time":"14:00","title":"取行李→天府机场","poiName":"取行李→天府机场","transport":"打车约¥100–130（约60分钟）","cost":"¥100–130","notes":"提前2小时到机场","duration":"","source":"itinerary-structured.json:101","tags":[]},{"time":"16:00","title":"天府机场出发（3U6701 川航）","poiName":"天府机场出发（3U6701 川航）","transport":"—","cost":"¥400/人","notes":"购票；代表性样例数据","duration":"","source":"itinerary-structured.json:102","tags":[]},{"time":"18:25","title":"抵达广州白云机场","poiName":"抵达广州白云机场","transport":"—","cost":"—","duration":"","source":"itinerary-structured.json:103","tags":[]}]}],"poiExperiences":[{"name":"成都大熊猫繁育研究基地","day":2,"rating":"必去","image":"https://aos-comment.amap.com/B001C7WE5S/comment/content_media_external_file_100006799_1767191789906_56269281.jpg","whyGo":["全球最大熊猫基地，成华区北郊，距市区约10公里","大熊猫博物馆、幼年熊猫区、小熊猫区一体","7岁孩子必打卡"],"recommendedDuration":"3–4小时","mustDo":["早7:30开园即入，看熊猫吃早饭（最活跃时段）","幼年熊猫区","乘观光车省体力"],"tips":"主要风险：旺季必须提前预约，早去否则熊猫睡觉","queueAndReservation":["官网/公众号提前预约（旺季可能提前3–5天售罄）","成人票约¥55，儿童1.2m以下免票","6月1日儿童节人流激增，务必最早场次"],"preparation":["身份证+儿童户口本","防蚊液","轻便运动鞋","备水和零食","早餐在外吃完再进园"],"familyNotes":["身份证+儿童户口本","防蚊液","轻便运动鞋","备水和零食","早餐在外吃完再进园"],"avoid":["不要10点后才到","不要不预约直接去（旺季可能无票）","不要错过幼年熊猫区"],"commonComplaints":["中午后熊猫全部睡觉，晚去等于白去","节假日入园排队30分钟以上","园区大，走路多"],"suitable":"7岁孩子、亲子家庭、动物爱好者","notSuitable":"腿脚不便的老人（园区坡道多）","source":"Amap verified（坐标、地址）；FlyAI booking reference（票务链接）；Web-Rooter cited（panda.org.cn官方票务页 W1/W2，重庆日报预约指南 W3）；多源一致"},{"name":"都江堰景区","day":3,"rating":"必去","image":"http://store.is.autonavi.com/showpic/31fab45390b5932dfa51a67dbf8548f4","whyGo":["2300年水利奇迹，UNESCO世界遗产","鱼嘴分水堤、飞沙堰、宝瓶口三大工程","安澜索桥体验感强","成灌城际铁路直达，半日可往返"],"recommendedDuration":"4–5小时（含往返交通约2小时）","mustDo":["鱼嘴→飞沙堰→宝瓶口主线","安澜索桥（孩子喜欢晃桥）","伏龙观俯瞰全景"],"tips":"主要风险：步行量大，需预约门票","queueAndReservation":["成人票约¥80，儿童1.2m以下免票","城际铁路票提前买（¥15–20/人）","景区内可租电瓶车"],"preparation":["舒适运动鞋","折叠雨衣（夏季阵雨）","防晒","充足饮水","讲解器¥20"],"familyNotes":["舒适运动鞋","折叠雨衣（夏季阵雨）","防晒","充足饮水","讲解器¥20"],"avoid":["不要同日叠加青城山（体力透支）","不要忘记预约门票"],"commonComplaints":["全程步行5–8公里，7岁孩子可完成但节奏要慢","夏季午间暴晒","讲解器值得租"],"suitable":"全家，7岁孩子体力可完成","notSuitable":"腿脚不便者（坡道多）","source":"Amap verified（坐标、地址）；FlyAI booking reference；FlyAI semantic reference；多源一致"},{"name":"成都自然博物馆","day":2,"rating":"必去","image":"http://store.is.autonavi.com/showpic/31a0b4d97a84e7c1fd81262bbcddaef4","whyGo":["新晋网红，恐龙化石大厅震撼，互动性强","7岁孩子最爱","地铁十里店站B口步行110米，交通极便利"],"recommendedDuration":"2–3小时","mustDo":["恐龙化石展厅（巨型骨架）","矿物岩石互动区","古生物演化展"],"tips":"主要风险：必须提前预约，周一闭馆","queueAndReservation":["免费（需预约）","周末约满需提前2–3天预约"],"preparation":["提前关注\"成都自然博物馆\"公众号预约","充电宝","水"],"familyNotes":["提前关注\"成都自然博物馆\"公众号预约","充电宝","水"],"avoid":["周一不要安排","不要不预约直接去"],"commonComplaints":["周末人流大","周一闭馆","需提前预约，热门时段约满快"],"suitable":"7岁孩子、科普爱好者","notSuitable":"对自然科学无兴趣的纯休闲游客","source":"Amap verified（坐标、地址）；FlyAI semantic reference；单源参考（预约细节需官方核实）"},{"name":"宽窄巷子","day":1,"rating":"值得","image":"https://aos-comment.amap.com/B0FFHJ46ZK/comment/content_media_external_images_media_1000056554_ss__1770378381522_09529369.jpg","whyGo":["成都保存最完整的清朝古街道，宽巷子+窄巷子+井巷子","变脸表演、糖画、三大炮等传统小吃","地铁宽窄巷子站B口步行60米"],"recommendedDuration":"2小时","mustDo":["傍晚入园（人少、灯光好）","变脸表演","糖画DIY","人民公园盖碗茶（步行可达）"],"tips":"主要风险：商业化重，节假日极拥挤","queueAndReservation":["免费入园","变脸表演约¥50–100/场"],"preparation":["无需预约","傍晚17:00后人少","控制孩子零食量"],"familyNotes":["无需预约","傍晚17:00后人少","控制孩子零食量"],"avoid":["不要节假日白天去（人山人海）","不要在景区内高价餐厅吃正餐"],"commonComplaints":["商业化重，餐厅价格偏高","节假日极拥挤","部分小吃质量参差"],"suitable":"全家，孩子喜欢小吃和变脸","notSuitable":"怕人多、怕商业化的游客","source":"Amap verified（坐标、地址）；Web-Rooter cited（W2 大众点评经验）；多源一致"},{"name":"春熙路/太古里","day":1,"rating":"值得","image":"http://store.is.autonavi.com/showpic/4E377E858534426097901E10EEAFCD8E","whyGo":["成都最繁华商圈，IFS爬墙熊猫打卡","夜市美食集中","火锅、串串、冒菜一条街"],"recommendedDuration":"2–3小时（晚餐+逛街）","mustDo":["IFS外墙爬墙熊猫拍照","太古里夜景","附近火锅（推荐大龙燚、海底捞）"],"tips":"主要风险：人多，消费高","queueAndReservation":[],"preparation":[],"familyNotes":[],"avoid":["不要在太古里内餐厅吃饭（性价比低）","附近街巷有更多本地餐厅"],"commonComplaints":["消费偏高","人多嘈杂"],"suitable":"全家，孩子喜欢爬墙熊猫","notSuitable":"预算有限的家庭（消费高）","source":"Amap verified；FlyAI semantic reference"}],"hotels":[{"name":"成都九眼桥voco酒店","tier":"高档型","area":"近春熙路步行街（锦江区）","price":"¥1194","fit":"亲子，位置极佳，步行春熙路","tradeoffs":["旺季价格高"],"booking_url":"https://a.feizhu.com/2BRNCn","room_type_note":"按上游已接受酒店候选展示；房型以订票/查询链接实时页面为准。","source":"itinerary-structured.json accepted hotel candidate","longitude":104.083379,"latitude":30.638067,"location":[104.083379,30.638067],"coordinate_source":"amap_place_text","image":"https://store.is.autonavi.com/showpic/31c02e7d3152ed08186e46046179c896","priceReference":"¥1194","roomType":"按上游已接受酒店候选展示；房型以订票/查询链接实时页面为准。","bookingUrl":"https://a.feizhu.com/2BRNCn","url":"https://a.feizhu.com/2BRNCn"},{"name":"西子礼白酒店（天府熊猫塔建设路店）","tier":"高档型","area":"近建设路（成华区）","price":"¥426","fit":"近自然博物馆和熊猫基地","tradeoffs":["距宽窄巷子需打车约20分钟"],"booking_url":"https://a.feizhu.com/0cd7Px","room_type_note":"按上游已接受酒店候选展示；房型以订票/查询链接实时页面为准。","source":"itinerary-structured.json accepted hotel candidate","longitude":104.101546,"latitude":30.664117,"location":[104.101546,30.664117],"coordinate_source":"amap_place_text","image":"https://store.is.autonavi.com/showpic/6b7767cd4dfd2e6478397e0b0f2b2048","priceReference":"¥426","roomType":"按上游已接受酒店候选展示；房型以订票/查询链接实时页面为准。","bookingUrl":"https://a.feizhu.com/0cd7Px","url":"https://a.feizhu.com/0cd7Px"},{"name":"恩季S·VIBRANT设计师酒店（春熙路太古里店）","tier":"中档型","area":"近春熙路步行街（锦江区）","price":"¥277","fit":"亲子，位置极佳，性价比高","tradeoffs":["设计师酒店，房间可能较小"],"booking_url":"https://a.feizhu.com/2S9eyq","room_type_note":"按上游已接受酒店候选展示；房型以订票/查询链接实时页面为准。","source":"itinerary-structured.json accepted hotel candidate","longitude":104.07198,"latitude":30.657135,"location":[104.07198,30.657135],"coordinate_source":"amap_place_text","image":"https://store.is.autonavi.com/showpic/c5a1078c03b0f15e815b6c4ca1009859","priceReference":"¥277","roomType":"按上游已接受酒店候选展示；房型以订票/查询链接实时页面为准。","bookingUrl":"https://a.feizhu.com/2S9eyq","url":"https://a.feizhu.com/2S9eyq"},{"name":"汉庭酒店（太古里春熙路步行街店）","tier":"中档型","area":"近春熙路步行街（锦江区）","price":"¥297","fit":"连锁品质稳定，位置好","tradeoffs":["标准连锁，无特色亲子设施"],"booking_url":"https://a.feizhu.com/3k3cF7","room_type_note":"按上游已接受酒店候选展示；房型以订票/查询链接实时页面为准。","source":"itinerary-structured.json accepted hotel candidate","longitude":104.071899,"latitude":30.657176,"location":[104.071899,30.657176],"coordinate_source":"amap_place_text","image":"https://store.is.autonavi.com/showpic/7f8e8d258ef3acdc6c2a899b626798fc","priceReference":"¥297","roomType":"按上游已接受酒店候选展示；房型以订票/查询链接实时页面为准。","bookingUrl":"https://a.feizhu.com/3k3cF7","url":"https://a.feizhu.com/3k3cF7"}],"transport":[{"type":"城际交通","route":"去程（推荐） · MU6141 东航 · 白云 06:40 → 天府 09:05","duration":"2h25m","cost":"¥429/人","source":"itinerary-structured.json 交通表","url":"https://a.feizhu.com/1nbkbu"},{"type":"城际交通","route":"去程（备选） · AQ1115 九元 · 白云 12:20 → 天府 14:50","duration":"2h30m","cost":"¥409/人","source":"itinerary-structured.json 交通表","url":"https://a.feizhu.com/2rKOrC"},{"type":"城际交通","route":"去程（备选） · CA4310 国航 · 白云 07:55 → 天府 10:15","duration":"2h20m","cost":"¥480/人","source":"itinerary-structured.json 交通表","url":"https://a.feizhu.com/0eqUu7"},{"type":"城际交通","route":"返程（备选） · AQ1116 九元 · 天府 16:00 → 白云 18:25","duration":"2h25m","cost":"¥409/人","source":"itinerary-structured.json 交通表","url":"https://a.feizhu.com/0wlRn3"},{"type":"城际交通","route":"返程（备选） · CZ3476 南航 · 天府 21:00 → 白云 23:25","duration":"2h25m","cost":"¥460/人","source":"itinerary-structured.json 交通表","url":"https://a.feizhu.com/0RTgze"},{"type":"城际交通","route":"返程（推荐） · 3U6701 川航 · 天府 16:00→08:00 → 白云 18:25→10:25","duration":"2h25m","cost":"¥400/人","source":"itinerary-structured.json 交通表","url":"https://a.feizhu.com/0dlkvn"}],"map":{"schemaVersion":"1.1","pois":[{"id":"poi-1","name":"双流机场站","originalName":"广州白云机场","address":"成都双流国际机场T2航站楼B1-B2层","location":[103.959895,30.57045],"day":1,"order":1,"category":"transport","marker":"交","confidence":"verified","source":"amap_place_text","image":"https://aos-comment.amap.com/B0FFFDQ5Y6/comment/1009082D_1150_4C9E_9CFE_445900DF4405_L0_001_2016_151_1768429737007_01438417.jpg"},{"id":"poi-2","name":"成都天府国际机场","originalName":"成都天府机场","address":"芦葭镇空港大道","location":[104.443142,30.313177],"day":1,"order":2,"category":"transport","marker":"交","confidence":"verified","source":"amap_place_text","image":"http://store.is.autonavi.com/showpic/ea3b9e2246d6c97cd247772587ddc018"},{"id":"poi-4","name":"锦居酒店(成都金融城银泰中心in99店)","originalName":"酒店 check-in","address":"锦晖东街208号","location":[104.072977,30.586383],"day":1,"order":4,"category":"hotel","marker":"住","confidence":"verified","source":"amap_place_text","image":"https://store.is.autonavi.com/showpic/76a47140a69b0db659f78554507bd9c5"},{"id":"poi-5","name":"井巷子","originalName":"宽窄巷子（宽巷子+窄巷子+井巷子）","address":"宽窄巷子景区(宽窄巷子地铁站B口步行200米)","location":[104.05219,30.663508],"day":1,"order":5,"category":"city","marker":"街","confidence":"verified","source":"amap_place_text","image":"https://aos-comment.amap.com/B0FFHJ46ZK/comment/content_media_external_images_media_1000056554_ss__1770378381522_09529369.jpg"},{"id":"poi-6","name":"戏蝶梨园·川剧变脸·盖碗茶(春熙路店)","originalName":"人民公园·鹤鸣茶社盖碗茶","address":"顺城大街8号中环广场","location":[104.071142,30.656251],"day":1,"order":6,"category":"food","marker":"食","confidence":"verified","source":"amap_place_text","image":"https://aos-comment.amap.com/B0K36H400G/comment/content_media_external_file_5033_1752890642896_11575444.jpg"},{"id":"poi-7","name":"成都太古里","originalName":"春熙路/太古里","address":"中纱帽街8号","location":[104.08155,30.65276],"day":1,"order":7,"category":"city","marker":"街","confidence":"verified","source":"amap_place_text","image":"http://store.is.autonavi.com/showpic/4E377E858534426097901E10EEAFCD8E"},{"id":"poi-8","name":"成都大熊猫繁育研究基地","originalName":"成都大熊猫繁育研究基地开园入场","address":"熊猫大道1375号","location":[104.143966,30.727906],"day":2,"order":8,"category":"attraction","marker":"景","confidence":"verified","source":"amap_place_text","image":"https://aos-comment.amap.com/B001C7WE5S/comment/content_media_external_file_100006799_1767191789906_56269281.jpg"},{"id":"poi-9","name":"熊猫基地(熊猫大道)(公交站)","originalName":"熊猫基地","address":"熊猫基地-沸腾小镇假日专线","location":[104.14372,30.73197],"day":2,"order":9,"category":"transport","marker":"交","confidence":"verified","source":"amap_place_text","image":"https://aos-comment.amap.com/BV11433023/comment/a1eae209af61755186be4f7df6f8c687_2048_2048_80.jpg"},{"id":"poi-10","name":"成都自然博物馆","originalName":"成都自然博物馆（2.5小时）","address":"成华大道十里店路88号(十里店地铁站B口步行110米)","location":[104.142764,30.677895],"day":2,"order":10,"category":"culture","marker":"文","confidence":"verified","source":"amap_place_text","image":"http://store.is.autonavi.com/showpic/31a0b4d97a84e7c1fd81262bbcddaef4"},{"id":"poi-11","name":"成都博物馆","originalName":"成都博物馆","address":"小河街1号","location":[104.06428,30.656979],"day":2,"order":11,"category":"culture","marker":"文","confidence":"verified","source":"amap_place_text","image":"http://store.is.autonavi.com/showpic/2892dfb3b4f73400dc26209b74a74fdb"},{"id":"poi-12","name":"犀浦站","originalName":"犀浦站","address":"学园路148号","location":[103.972149,30.756812],"day":3,"order":12,"category":"transport","marker":"交","confidence":"verified","source":"amap_place_text","image":"https://aos-comment.amap.com/B001C808TY/comment/39BD9D2A_80E3_495F_983F_498D8471BF96_L0_001_1290_139_1767414869121_52743676.jpg"},{"id":"poi-14","name":"都江堰站","originalName":"都江堰站（城际铁路）","address":"天府大道","location":[103.639755,30.958085],"day":3,"order":14,"category":"transport","marker":"交","confidence":"verified","source":"amap_place_text","image":"http://store.is.autonavi.com/showpic/cb1660db59a8b69b9ebdb01290f93d43"},{"id":"poi-15","name":"都江堰景区","originalName":"都江堰景区","address":"公园路","location":[103.614486,30.994157],"day":3,"order":15,"category":"attraction","marker":"景","confidence":"verified","source":"amap_place_text","image":"http://store.is.autonavi.com/showpic/31fab45390b5932dfa51a67dbf8548f4"},{"id":"poi-16","name":"玉垒山公园","originalName":"南桥/玉垒山公园","address":"幸福路","location":[103.615496,31.000231],"day":3,"order":16,"category":"city","marker":"街","confidence":"verified","source":"amap_place_text","image":"https://aos-comment.amap.com/B0L037D7O6/comment/20260321-1b7c2452687719f9d2866c68-WgrBvaXP0N6tdxfEIccJl.jpg"},{"id":"poi-18","name":"浣花溪公园","originalName":"杜甫草堂+浣花溪公园（2小时）","address":"草堂街道青华路9号(近杜甫草堂)","location":[104.03254,30.662105],"day":4,"order":18,"category":"city","marker":"街","confidence":"verified","source":"amap_place_text","image":"http://store.is.autonavi.com/showpic/36939d51bb4264f5f38ce5b548396e4a"},{"id":"poi-19","name":"时间之外酒店(新会展环球中心店)","originalName":"酒店 check-out","address":"天府大道北段1777号招商玺荟2栋2单元721室","location":[104.072536,30.575692],"day":4,"order":19,"category":"hotel","marker":"住","confidence":"verified","source":"amap_place_text","image":"https://store.is.autonavi.com/showpic/1cfd19475a19f0b0542996424b1533cf"},{"id":"poi-21","name":"成都九眼桥voco酒店","originalName":"成都九眼桥voco酒店","address":"群众路161号","location":[104.083379,30.638067],"day":"","order":21,"category":"hotel","marker":"住","confidence":"verified","source":"amap_place_text","image":"https://store.is.autonavi.com/showpic/31c02e7d3152ed08186e46046179c896"},{"id":"poi-22","name":"西子·礼白酒店(成都太古里339熊猫塔新鸿路地铁站店)","originalName":"西子礼白酒店（天府熊猫塔建设路店）","address":"一环路东二段96号(新鸿路地铁站A口旁)","location":[104.101546,30.664117],"day":"","order":22,"category":"transport","marker":"交","confidence":"verified","source":"amap_place_text","image":"https://store.is.autonavi.com/showpic/6b7767cd4dfd2e6478397e0b0f2b2048"},{"id":"poi-23","name":"恩季S丨VIBRANT天府·设计师酒店(成都春熙路太古里店)","originalName":"恩季S·VIBRANT设计师酒店（春熙路太古里店）","address":"青年路67号3楼","location":[104.07198,30.657135],"day":"","order":23,"category":"hotel","marker":"住","confidence":"verified","source":"amap_place_text","image":"https://store.is.autonavi.com/showpic/c5a1078c03b0f15e815b6c4ca1009859"},{"id":"poi-24","name":"汉庭成都太古里春熙路步行街酒店","originalName":"汉庭酒店（太古里春熙路步行街店）","address":"青年路69号汉庭成都太古里春熙路步行街酒店","location":[104.071899,30.657176],"day":"","order":24,"category":"hotel","marker":"住","confidence":"verified","source":"amap_place_text","image":"https://store.is.autonavi.com/showpic/7f8e8d258ef3acdc6c2a899b626798fc"}],"hotels":[{"id":"hotel-1","name":"成都九眼桥voco酒店","location":[104.083379,30.638067],"day":"","order":1,"category":"hotel","marker":"住","confidence":"itinerary-structured.json accepted hotel candidate","source":"itinerary-structured.json accepted hotel candidate","price":"¥1194","url":"https://a.feizhu.com/2BRNCn","image":"https://store.is.autonavi.com/showpic/31c02e7d3152ed08186e46046179c896"},{"id":"hotel-2","name":"西子礼白酒店（天府熊猫塔建设路店）","location":[104.101546,30.664117],"day":"","order":2,"category":"hotel","marker":"住","confidence":"itinerary-structured.json accepted hotel candidate","source":"itinerary-structured.json accepted hotel candidate","price":"¥426","url":"https://a.feizhu.com/0cd7Px","image":"https://store.is.autonavi.com/showpic/6b7767cd4dfd2e6478397e0b0f2b2048"},{"id":"hotel-3","name":"恩季S·VIBRANT设计师酒店（春熙路太古里店）","location":[104.07198,30.657135],"day":"","order":3,"category":"hotel","marker":"住","confidence":"itinerary-structured.json accepted hotel candidate","source":"itinerary-structured.json accepted hotel candidate","price":"¥277","url":"https://a.feizhu.com/2S9eyq","image":"https://store.is.autonavi.com/showpic/c5a1078c03b0f15e815b6c4ca1009859"},{"id":"hotel-4","name":"汉庭酒店（太古里春熙路步行街店）","location":[104.071899,30.657176],"day":"","order":4,"category":"hotel","marker":"住","confidence":"itinerary-structured.json accepted hotel candidate","source":"itinerary-structured.json accepted hotel candidate","price":"¥297","url":"https://a.feizhu.com/3k3cF7","image":"https://store.is.autonavi.com/showpic/7f8e8d258ef3acdc6c2a899b626798fc"}],"routes":[{"day":1,"from":"","to":"广州白云机场出发（MU6141 东航）","mode":"机场自行前往","duration":"购票；早班到成都后直接出行","cost":"¥429/人","source":"itinerary.md"},{"day":1,"from":"天府机场","to":"酒店 check-in","mode":"地铁18号线约50分钟","duration":"约1小时25分钟","cost":"¥10/人","source":"itinerary.md"},{"day":2,"from":"","to":"午餐：熊猫基地附近或返回市区","mode":"打车约¥30","duration":"约1小时","cost":"¥80–120","source":"itinerary.md"},{"day":3,"from":"酒店出发","to":"犀浦站","mode":"地铁2号线约30分钟","duration":"犀浦站换乘成灌城际铁路","cost":"¥5","source":"itinerary.md"},{"day":3,"from":"犀浦","to":"都江堰站（城际铁路）","mode":"城际铁路约50分钟","duration":"约50分钟","cost":"¥15–20/人","source":"itinerary.md"},{"day":3,"from":"都江堰站","to":"犀浦","mode":"城际铁路+地铁","duration":"约1小时","cost":"¥20–25/人","source":"itinerary.md"},{"day":4,"from":"取行李","to":"天府机场","mode":"打车约¥100–130（约60分钟）","duration":"提前2小时到机场","cost":"¥100–130","source":"itinerary.md"}],"generatedAt":"2026-05-11"},"food":[{"name":"宽窄巷子周边用餐","area":"宽窄巷子","price":"¥80–120","dishes":[],"note":"宽窄巷子附近本地餐厅；避开景区内高价餐厅；推荐附近苍蝇馆子；¥80–120","source":"itinerary.md"},{"name":"熊猫基地午餐策略","area":"熊猫基地/返回市区","price":"¥80–120","dishes":[],"note":"基地内餐厅容易排队且偏贵，建议自带水和零食，或回市区午餐。","source":"itinerary.md"},{"name":"火锅初体验","area":"春熙路/太古里或酒店周边","price":"¥150–250","dishes":[],"note":"推荐大龙燚/海底捞","source":"itinerary.md"},{"name":"火锅初体验","area":"春熙路","price":"¥80–120）","dishes":[],"note":"¥80–120","source":"itinerary.md"},{"name":"都江堰市区午餐","area":"都江堰市区","price":"¥80–120","dishes":[],"note":"景区内餐厅偏贵，午餐优先放在都江堰市区。","source":"itinerary.md"},{"name":"早餐酒店","area":"春熙路","price":"¥0–50）","dishes":[],"note":"¥0–50","source":"itinerary.md"},{"name":"锦里/宽窄巷子小吃","area":"锦里、宽窄巷子","dishes":[],"note":"适合快速尝鲜和拍照，正餐优先放到街区外。","source":"destination-brief.md"},{"name":"不辣/少辣小吃","area":"全城小吃店","dishes":["带孩子点鸳鸯锅","提前说明不辣"],"note":"适合小朋友垫肚子；点餐时明确说不辣或少辣。","source":"destination-brief.md"}],"budget":{"rows":[{"item":"机票（广州↔成都，3人）","amount":"¥2880","note":"代表性样例数据；早班经济舱"},{"item":"住宿（3晚，1间）","amount":"¥3582","note":"经济：汉庭¥277/晚；舒适：voco¥1194/晚"},{"item":"景区门票（3人）","amount":"¥600","note":"熊猫基地¥110+都江堰¥160+杜甫草堂¥100+自然博物馆免费"},{"item":"市内交通","amount":"¥500","note":"地铁+打车；都江堰城际¥120"},{"item":"餐饮（4天）","amount":"¥2000","note":"经济：本地馆子；舒适：含火锅+川菜"},{"item":"购物/伴手礼","amount":"¥500","note":"按需"}],"total":"约¥10062（不含个人消费和意外支出）"},"amapKey":"fbb979dc813d025582af9ec422d33750"};</script>
+  <script>
+    const data = window.__ROAMMATE_ATLAS__;
+    const $ = (selector, root = document) => root.querySelector(selector);
+    const $$ = (selector, root = document) => [...root.querySelectorAll(selector)];
+    const esc = (value) => String(value ?? '').replace(/[&<>"']/g, (ch) => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[ch]));
+    const byName = new Map();
+    [...data.map.pois, ...data.map.hotels].forEach((item) => {
+      if (item.name) byName.set(item.name, item);
+      if (item.originalName) byName.set(item.originalName, item);
+    });
+    const experiences = new Map(data.poiExperiences.map((item) => [item.name, item]));
+    let map = null;
+    const markers = new Map();
+    const markerEntries = [];
+    let routeLine = null;
+
+    function matchExperience(target) {
+      const names = [];
+      if (typeof target === 'object' && target) {
+        names.push(target.name, target.originalName);
+      } else if (target) {
+        names.push(target);
+      }
+      const expanded = [];
+      for (const name of names.filter(Boolean)) {
+        const mapped = byName.get(name);
+        expanded.push(name, mapped?.name, mapped?.originalName);
+      }
+      const aliases = [...new Set(expanded.filter(Boolean))];
+      for (const alias of aliases) {
+        if (experiences.has(alias)) return experiences.get(alias);
+      }
+      return [...experiences.values()].find((item) => aliases.some((alias) => alias.includes(item.name) || item.name.includes(alias))) || null;
+    }
+
+    function markerClass(item) {
+      return 'atlas-marker ' + esc(item.category || 'attraction');
+    }
+
+    function initMap() {
+      const allPoints = [...data.map.pois, ...data.map.hotels].filter((item) => Array.isArray(item.location));
+      if (window.AMap && data.amapKey && allPoints.length) {
+        map = new AMap.Map('atlasMap', { zoom: 12, center: allPoints[0].location, mapStyle: 'amap://styles/fresh' });
+        const path = data.map.pois.filter((item) => Array.isArray(item.location)).map((item) => item.location);
+        if (path.length > 1) {
+          routeLine = new AMap.Polyline({ path, strokeColor: '#1d766f', strokeWeight: 6, strokeOpacity: .82, lineJoin: 'round' });
+          routeLine.setMap(map);
+        }
+        for (const item of allPoints) {
+          const marker = new AMap.Marker({
+            position: item.location,
+            title: item.name,
+            content: '<button class="' + markerClass(item) + '" type="button">' + esc(item.marker || '点') + '</button>',
+            anchor: 'center',
+          });
+          marker.setMap(map);
+          marker.on('click', () => openDrawer(item.name));
+          markers.set(item.name, marker);
+          markerEntries.push({ item, marker });
+        }
+        map.setFitView(null, false, [70, 70, 70, 70]);
+      } else {
+        renderFallbackMap(allPoints);
+      }
+    }
+
+    function renderFallbackMap(points) {
+      const canvas = $('#atlasMap');
+      const usable = points.length ? points : data.map.pois;
+      canvas.innerHTML = '<div class="fallback-map"><div class="fallback-route-line"></div></div>';
+      const fallback = $('.fallback-map', canvas);
+      usable.slice(0, 12).forEach((item, index) => {
+        const left = 10 + (index % 6) * 16;
+        const top = 28 + Math.floor(index / 6) * 32 + (index % 2) * 7;
+        const node = document.createElement('button');
+        node.className = 'fallback-node';
+        node.type = 'button';
+        node.style.left = left + '%';
+        node.style.top = top + '%';
+        node.innerHTML = '<i>' + esc(item.marker || '点') + '</i><span>' + esc(item.name) + '</span>';
+        node.addEventListener('click', () => openDrawer(item.name));
+        fallback.appendChild(node);
+      });
+    }
+
+    function focusPoi(name) {
+      if (!name) return;
+      const item = byName.get(name) || [...byName.values()].find((candidate) => name.includes(candidate.name) || candidate.name.includes(name));
+      $$('.activity-card').forEach((card) => card.classList.toggle('active', card.dataset.focusPoi === name));
+      if (item && map && Array.isArray(item.location)) {
+        map.setZoomAndCenter(14, item.location, true, 500);
+        const marker = markers.get(item.name);
+        if (marker?.setAnimation) {
+          marker.setAnimation('AMAP_ANIMATION_BOUNCE');
+          window.setTimeout(() => marker.setAnimation(null), 900);
+        }
+      }
+      openDrawer(item?.name || name);
+    }
+
+    function field(label, value) {
+      if (!value || (Array.isArray(value) && !value.length)) return '';
+      const text = Array.isArray(value) ? '<ul>' + value.map((item) => '<li>' + esc(item) + '</li>').join('') + '</ul>' : esc(value);
+      return '<div class="drawer-field"><strong>' + esc(label) + '</strong>' + text + '</div>';
+    }
+
+    function openDrawer(name) {
+      const item = byName.get(name) || [...byName.values()].find((candidate) => name.includes(candidate.name) || candidate.name.includes(name)) || { name };
+      const exp = matchExperience(item);
+      const drawer = $('#atlasDrawer');
+      $('#drawerTitle').textContent = item.name || name;
+      $('#drawerBody').innerHTML = [
+        item.image ? '<img src="' + esc(item.image) + '" alt="' + esc(item.name) + '">' : '',
+        field('类型', [item.day ? 'Day ' + item.day : '', item.category, item.confidence].filter(Boolean).join(' · ')),
+        field('地址', item.address),
+        field('价格/链接', item.price ? item.price : ''),
+        item.url ? '<div class="drawer-field"><strong>跳转</strong><a href="' + esc(item.url) + '" target="_blank" rel="noopener noreferrer">飞猪查看</a></div>' : '',
+        exp ? field('口碑等级', exp.rating) : '',
+        exp ? field('推荐理由', exp.whyGo) : '',
+        exp ? field('核心判断', exp.tips) : '',
+        exp ? field('建议时长', exp.recommendedDuration) : '',
+        exp ? field('必玩/必看', exp.mustDo) : '',
+        exp ? field('排队与预约', exp.queueAndReservation) : '',
+        exp ? field('亲子提醒', exp.familyNotes) : '',
+        exp ? field('准备材料', exp.preparation) : '',
+        exp ? field('常见差评', exp.commonComplaints) : '',
+        exp ? field('避雷', exp.avoid) : '',
+        exp ? field('适合', exp.suitable) : '',
+        exp ? field('不适合', exp.notSuitable) : '',
+        field('来源', exp?.source || item.source),
+      ].filter(Boolean).join('');
+      drawer.classList.add('open');
+      $('#drawerBackdrop')?.classList.add('open');
+    }
+
+    function closeDrawer() {
+      $('#atlasDrawer')?.classList.remove('open');
+      $('#drawerBackdrop')?.classList.remove('open');
+    }
+
+    function setDay(day) {
+      $$('.day-tabs button').forEach((button) => button.classList.toggle('active', button.dataset.dayTab === day));
+      $$('.day-card').forEach((card) => card.classList.toggle('is-dimmed', day !== 'all' && card.dataset.dayCard !== day));
+      $$('.route-pill').forEach((pill) => pill.style.display = day === 'all' || !pill.dataset.routeDay || pill.dataset.routeDay === day ? '' : 'none');
+      if (map) {
+        const activePois = day === 'all'
+          ? data.map.pois.filter((item) => Array.isArray(item.location))
+          : data.map.pois.filter((item) => String(item.day) === String(day) && Array.isArray(item.location));
+        const visiblePoints = [...activePois, ...data.map.hotels.filter((item) => Array.isArray(item.location))];
+        markerEntries.forEach(({ item, marker }) => {
+          const visible = day === 'all' || String(item.day) === String(day) || item.category === 'hotel';
+          marker.setMap(visible ? map : null);
+        });
+        if (routeLine) {
+          if (activePois.length > 1) {
+            routeLine.setPath(activePois.map((item) => item.location));
+            routeLine.setMap(map);
+          } else {
+            routeLine.setMap(null);
+          }
+        }
+        const activeMarkers = visiblePoints.map((item) => markers.get(item.name)).filter(Boolean);
+        if (activeMarkers.length) map.setFitView(activeMarkers, false, [90, 90, 90, 90]);
+      }
+    }
+
+    $$('.day-tabs button').forEach((button) => button.addEventListener('click', () => setDay(button.dataset.dayTab)));
+    $$('[data-focus-poi]').forEach((button) => button.addEventListener('click', () => focusPoi(button.dataset.focusPoi)));
+    $$('[data-focus-hotel]').forEach((card) => card.addEventListener('click', () => focusPoi(card.dataset.focusHotel)));
+    $$('.mode-nav a, .doc-jump a').forEach((link) => link.addEventListener('click', closeDrawer));
+    $('#drawerClose')?.addEventListener('click', closeDrawer);
+    $('#drawerBackdrop')?.addEventListener('click', closeDrawer);
+    document.addEventListener('keydown', (event) => {
+      if (event.key === 'Escape') closeDrawer();
+    });
+    initMap();
+  </script>
+</body>
+</html>

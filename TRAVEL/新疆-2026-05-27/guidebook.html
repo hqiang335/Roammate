@@ -1,0 +1,1413 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>乌鲁木齐旅行地图册</title>
+  <style>
+    :root {
+      --bg: #f4efe6;
+      --paper: #fffdf8;
+      --panel: #ffffff;
+      --ink: #202823;
+      --muted: #69736d;
+      --line: #e7dccd;
+      --accent: #1d766f;
+      --accent-2: #c7563b;
+      --amber: #b7791f;
+      --blue: #2f6f9f;
+      --rose: #a43e57;
+      --shadow: 0 18px 50px rgba(38, 30, 20, 0.11);
+      --radius: 8px;
+      --day-1: #c7563b;
+      --day-2: #2f8f5b;
+      --day-3: #5276b7;
+      --day-4: #b7791f;
+      --day-5: #8461a8;
+      --day-6: #1d766f;
+    }
+    * { box-sizing: border-box; }
+    html { max-width: 100%; overflow-x: hidden; background: var(--bg); color: var(--ink); scroll-behavior: smooth; }
+    body { max-width: 100%; overflow-x: hidden; margin: 0; font-family: "PingFang SC", "Hiragino Sans GB", "Microsoft YaHei", sans-serif; font-size: 15px; line-height: 1.6; letter-spacing: 0; }
+    a { color: var(--accent); text-decoration: none; font-weight: 700; }
+    a:hover { text-decoration: underline; }
+    h1, h2, h3, h4, p { margin-top: 0; }
+    h1 { max-width: 760px; margin-bottom: 14px; font-size: 40px; line-height: 1.12; }
+    h2 { margin-bottom: 12px; font-size: 22px; line-height: 1.25; }
+    h3 { margin-bottom: 8px; font-size: 16px; line-height: 1.35; }
+    h4 { margin: 14px 0 6px; font-size: 13px; color: var(--accent); }
+    button, input { font: inherit; }
+    .atlas { min-height: 100vh; }
+    .hero { position: relative; display: grid; grid-template-columns: minmax(0, 1fr) auto; gap: 24px; align-items: end; padding: 34px clamp(18px, 4vw, 52px) 28px; background: #233029; color: #fff8ed; overflow: hidden; }
+    .hero::after { content: ""; position: absolute; inset: auto -8% -42% 35%; height: 280px; background: linear-gradient(90deg, rgba(199,86,59,0.42), rgba(29,118,111,0.38)); transform: rotate(-6deg); opacity: .45; }
+    .hero-copy { position: relative; z-index: 1; }
+    .eyebrow, .section-kicker { margin: 0 0 10px; font-size: 12px; font-weight: 800; letter-spacing: .08em; text-transform: uppercase; color: var(--accent-2); }
+    .hero .eyebrow { color: #f3c287; }
+    .hero-meta, .assumption { margin: 0; color: #e7dccd; }
+    .assumption { margin-top: 8px; color: #f3c287; font-weight: 700; }
+    .mode-nav { position: relative; z-index: 30; display: flex; flex-wrap: wrap; gap: 8px; justify-content: flex-end; }
+    .mode-nav a { display: inline-flex; min-height: 36px; align-items: center; padding: 7px 12px; border: 1px solid rgba(255,255,255,.25); border-radius: 999px; color: #fff8ed; background: rgba(255,255,255,.08); }
+    img, canvas, svg, video { max-width: 100%; }
+    .content { display: grid; gap: 18px; min-width: 0; padding: 18px clamp(14px, 3vw, 36px) 40px; }
+    .content > * { min-width: 0; }
+    .panel, .map-panel { background: rgba(255,253,248,.94); border: 1px solid var(--line); border-radius: var(--radius); box-shadow: var(--shadow); }
+    .panel { padding: 22px; }
+    .overview-grid { display: grid; grid-template-columns: minmax(0, 1.1fr) minmax(280px, .9fr); gap: 22px; align-items: start; min-width: 0; }
+    .lead { color: #3d4842; font-size: 16px; }
+    .quick-facts, .hotel-meta { display: flex; flex-wrap: wrap; gap: 8px; }
+    .chip { display: inline-flex; min-height: 26px; align-items: center; padding: 3px 9px; border-radius: 999px; background: #eef7f4; color: var(--accent); font-size: 12px; font-weight: 800; }
+    .chip.amber { background: #fff4da; color: var(--amber); }
+    .chip.blue { background: #e8f1fb; color: var(--blue); }
+    .chip.rose { background: #fdecef; color: var(--rose); }
+    .metric-grid { display: grid; grid-template-columns: repeat(5, minmax(0, 1fr)); gap: 9px; }
+    .metric { padding: 12px; border: 1px solid var(--line); border-radius: var(--radius); background: #fff; }
+    .metric span { display: block; color: var(--muted); font-size: 12px; }
+    .metric strong { display: block; margin-top: 2px; font-size: 22px; line-height: 1; }
+    .metric.warning strong { color: var(--accent-2); }
+    .insight-strip { display: flex; flex-wrap: wrap; gap: 8px; margin-top: 18px; }
+    .insight-strip span { padding: 8px 10px; border-radius: var(--radius); background: #f7efe2; color: #4b4034; }
+    .alert-block { margin-top: 18px; padding: 14px 16px; border-left: 4px solid var(--accent-2); border-radius: 0 var(--radius) var(--radius) 0; background: #fff1e9; }
+    .plan-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 10px; }
+    .plan-card { border: 1px solid var(--line); border-radius: var(--radius); background: #fff; padding: 12px; }
+    .plan-card span, .plan-card em { display: block; color: var(--accent-2); font-size: 12px; font-style: normal; font-weight: 800; }
+    .plan-card p { margin: 0 0 6px; color: var(--muted); font-size: 13px; }
+    .plan-card strong { display: block; }
+    .dashboard-grid { display: grid; grid-template-columns: minmax(0, .86fr) minmax(0, 1.14fr); gap: 18px; align-items: start; min-width: 0; }
+    .timeline-panel { position: sticky; top: 14px; max-height: calc(100vh - 28px); overflow: auto; }
+    .day-tabs { position: sticky; top: -22px; z-index: 3; display: flex; gap: 8px; margin: 12px -4px 14px; padding: 8px 4px; background: rgba(255,253,248,.96); border-bottom: 1px solid var(--line); }
+    .day-tabs button { min-height: 34px; border: 1px solid var(--line); border-radius: 999px; padding: 6px 12px; background: #fff; color: var(--muted); cursor: pointer; }
+    .day-tabs button.active { border-color: var(--accent); background: var(--accent); color: #fff; }
+    .day-stack { display: grid; gap: 12px; }
+    .day-card { border: 1px solid var(--line); border-radius: var(--radius); background: #fff; overflow: hidden; transition: transform .18s ease, box-shadow .18s ease, opacity .18s ease; }
+    .day-card:hover { transform: translateY(-1px); box-shadow: 0 10px 28px rgba(31, 24, 17, .1); }
+    .day-card.is-dimmed { display: none; }
+    .day-card-head { padding: 14px; background: #f7f3ea; border-bottom: 1px solid var(--line); }
+    .day-card-head p { margin: 2px 0 0; color: var(--muted); font-size: 13px; }
+    .day-badge { display: inline-flex; margin-bottom: 8px; padding: 3px 8px; border-radius: 999px; background: var(--accent-2); color: #fff; font-size: 12px; font-weight: 800; }
+    .activity-list { display: grid; gap: 0; }
+    .activity-card { display: grid; grid-template-columns: 74px minmax(0, 1fr) auto; gap: 10px; width: 100%; padding: 12px 14px; border: 0; border-bottom: 1px solid var(--line); background: #fff; text-align: left; cursor: pointer; }
+    .activity-card:hover, .activity-card.active { background: #eef7f4; }
+    .activity-card .time { color: var(--accent); font-weight: 800; font-size: 13px; }
+    .activity-main strong, .activity-main span { display: block; }
+    .activity-main span { color: var(--muted); font-size: 13px; }
+    .cost { color: var(--amber); font-weight: 800; white-space: nowrap; }
+    .day-notes { padding: 12px 14px; background: #fffdf8; color: var(--muted); font-size: 13px; }
+    .day-notes p { margin: 5px 0; }
+    .day-notes strong { margin-right: 8px; color: var(--ink); }
+    .map-panel { position: sticky; top: 14px; min-width: 0; max-width: 100%; overflow: hidden; }
+    .map-toolbar { display: flex; justify-content: space-between; gap: 16px; padding: 16px 16px 10px; align-items: start; }
+    .map-toolbar h2 { margin-bottom: 0; }
+    .map-legend { display: flex; flex-wrap: wrap; justify-content: flex-end; gap: 7px; color: var(--muted); font-size: 12px; }
+    .map-legend span { display: inline-flex; align-items: center; gap: 5px; }
+    .map-legend i { display: inline-grid; width: 22px; height: 22px; place-items: center; border-radius: 999px; background: var(--ink); color: #fff; font-style: normal; font-size: 12px; }
+    .map-canvas { position: relative; width: 100%; min-width: 0; min-height: 540px; overflow: hidden; background: #dfe7df; }
+    #atlasMap, #atlasMap .amap-container { max-width: 100%; overflow: hidden; }
+    #atlasMap .amap-container { background: #dfe7df; }
+    .map-empty, .fallback-map { position: absolute; inset: 0; display: grid; place-items: center; padding: 24px; color: var(--muted); text-align: center; }
+    .map-empty strong { display: block; color: var(--ink); font-size: 18px; }
+    .fallback-map { display: block; background: linear-gradient(135deg, #e4eadf, #f6efe2); overflow: hidden; }
+    .fallback-route-line { position: absolute; left: 10%; right: 10%; top: 50%; height: 4px; background: rgba(29,118,111,.42); transform: rotate(-8deg); }
+    .fallback-node { position: absolute; transform: translate(-50%, -50%); display: grid; gap: 6px; justify-items: center; max-width: 150px; }
+    .fallback-node i, .atlas-marker { display: grid; width: 34px; height: 34px; place-items: center; border: 2px solid #fff; border-radius: 999px; background: var(--accent); color: #fff; box-shadow: 0 8px 20px rgba(0,0,0,.18); font-style: normal; font-weight: 900; }
+    .fallback-node span { padding: 4px 7px; border-radius: 999px; background: rgba(255,255,255,.88); color: var(--ink); font-size: 12px; white-space: nowrap; }
+    .atlas-marker.hotel { background: var(--amber); }
+    .atlas-marker.transport { background: var(--blue); }
+    .atlas-marker.food { background: var(--rose); }
+    .atlas-marker.culture { background: #8461a8; }
+    .atlas-marker.city { background: var(--accent-2); }
+    .route-summary { display: flex; gap: 8px; max-width: 100%; min-width: 0; padding: 12px 16px 16px; overflow-x: auto; border-top: 1px solid var(--line); background: #fffdf8; }
+    .route-pill { flex: 0 0 auto; max-width: 300px; display: grid; gap: 2px; padding: 8px 10px; border: 1px solid var(--line); border-radius: var(--radius); background: #fff; text-align: left; cursor: pointer; }
+    .route-pill span { overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+    .route-pill strong { color: var(--accent); font-size: 12px; }
+    .transport-groups { display: grid; gap: 16px; }
+    .transport-group { padding: 14px; border: 1px solid var(--line); border-radius: var(--radius); background: #fffdf8; }
+    .transport-group-head { display: flex; align-items: baseline; justify-content: space-between; gap: 12px; margin-bottom: 10px; }
+    .transport-group-head h3 { margin: 0; font-size: 18px; }
+    .transport-group-head span { color: var(--muted); font-size: 13px; }
+    .transport-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(230px, 1fr)); gap: 12px; }
+    .transport-card { padding: 14px; border: 1px solid var(--line); border-radius: var(--radius); background: #fff; }
+    .transport-card span { color: var(--accent-2); font-size: 12px; font-weight: 900; }
+    .transport-card h4 { margin: 4px 0 6px; font-size: 15px; line-height: 1.45; }
+    .transport-card p { margin: 0; color: var(--accent); font-weight: 800; }
+    .transport-card small { display: block; margin-top: 8px; color: var(--muted); }
+    .dossier-grid, .hotel-grid, .check-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(260px, 1fr)); gap: 14px; }
+    .dossier-card, .hotel-card, .check-card, .split-card { border: 1px solid var(--line); border-radius: var(--radius); background: #fff; overflow: hidden; }
+    .dossier-button { width: 100%; min-height: 148px; display: grid; gap: 4px; align-content: start; padding: 0 14px 14px; text-align: left; cursor: pointer; color: inherit; transition: transform .18s ease, box-shadow .18s ease, border-color .18s ease; }
+    .dossier-button:hover, .dossier-button:focus-visible { transform: translateY(-2px); border-color: rgba(29,118,111,.38); box-shadow: 0 12px 28px rgba(31, 24, 17, .12); outline: none; }
+    .dossier-button img, .dossier-image-fallback { width: calc(100% + 28px); max-width: none; height: 142px; margin: 0 -14px 10px; object-fit: cover; background: #efe4d5; }
+    .dossier-image-fallback { display: grid; place-items: center; color: var(--accent-2); font-size: 13px; font-weight: 900; }
+    .dossier-button span { margin-top: 14px; color: var(--accent-2); font-size: 12px; font-weight: 800; }
+    .dossier-button img + span, .dossier-image-fallback + span { margin-top: 0; }
+    .dossier-button em { color: var(--muted); font-size: 12px; font-style: normal; }
+    .dossier-button p { margin: 2px 0 0; color: #3d4842; font-size: 13px; }
+    .dossier-button small { color: var(--accent-2); font-size: 12px; }
+    ul { margin: 6px 0 0; padding-left: 19px; }
+    li { margin: 3px 0; }
+    .source-note, .muted { color: var(--muted); font-size: 13px; }
+    .hotel-card { transition: transform .18s ease, box-shadow .18s ease; }
+    .hotel-card:hover { transform: translateY(-2px); box-shadow: 0 12px 28px rgba(31, 24, 17, .12); }
+    .hotel-card img, .hotel-image-fallback { width: 100%; height: 160px; object-fit: cover; background: #efe4d5; display: grid; place-items: center; color: var(--amber); font-weight: 900; }
+    .hotel-card-body { padding: 14px; }
+    .tier { color: var(--accent-2); font-size: 12px; font-weight: 900; }
+    .tradeoff { color: var(--muted); }
+    .card-actions { margin-top: 10px; }
+    .split-panel { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 14px; background: transparent; border: 0; box-shadow: none; padding: 0; }
+    .split-card { padding: 20px; box-shadow: var(--shadow); }
+    .mini-row { padding: 10px 0; border-bottom: 1px solid var(--line); }
+    .mini-row:last-child { border-bottom: 0; }
+    .mini-row strong, .mini-row span { display: block; }
+    .mini-row span { color: var(--muted); font-size: 13px; }
+    .total { margin: 14px 0 0; color: var(--amber); font-weight: 900; }
+    .check-card { padding: 14px; }
+    .check-card label { display: flex; gap: 8px; align-items: flex-start; padding: 6px 0; color: #3d4842; }
+    .docs-intro { scroll-margin-top: 18px; }
+    .doc-jump { display: flex; flex-wrap: wrap; gap: 8px; margin-top: 14px; }
+    .doc-jump a { display: inline-flex; min-height: 34px; align-items: center; padding: 6px 10px; border: 1px solid var(--line); border-radius: 999px; background: #fff; }
+    .source-doc { scroll-margin-top: 18px; }
+    .source-doc-summary { display: grid; gap: 4px; cursor: pointer; list-style: none; }
+    .source-doc-summary::-webkit-details-marker { display: none; }
+    .source-doc-summary strong { font-size: 20px; }
+    .source-doc-summary em { color: var(--muted); font-style: normal; }
+    .source-doc .markdown-body { max-width: 1080px; margin-top: 18px; }
+    .markdown-body h3 { margin-top: 22px; font-size: 22px; line-height: 1.28; color: var(--ink); }
+    .markdown-body h4 { margin-top: 20px; font-size: 18px; color: var(--accent); }
+    .markdown-body h5 { margin: 18px 0 8px; font-size: 16px; color: var(--accent-2); }
+    .markdown-body h6 { margin: 16px 0 7px; font-size: 14px; color: var(--muted); }
+    .markdown-body p { margin: 8px 0; }
+    .markdown-body strong { color: #17221d; }
+    .markdown-body code { padding: 1px 5px; border-radius: 6px; background: #f1eadf; font-size: .92em; }
+    .markdown-body pre { overflow: auto; padding: 12px; border-radius: var(--radius); background: #233029; color: #fff8ed; }
+    .markdown-body blockquote { margin: 12px 0; padding: 10px 14px; border-left: 4px solid var(--accent); background: #eef7f4; color: #3d4842; }
+    .markdown-body hr { border: 0; border-top: 1px solid var(--line); margin: 20px 0; }
+    .markdown-body .md-table-wrap { overflow-x: auto; margin: 12px 0 16px; border: 1px solid var(--line); border-radius: var(--radius); background: #fff; }
+    .markdown-body table { width: 100%; border-collapse: collapse; min-width: 680px; }
+    .markdown-body th, .markdown-body td { padding: 9px 10px; border-bottom: 1px solid var(--line); vertical-align: top; text-align: left; }
+    .markdown-body th { background: #f7f3ea; color: #3d4842; font-weight: 900; }
+    .markdown-body tr:last-child td { border-bottom: 0; }
+    .raw-markdown { margin-top: 18px; border-top: 1px solid var(--line); padding-top: 12px; }
+    .raw-markdown summary { cursor: pointer; color: var(--accent); font-weight: 900; }
+    .raw-markdown pre { max-height: 420px; overflow: auto; padding: 12px; border-radius: var(--radius); background: #233029; color: #fff8ed; white-space: pre-wrap; }
+    .drawer-backdrop { position: fixed; inset: 0; z-index: 19; background: rgba(32,40,35,.28); opacity: 0; pointer-events: none; transition: opacity .18s ease; }
+    .drawer-backdrop.open { opacity: 1; pointer-events: auto; }
+    .drawer { position: fixed; top: 0; right: 0; z-index: 20; width: min(420px, 100vw); height: 100vh; background: var(--paper); border-left: 1px solid var(--line); box-shadow: -20px 0 60px rgba(0,0,0,.16); transform: translateX(105%); transition: transform .22s ease; overflow: auto; }
+    .drawer.open { transform: translateX(0); }
+    .drawer-head { display: flex; align-items: center; justify-content: space-between; gap: 12px; padding: 18px; border-bottom: 1px solid var(--line); background: #233029; color: #fff8ed; }
+    .drawer-head h2 { margin: 0; font-size: 20px; }
+    .drawer-close { width: 34px; height: 34px; border: 1px solid rgba(255,255,255,.28); border-radius: 999px; background: rgba(255,255,255,.1); color: #fff; cursor: pointer; }
+    .drawer-body { padding: 18px; }
+    .drawer-body img { width: 100%; max-height: 220px; object-fit: cover; border-radius: var(--radius); margin-bottom: 12px; }
+    .drawer-field { padding: 10px 0; border-bottom: 1px solid var(--line); }
+    .drawer-field strong { display: block; color: var(--accent); font-size: 12px; }
+    @page { size: A4; margin: 12mm; }
+    @media print {
+      html, body { background: #fff; }
+      .hero, .panel, .map-panel, .split-card { box-shadow: none; }
+      .mode-nav, .map-canvas, .drawer, .day-tabs, .doc-jump { display: none !important; }
+      .content, .dashboard-grid, .overview-grid, .split-panel { display: block; padding: 0; }
+      .panel, .map-panel, .day-card, .dossier-card, .hotel-card, .check-card { break-inside: avoid; margin-bottom: 12px; }
+      .timeline-panel, .map-panel { position: static; max-height: none; overflow: visible; }
+    }
+    @media (max-width: 1100px) {
+      .hero, .overview-grid, .dashboard-grid, .split-panel { grid-template-columns: 1fr; }
+      .mode-nav { justify-content: flex-start; }
+      .timeline-panel, .map-panel { position: static; max-height: none; }
+      .map-canvas { min-height: 420px; }
+    }
+    @media (max-width: 680px) {
+      h1 { font-size: 28px; overflow-wrap: anywhere; }
+      h2 { font-size: 20px; }
+      .hero { display: block; padding: 28px 18px 22px; }
+      .mode-nav { justify-content: flex-start; margin-top: 22px; }
+      .mode-nav a { min-height: 34px; padding: 6px 10px; }
+      .content { padding: 12px; }
+      .panel { padding: 16px; }
+      .metric-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+      .plan-grid, .dossier-grid, .hotel-grid, .check-grid { grid-template-columns: 1fr; }
+      .day-tabs { overflow-x: auto; padding-bottom: 9px; }
+      .day-tabs button { flex: 0 0 auto; }
+      .activity-card { grid-template-columns: 62px minmax(0, 1fr); }
+      .cost { grid-column: 2; }
+      .map-toolbar { display: block; }
+      .map-legend { justify-content: flex-start; margin-top: 10px; }
+      .map-canvas { min-height: 360px; }
+      .route-pill { max-width: min(280px, calc(100vw - 58px)); }
+      .markdown-body table { min-width: 560px; }
+      .drawer { top: auto; bottom: 0; width: 100%; height: auto; max-height: 86vh; border-left: 0; border-top: 1px solid var(--line); border-radius: 12px 12px 0 0; transform: translateY(105%); }
+      .drawer.open { transform: translateY(0); }
+    }
+  </style>
+  <script>window._AMapSecurityConfig = { securityJsCode: "e244a2946f6a6943e42edf7f9e363133" };</script>
+  <script src="https://webapi.amap.com/maps?v=2.0&key=fbb979dc813d025582af9ec422d33750"></script>
+</head>
+<body>
+  <div class="atlas">
+
+    <header class="hero">
+      <div class="hero-copy">
+        <p class="eyebrow">Roammate Travel Atlas</p>
+        <h1>乌鲁木齐旅行地图册</h1>
+        <p class="hero-meta">2026-05-27 至 2026-05-29 · 3天 · 两对情侣，共4人 · 北京出发</p>
+
+      </div>
+      <nav class="mode-nav" aria-label="页面导航">
+        <a href="#plan-overview">行程总览</a>
+        <a href="#transport-board">交通参考</a>
+        <a href="#dashboard">地图工作台</a>
+        <a href="#poi-dossier">地点档案</a>
+        <a href="#hotel-board">酒店组合</a>
+        <a href="#full-docs">完整资料</a>
+      </nav>
+    </header>
+<main class="content">
+
+    <section class="panel overview-panel" id="overview">
+      <div class="section-kicker">行程总览</div>
+      <div class="overview-grid">
+        <div>
+          <h2>乌鲁木齐怎么轻松玩</h2>
+          <p class="lead">适合情侣短途深度体验：3天2夜以乌鲁木齐为基地，可覆盖天山天池自然风光 + 大巴扎民俗文化，节奏适中，无需长途转场。</p>
+          <div class="quick-facts">
+            <span class="chip emerald">中等，每天3-4个核心安排，留有弹性</span>
+
+            <span class="chip blue">飞机（城际）+ 包车/打车（景区）+ 地铁（市区）</span>
+            <span class="chip rose">舒适型，约¥2500-3500/人（含机票）</span>
+          </div>
+        </div>
+
+    <div class="metric-grid" aria-label="行程总览指标">
+      <div class="metric"><span>天数</span><strong>3</strong></div>
+      <div class="metric"><span>地图点位</span><strong>14</strong></div>
+      <div class="metric"><span>路线段</span><strong>8</strong></div>
+      <div class="metric"><span>酒店候选</span><strong>4</strong></div>
+      <div class="metric warning"><span>重点提醒</span><strong>6</strong></div>
+    </div>
+      </div>
+      <div class="insight-strip"><span>天山天池：海拔1910m高山湖泊，雪山倒影+云杉森林，情侣打卡首选，建议全天（Web-Rooter cited: wlmq.bendibao.com）</span><span>新疆国际大巴扎：全国最大巴扎，丝绸之路观光塔+维吾尔族美食+手工艺品，夜晚氛围佳（FlyAI POI verified）</span><span>新疆维吾尔自治区博物馆：楼兰美女、五星出东方织锦等国宝，免费讲解，深度了解西域历史（FlyAI POI verified）</span></div>
+      <div class="alert-block"><strong>重点提醒</strong><ul><li>天气：昼夜温差大，天池山区气温低，必备保暖外套；偶有阵雨，备轻便雨具</li><li>时差作息：新疆使用北京时间，实际作息晚约2小时，午餐约14:00，晚餐约20:00后，安排行程需预留弹性</li><li>安检：新疆安检严格，随身携带身份证，机场/景区预留充足安检时间（建议提前1.5小时到机场）</li><li>天池门票：2026年有优惠政策（官方页面暂无法访问，建议出发前查询官方公众号确认最新价格，历史参考约¥100-130/人）</li><li>博物馆：周一闭馆，2026-05-27为周三，可正常参观；需提前预约</li><li>饮食：以牛羊肉为主，分量大；如有清真饮食需求，全城均有保障</li></ul></div>
+    </section>
+
+    <section class="panel plan-overview" id="plan-overview">
+      <div class="section-kicker">总体安排</div>
+      <h2>每天的主题、强度和关键提醒</h2>
+      <div class="plan-grid">
+
+          <article class="plan-card">
+            <span>Day 1</span>
+            <h3>抵达·市区文化探索</h3>
+            <p>乌鲁木齐市区 · 强度：轻松</p>
+            <strong>博物馆+红山公园+大巴扎夜市</strong>
+            <em>博物馆需提前预约；注意时差作息</em>
+          </article>
+          <article class="plan-card">
+            <span>Day 2</span>
+            <h3>天山天池全天游</h3>
+            <p>阜康市天山天池 · 强度：中等</p>
+            <strong>环湖徒步+雪山倒影+哈萨克风情</strong>
+            <em>早出发错峰；备冲锋衣；自带干粮</em>
+          </article>
+          <article class="plan-card">
+            <span>Day 3</span>
+            <h3>大巴扎深度+返程</h3>
+            <p>乌鲁木齐市区 · 强度：轻松</p>
+            <strong>大巴扎购物+领馆巷美食+返京</strong>
+            <em>午班机12:30，上午留半天</em>
+          </article>
+      </div>
+    </section>
+
+    <section class="panel transport-panel" id="transport-board">
+      <div class="section-kicker">交通参考</div>
+      <h2>城际航班/车次与市内移动</h2>
+      <div class="transport-groups">
+
+          <article class="transport-group">
+            <div class="transport-group-head">
+              <h3>去程</h3>
+              <span>抵达目的地的城际交通</span>
+            </div>
+            <div class="transport-grid">
+
+                <article class="transport-card">
+                  <span>城际交通</span>
+                  <h4>去程（推荐） · JD5217 首都航空 · 大兴 07:25 → 乌鲁木齐天山 11:50</h4>
+                  <p>4h25m · ¥1200/人</p>
+                  <div><a href="https://a.feizhu.com/1kib55" target="_blank" rel="noopener noreferrer">查看链接</a></div>
+                  <small>itinerary-structured.json 交通表</small>
+                </article>
+                <article class="transport-card">
+                  <span>城际交通</span>
+                  <h4>去程备选 · CZ6906 南航 · 大兴 20:30 → 乌鲁木齐天山 次日01:05</h4>
+                  <p>4h35m · ¥1250/人</p>
+                  <div><a href="https://a.feizhu.com/2keWRK" target="_blank" rel="noopener noreferrer">查看链接</a></div>
+                  <small>itinerary-structured.json 交通表</small>
+                </article>
+            </div>
+          </article>
+          <article class="transport-group">
+            <div class="transport-group-head">
+              <h3>返程</h3>
+              <span>离开目的地的城际交通</span>
+            </div>
+            <div class="transport-grid">
+
+                <article class="transport-card">
+                  <span>城际交通</span>
+                  <h4>返程（推荐） · CZ6915 南航 · 乌鲁木齐天山 12:30 → 大兴 16:15</h4>
+                  <p>3h45m · ¥1280/人</p>
+                  <div><a href="https://a.feizhu.com/0SmakP" target="_blank" rel="noopener noreferrer">查看链接</a></div>
+                  <small>itinerary-structured.json 交通表</small>
+                </article>
+                <article class="transport-card">
+                  <span>城际交通</span>
+                  <h4>返程备选 · JD5220 首都航空 · 乌鲁木齐天山 20:40 → 大兴 次日00:20</h4>
+                  <p>3h40m · ¥1200/人</p>
+                  <div><a href="https://a.feizhu.com/4e8y79" target="_blank" rel="noopener noreferrer">查看链接</a></div>
+                  <small>itinerary-structured.json 交通表</small>
+                </article>
+            </div>
+          </article>
+      </div>
+    </section>
+    <div class="dashboard-grid">
+
+    <section class="panel timeline-panel" aria-label="每日安排">
+      <div class="section-kicker">每日安排</div>
+      <h2>按天切换，地图同步看路线</h2>
+
+    <div class="day-tabs" role="tablist" aria-label="每日行程">
+      <button class="active" type="button" data-day-tab="all">全部</button>
+      <button type="button" data-day-tab="1">Day 1</button><button type="button" data-day-tab="2">Day 2</button><button type="button" data-day-tab="3">Day 3</button>
+    </div>
+      <div class="day-stack">
+
+          <article class="day-card" data-day-card="1">
+            <div class="day-card-head">
+              <div>
+                <span class="day-badge">Day 1</span>
+                <h3>抵达·市区文化探索</h3>
+                <p>乌鲁木齐市区 · 强度：轻松</p>
+              </div>
+            </div>
+            <div class="activity-list">
+
+    <button class="activity-card has-detail" type="button" data-focus-poi="北京大兴机场出发（JD5217首都航空）" data-day="1">
+      <span class="time">07:25</span>
+      <span class="activity-main">
+        <strong>北京大兴机场出发（JD5217首都航空）</strong>
+        <span>飞机 · 订票</span>
+      </span>
+      <span class="cost">¥1200/人（样例）</span>
+    </button>
+    <button class="activity-card has-detail" type="button" data-focus-poi="抵达乌鲁木齐天山机场" data-day="1">
+      <span class="time">11:50</span>
+      <span class="activity-main">
+        <strong>抵达乌鲁木齐天山机场</strong>
+        <span>— · 提前1.5小时到机场安检</span>
+      </span>
+      <span class="cost">—</span>
+    </button>
+    <button class="activity-card has-detail" type="button" data-focus-poi="机场→酒店（八音和酒店大巴扎店）入住" data-day="1">
+      <span class="time">12:30</span>
+      <span class="activity-main">
+        <strong>机场→酒店（八音和酒店大巴扎店）入住</strong>
+        <span>打车约40分钟 · 机场无直达地铁</span>
+      </span>
+      <span class="cost">约¥60/车</span>
+    </button>
+    <button class="activity-card has-detail" type="button" data-focus-poi="新疆维吾尔自治区博物馆" data-day="1">
+      <span class="time">14:00</span>
+      <span class="activity-main">
+        <strong>新疆维吾尔自治区博物馆（楼兰美女+五星出东方）</strong>
+        <span>打车约15分钟 · 10:00-18:00，18:00停止入馆；禁带打火机和水瓶</span>
+      </span>
+      <span class="cost">免费（需预约）</span>
+    </button>
+    <button class="activity-card has-detail" type="button" data-focus-poi="红山公园登高，俯瞰乌鲁木齐城市全景" data-day="1">
+      <span class="time">16:30</span>
+      <span class="activity-main">
+        <strong>红山公园登高，俯瞰乌鲁木齐城市全景</strong>
+        <span>打车约10分钟 · 傍晚光线好，适合拍照</span>
+      </span>
+      <span class="cost">约¥10/人</span>
+    </button>
+    <button class="activity-card has-detail" type="button" data-focus-poi="新疆国际大巴扎" data-day="1">
+      <span class="time">18:30</span>
+      <span class="activity-main">
+        <strong>新疆国际大巴扎（丝绸之路观光塔+夜市氛围）</strong>
+        <span>步行/打车约15分钟 · 地铁二道桥站可达</span>
+      </span>
+      <span class="cost">入园免费，观光塔另收费</span>
+    </button>
+    <button class="activity-card has-detail" type="button" data-focus-poi="领馆巷/大巴扎周边晚餐（烤羊肉串+馕+手抓饭）" data-day="1">
+      <span class="time">20:00</span>
+      <span class="activity-main">
+        <strong>领馆巷/大巴扎周边晚餐（烤羊肉串+馕+手抓饭）</strong>
+        <span>步行 · 新疆作息晚，20:00后才是正式晚餐时间</span>
+      </span>
+      <span class="cost">约¥80-120/人</span>
+    </button>
+    <button class="activity-card has-detail" type="button" data-focus-poi="返回酒店休息" data-day="1">
+      <span class="time">21:30</span>
+      <span class="activity-main">
+        <strong>返回酒店休息</strong>
+        <span>步行/打车 · —</span>
+      </span>
+      <span class="cost">—</span>
+    </button>
+            </div>
+            <div class="day-notes">
+              <p><strong>核心</strong>楼兰美女古尸（博物馆镇馆之宝）、大巴扎夜晚氛围+烤肉</p>
+              <p><strong>餐食</strong>午餐酒店附近简餐（约¥30-50/人）；晚餐领馆巷/大巴扎周边新疆特色（约¥80-120/人）</p>
+              <p><strong>休息</strong>入住后先休息1小时调整时差；博物馆内有饮水处；大巴扎周边便利店补给</p>
+              <p><strong>预算</strong>机票¥1200+打车约¥100+博物馆免费+红山¥10+餐饮约¥150 = 约¥1460/人（含机票）</p>
+              <p><strong>预约</strong>博物馆需提前通过官方微信公众号预约（周一闭馆，2026-05-27为周三可正常参观）</p>
+              <p><strong>备选</strong>博物馆为室内，雨天不受影响；疲劳可跳过红山公园，直接大巴扎</p>
+              <div><strong>提醒</strong><ul><li>博物馆需提前预约</li><li>注意时差作息</li></ul></div>
+            </div>
+          </article>
+          <article class="day-card" data-day-card="2">
+            <div class="day-card-head">
+              <div>
+                <span class="day-badge">Day 2</span>
+                <h3>天山天池全天游</h3>
+                <p>阜康市天山天池 · 强度：中等</p>
+              </div>
+            </div>
+            <div class="activity-list">
+
+    <button class="activity-card has-detail" type="button" data-focus-poi="酒店出发，前往天山天池" data-day="2">
+      <span class="time">07:30</span>
+      <span class="activity-main">
+        <strong>酒店出发，前往天山天池</strong>
+        <span>包车（4人约¥350/天含等候） · 建议8:30前到游客中心错峰</span>
+      </span>
+      <span class="cost">¥350/车</span>
+    </button>
+    <button class="activity-card has-detail" type="button" data-focus-poi="抵达天池游客中心，购票乘区间车" data-day="2">
+      <span class="time">09:00</span>
+      <span class="activity-main">
+        <strong>抵达天池游客中心，购票乘区间车</strong>
+        <span>区间车（单程40-50分钟） · 2026年有优惠政策，出发前查官方公众号确认</span>
+      </span>
+      <span class="cost">门票约¥100-130/人（需复核）；区间车约¥90/人往返</span>
+    </button>
+    <button class="activity-card has-detail" type="button" data-focus-poi="天池湖边抵达，开始环湖轻徒步" data-day="2">
+      <span class="time">10:00</span>
+      <span class="activity-main">
+        <strong>天池湖边抵达，开始环湖轻徒步</strong>
+        <span>步行 · 湖边栈道顺时针漫步，全程平缓约1-2小时</span>
+      </span>
+      <span class="cost">—</span>
+    </button>
+    <button class="activity-card has-detail" type="button" data-focus-poi="西王母祖庙" data-day="2">
+      <span class="time">11:30</span>
+      <span class="activity-main">
+        <strong>西王母祖庙参观+湖边拍照</strong>
+        <span>步行 · 最佳情侣拍照点：庙前+博格达峰背景</span>
+      </span>
+      <span class="cost">含景区票</span>
+    </button>
+    <button class="activity-card has-detail" type="button" data-focus-poi="景区内午餐（自备干粮为主）" data-day="2">
+      <span class="time">13:00</span>
+      <span class="activity-main">
+        <strong>景区内午餐（自备干粮为主）</strong>
+        <span>— · 景区餐饮贵且选择少，强烈建议自备</span>
+      </span>
+      <span class="cost">自备约¥30/人</span>
+    </button>
+    <button class="activity-card has-detail" type="button" data-focus-poi="东小天池/悬泉瑶虹瀑布" data-day="2">
+      <span class="time">14:00</span>
+      <span class="activity-main">
+        <strong>东小天池/悬泉瑶虹瀑布（体力好可选）</strong>
+        <span>步行约30分钟 · 路程稍远，体力不足可跳过</span>
+      </span>
+      <span class="cost">含景区票</span>
+    </button>
+    <button class="activity-card has-detail" type="button" data-focus-poi="乘区间车返回游客中心" data-day="2">
+      <span class="time">15:30</span>
+      <span class="activity-main">
+        <strong>乘区间车返回游客中心</strong>
+        <span>区间车 · 15:00后游客减少，错峰返程</span>
+      </span>
+      <span class="cost">含往返票</span>
+    </button>
+    <button class="activity-card has-detail" type="button" data-focus-poi="包车返回乌鲁木齐市区" data-day="2">
+      <span class="time">16:30</span>
+      <span class="activity-main">
+        <strong>包车返回乌鲁木齐市区</strong>
+        <span>包车 · 约1.5小时车程</span>
+      </span>
+      <span class="cost">含在包车费内</span>
+    </button>
+    <button class="activity-card has-detail" type="button" data-focus-poi="日月星光集装箱小镇/粮校后街晚餐" data-day="2">
+      <span class="time">18:30</span>
+      <span class="activity-main">
+        <strong>日月星光集装箱小镇/粮校后街晚餐</strong>
+        <span>打车约15分钟 · 烟火气十足，价格实惠</span>
+      </span>
+      <span class="cost">约¥60-100/人</span>
+    </button>
+    <button class="activity-card has-detail" type="button" data-focus-poi="返回酒店休息" data-day="2">
+      <span class="time">20:30</span>
+      <span class="activity-main">
+        <strong>返回酒店休息</strong>
+        <span>打车 · —</span>
+      </span>
+      <span class="cost">约¥20</span>
+    </button>
+            </div>
+            <div class="day-notes">
+              <p><strong>核心</strong>天池环湖徒步+博格达峰雪山倒影、西王母祖庙情侣打卡、傍晚湖面倒影（游客散去后最美）</p>
+              <p><strong>餐食</strong>早餐酒店（约¥30/人）；午餐自备干粮（约¥30/人）；晚餐集装箱小镇/粮校后街（约¥60-100/人）</p>
+              <p><strong>休息</strong>景区游客中心有卫生间（旺季排队，提前解决）；山区信号弱，提前下载离线地图；备好保暖衣物</p>
+              <p><strong>预算</strong>包车¥350/4人=¥88+门票约¥130+区间车¥90+餐饮约¥160 = 约¥468/人</p>
+              <p><strong>预约</strong>天池建议提前网购门票（节省排队时间）；包车建议提前一天预订</p>
+              <p><strong>备选</strong>天池雨天云雾缭绕别有风味，备雨具；疲劳可缩短徒步，只游湖边主景区</p>
+              <div><strong>提醒</strong><ul><li>早出发错峰</li><li>备冲锋衣</li><li>自带干粮</li></ul></div>
+            </div>
+          </article>
+          <article class="day-card" data-day-card="3">
+            <div class="day-card-head">
+              <div>
+                <span class="day-badge">Day 3</span>
+                <h3>大巴扎深度体验+返程</h3>
+                <p>乌鲁木齐市区 · 强度：轻松</p>
+              </div>
+            </div>
+            <div class="activity-list">
+
+    <button class="activity-card has-detail" type="button" data-focus-poi="酒店早餐+退房" data-day="3">
+      <span class="time">08:30</span>
+      <span class="activity-main">
+        <strong>酒店早餐+退房</strong>
+        <span>— · 行李寄存酒店</span>
+      </span>
+      <span class="cost">含酒店</span>
+    </button>
+    <button class="activity-card has-detail" type="button" data-focus-poi="新疆国际大巴扎深度游" data-day="3">
+      <span class="time">09:30</span>
+      <span class="activity-main">
+        <strong>新疆国际大巴扎深度游（丝绸之路观光塔+特产购物）</strong>
+        <span>步行（酒店步行可达） · 避开玉石高价陷阱；干果/香料货比三家</span>
+      </span>
+      <span class="cost">入园免费</span>
+    </button>
+    <button class="activity-card has-detail" type="button" data-focus-poi="领馆巷午餐（鸽子汤+地道南疆美食）" data-day="3">
+      <span class="time">11:00</span>
+      <span class="activity-main">
+        <strong>领馆巷午餐（鸽子汤+地道南疆美食）</strong>
+        <span>步行约5分钟 · 比大巴扎内部更地道</span>
+      </span>
+      <span class="cost">约¥60-80/人</span>
+    </button>
+    <button class="activity-card has-detail" type="button" data-focus-poi="取行李，打车前往机场" data-day="3">
+      <span class="time">12:00</span>
+      <span class="activity-main">
+        <strong>取行李，打车前往机场</strong>
+        <span>打车约40分钟 · 提前1.5小时到机场</span>
+      </span>
+      <span class="cost">约¥60/车</span>
+    </button>
+    <button class="activity-card has-detail" type="button" data-focus-poi="乌鲁木齐天山机场出发（CZ6915南航）" data-day="3">
+      <span class="time">12:30</span>
+      <span class="activity-main">
+        <strong>乌鲁木齐天山机场出发（CZ6915南航）</strong>
+        <span>飞机 · 订票</span>
+      </span>
+      <span class="cost">¥1280/人（样例）</span>
+    </button>
+    <button class="activity-card has-detail" type="button" data-focus-poi="抵达北京大兴机场，行程结束" data-day="3">
+      <span class="time">16:15</span>
+      <span class="activity-main">
+        <strong>抵达北京大兴机场，行程结束</strong>
+        <span>— · —</span>
+      </span>
+      <span class="cost">—</span>
+    </button>
+            </div>
+            <div class="day-notes">
+              <p><strong>核心</strong>大巴扎特产购物（干果、香料、手工艺品）、领馆巷地道午餐</p>
+              <p><strong>餐食</strong>早餐酒店；午餐领馆巷（约¥60-80/人）；机上或北京晚餐</p>
+              <p><strong>休息</strong>退房后行李寄存；机场安检预留充足时间</p>
+              <p><strong>预算</strong>大巴扎购物约¥100-300（个人）+午餐¥70+打车¥60/4人=¥15+机票¥1280 = 约¥1465/人（含机票）</p>
+              <p><strong>预约</strong>无需预约；确认机票时间，提前check-in</p>
+              <p><strong>备选</strong>大巴扎室内外均有，小雨不影响；疲劳可缩短购物时间直接前往机场</p>
+              <div><strong>提醒</strong><ul><li>午班机12:30，上午留半天</li></ul></div>
+            </div>
+          </article>
+      </div>
+    </section>
+
+    <section class="map-panel" id="dashboard" aria-label="地图与交通">
+      <div class="map-toolbar">
+        <div>
+          <div class="section-kicker">地图与交通</div>
+          <h2>每日点位、交通和酒店位置</h2>
+        </div>
+        <div class="map-legend">
+          <span><i>景</i>景点</span><span><i>文</i>文化</span><span><i>街</i>街区</span><span><i>食</i>餐饮</span><span><i>住</i>住宿</span><span><i>交</i>交通</span>
+        </div>
+      </div>
+      <div class="map-canvas" id="atlasMap">
+        <div class="map-empty">
+          <strong>地图加载中</strong>
+          <span>地图线用于点位方位示意，真实交通以每日交通提示为准。</span>
+        </div>
+      </div>
+      <div class="route-summary">
+
+          <button class="route-pill" type="button" data-focus-poi="北京大兴机场出发（JD5217首都航空）" data-route-day="1">
+            <span>Day 1 · 北京大兴机场出发（JD5217首都航空）</span>
+            <strong>飞机 · 订票 · ¥1200/人（样例）</strong>
+          </button>
+          <button class="route-pill" type="button" data-focus-poi="酒店（八音和酒店大巴扎店）入住" data-route-day="1">
+            <span>Day 1 · 机场 → 酒店（八音和酒店大巴扎店）入住</span>
+            <strong>打车约40分钟 · 机场无直达地铁 · 约¥60/车</strong>
+          </button>
+          <button class="route-pill" type="button" data-focus-poi="返回酒店休息" data-route-day="1">
+            <span>Day 1 · 返回酒店休息</span>
+            <strong>步行/打车 · — · —</strong>
+          </button>
+          <button class="route-pill" type="button" data-focus-poi="酒店出发，前往天山天池" data-route-day="2">
+            <span>Day 2 · 酒店出发，前往天山天池</span>
+            <strong>包车（4人约¥350/天含等候） · 建议8:30前到游客中心错峰 · ¥350/车</strong>
+          </button>
+          <button class="route-pill" type="button" data-focus-poi="包车返回乌鲁木齐市区" data-route-day="2">
+            <span>Day 2 · 包车返回乌鲁木齐市区</span>
+            <strong>包车 · 约1.5小时车程 · 含在包车费内</strong>
+          </button>
+          <button class="route-pill" type="button" data-focus-poi="返回酒店休息" data-route-day="2">
+            <span>Day 2 · 返回酒店休息</span>
+            <strong>打车 · — · 约¥20</strong>
+          </button>
+          <button class="route-pill" type="button" data-focus-poi="取行李，打车前往机场" data-route-day="3">
+            <span>Day 3 · 取行李，打车前往机场</span>
+            <strong>打车约40分钟 · 提前1.5小时到机场 · 约¥60/车</strong>
+          </button>
+          <button class="route-pill" type="button" data-focus-poi="乌鲁木齐天山机场出发（CZ6915南航）" data-route-day="3">
+            <span>Day 3 · 乌鲁木齐天山机场出发（CZ6915南航）</span>
+            <strong>飞机 · 订票 · ¥1280/人（样例）</strong>
+          </button>
+      </div>
+    </section>
+    </div>
+
+    <section class="panel dossier-panel" id="poi-dossier">
+      <div class="section-kicker">重点景点怎么玩</div>
+      <h2>地点档案：点击卡片查看完整攻略</h2>
+      <div class="dossier-grid">
+
+          <button class="dossier-card dossier-button" type="button" data-focus-poi="天山天池" data-dossier="天山天池">
+            <div class="dossier-image-fallback">地点档案</div>
+            <span>地点档案 · Day 2</span>
+            <strong>天山天池</strong>
+            <em>必去 · 全天，含往返车程约6-8小时（市区出发）</em>
+            <p>主要风险：区间车排队、山区气温低、景区内餐饮贵</p>
+            <small>2026年有门票优惠政策（官方页面暂不可访问，搜索结果显示春节/冬季期间曾免票，5月是否优惠需出发前查询官方公众号确认）</small>
+          </button>
+          <button class="dossier-card dossier-button" type="button" data-focus-poi="新疆国际大巴扎" data-dossier="新疆国际大巴扎">
+            <img src="http://store.is.autonavi.com/showpic/0fbaa36d8ce8de891efb62590c367603" alt="新疆国际大巴扎">
+            <span>地点档案 · Day 1</span>
+            <strong>新疆国际大巴扎</strong>
+            <em>必去 · 2-3小时（含周边领馆巷可延长至半天）</em>
+            <p>主要风险：玉石购物陷阱、商品标价虚高</p>
+            <small>免费入园（观光塔单独收费）</small>
+          </button>
+          <button class="dossier-card dossier-button" type="button" data-focus-poi="新疆维吾尔自治区博物馆" data-dossier="新疆维吾尔自治区博物馆">
+            <div class="dossier-image-fallback">地点档案</div>
+            <span>地点档案 · Day 1</span>
+            <strong>新疆维吾尔自治区博物馆</strong>
+            <em>值得 · 2-3小时</em>
+            <p>主要风险：需提前预约、周一闭馆</p>
+            <small>免费</small>
+          </button>
+      </div>
+    </section>
+
+    <section class="panel hotel-panel" id="hotel-board">
+      <div class="section-kicker">住宿决策</div>
+      <h2>酒店组合：不同档次、位置和取舍</h2>
+      <div class="hotel-grid">
+
+          <article class="hotel-card" data-focus-hotel="乌鲁木齐八音和酒店（大巴扎店）">
+            <img src="https://store.is.autonavi.com/showpic/37e82e96ff9ff0e770123f517f38caed" alt="乌鲁木齐八音和酒店（大巴扎店）">
+            <div class="hotel-card-body">
+              <span class="tier">高档型（推荐）</span>
+              <h3>乌鲁木齐八音和酒店（大巴扎店）</h3>
+              <p>近大巴扎，文化路</p>
+              <div class="hotel-meta">
+                <span class="chip amber">¥333</span>
+                <span class="chip blue">按上游已接受酒店候选展示；房型以订票/查询链接实时页面为准。</span>
+              </div>
+              <p>情侣首选，步行大巴扎</p>
+              <p class="tradeoff">位置最优，性价比高</p>
+              <div class="card-actions"><a href="https://a.feizhu.com/0t0Xhn" target="_blank" rel="noopener noreferrer">飞猪查看</a></div>
+            </div>
+          </article>
+          <article class="hotel-card" data-focus-hotel="建国铂萃会展中心店">
+            <img src="https://store.is.autonavi.com/showpic/61a35d17978ed9f2060ff2bd493f605c" alt="建国铂萃会展中心店">
+            <div class="hotel-card-body">
+              <span class="tier">高档型</span>
+              <h3>建国铂萃会展中心店</h3>
+              <p>近博物馆，水磨沟区</p>
+              <div class="hotel-meta">
+                <span class="chip amber">¥385</span>
+                <span class="chip blue">按上游已接受酒店候选展示；房型以订票/查询链接实时页面为准。</span>
+              </div>
+              <p>文化游为主</p>
+              <p class="tradeoff">距大巴扎稍远，需打车</p>
+              <div class="card-actions"><a href="https://a.feizhu.com/3cW2I5" target="_blank" rel="noopener noreferrer">飞猪查看</a></div>
+            </div>
+          </article>
+          <article class="hotel-card" data-focus-hotel="伊力特酒店（南站万达店）">
+            <div class="hotel-image-fallback">住宿</div>
+            <div class="hotel-card-body">
+              <span class="tier">高档型</span>
+              <h3>伊力特酒店（南站万达店）</h3>
+              <p>近乌鲁木齐南站</p>
+              <div class="hotel-meta">
+                <span class="chip amber">¥376</span>
+                <span class="chip blue">上游未返回具体房型，需点击链接确认</span>
+              </div>
+              <p>高铁出行者</p>
+              <p class="tradeoff">无高铁需求时位置一般</p>
+              <div class="card-actions"><a href="https://a.feizhu.com/10GshS" target="_blank" rel="noopener noreferrer">飞猪查看</a></div>
+            </div>
+          </article>
+          <article class="hotel-card" data-focus-hotel="富力万达文华酒店">
+            <img src="https://store.is.autonavi.com/showpic/0ebe5b278aaa2bb6648112737a4fda4c" alt="富力万达文华酒店">
+            <div class="hotel-card-body">
+              <span class="tier">豪华型</span>
+              <h3>富力万达文华酒店</h3>
+              <p>近乌鲁木齐站</p>
+              <div class="hotel-meta">
+                <span class="chip amber">¥788</span>
+                <span class="chip blue">按上游已接受酒店候选展示；房型以订票/查询链接实时页面为准。</span>
+              </div>
+              <p>追求品质住宿</p>
+              <p class="tradeoff">价格偏高，位置偏西，降权</p>
+              <div class="card-actions"><a href="https://a.feizhu.com/0xXExB" target="_blank" rel="noopener noreferrer">飞猪查看</a></div>
+            </div>
+          </article>
+      </div>
+    </section>
+
+    <section class="panel split-panel">
+      <div class="split-card">
+        <div class="section-kicker">美食与口碑避雷</div>
+        <h2>吃什么、哪里谨慎</h2>
+
+          <div class="mini-row">
+            <strong>领馆巷/大巴扎周边晚餐</strong>
+            <span>¥80-120/人 · 烤羊肉串+馕+手抓饭</span>
+          </div>
+          <div class="mini-row">
+            <strong>午餐酒店附近简餐</strong>
+            <span>酒店附近 · ¥30-50/人） · 约¥30-50/人</span>
+          </div>
+          <div class="mini-row">
+            <strong>景区内午餐</strong>
+            <span>景区内 · ¥30/人 · 自备干粮为主</span>
+          </div>
+          <div class="mini-row">
+            <strong>日月星光集装箱小镇/粮校后街晚餐</strong>
+            <span>¥60-100/人 · 带小朋友点不辣或微辣菜品。</span>
+          </div>
+          <div class="mini-row">
+            <strong>早餐酒店</strong>
+            <span>¥30/人） · 约¥30/人</span>
+          </div>
+          <div class="mini-row">
+            <strong>领馆巷午餐</strong>
+            <span>¥60-80/人 · 鸽子汤+地道南疆美食</span>
+          </div>
+      </div>
+      <div class="split-card">
+        <div class="section-kicker">预算</div>
+        <h2>费用参考</h2>
+
+          <div class="mini-row">
+            <strong>机票（往返/人）</strong>
+            <span>¥2480 · 代表性日期样例数据，以购票时为准</span>
+          </div>
+          <div class="mini-row">
+            <strong>住宿（2晚/人，2人间）</strong>
+            <span>¥400 · 八音和酒店¥333/晚，2人分摊</span>
+          </div>
+          <div class="mini-row">
+            <strong>天山天池（门票+区间车）</strong>
+            <span>¥220 · 门票需复核2026年优惠政策</span>
+          </div>
+          <div class="mini-row">
+            <strong>包车（天池全天/4人分摊）</strong>
+            <span>¥100 · 约¥350-400/车</span>
+          </div>
+          <div class="mini-row">
+            <strong>市区打车</strong>
+            <span>¥120 · 3天市区交通</span>
+          </div>
+          <div class="mini-row">
+            <strong>餐饮</strong>
+            <span>¥600 · 3天含早中晚</span>
+          </div>
+          <div class="mini-row">
+            <strong>购物/杂费</strong>
+            <span>¥300 · 特产、纪念品</span>
+          </div>
+        <p class="total">合计参考：约¥4220（含往返机票）</p>
+      </div>
+    </section>
+
+
+    <section class="panel docs-intro" id="full-docs">
+      <div class="section-kicker">完整资料库</div>
+      <h2>原文归档：需要核对时再展开</h2>
+      <p class="lead">主页面优先呈现可执行信息；原始简报、行程和口碑保留为折叠归档，方便核对来源。</p>
+      <div class="doc-jump">
+        <a href="#doc-destination-brief">完整目的地简报</a><a href="#doc-itinerary">完整行程原文</a><a href="#doc-reputation">完整口碑与避雷原文</a>
+      </div>
+    </section>
+
+      <details class="panel source-doc" id="doc-destination-brief">
+        <summary class="source-doc-summary">
+          <span class="section-kicker">destination-brief.md</span>
+          <strong>完整目的地简报</strong>
+          <em>新疆（乌鲁木齐）旅行简报</em>
+        </summary>
+        <div class="markdown-body">
+          <h3>新疆（乌鲁木齐）旅行简报</h3>
+<h4>一句话判断</h4>
+<p>适合情侣短途深度体验：3天2夜以乌鲁木齐为基地，可覆盖天山天池自然风光 + 大巴扎民俗文化，节奏适中，无需长途转场。</p>
+<h4>目的地概览</h4>
+<ul><li><strong>城市定位</strong>：新疆首府，丝绸之路核心节点，多民族文化交汇地</li><li><strong>适合人群</strong>：情侣、文化爱好者、自然风光爱好者；3天2夜适合首次探访</li><li><strong>旅行强度</strong>：中等，天山天池需步行约3-5公里，其余景点轻松</li></ul>
+<h4>最佳旅行时间</h4>
+<ul><li><strong>推荐月份</strong>：5-9月，5月下旬为旺季前夕，人流相对五一少，性价比高</li><li><strong>天气风险</strong>：5月下旬乌鲁木齐市区白天约18-25°C（季节性估算），早晚约8-12°C；天山天池景区（海拔1910m）气温低5-8°C，需备冲锋衣/薄羽绒服</li><li><strong>2026-05-27 提醒</strong>：五一假期已过，旅游旺季正式开启前，预计人流适中；天池5月已开放，但山顶可能仍有积雪，需穿防滑鞋</li></ul>
+<h4>怎么到达</h4>
+<h5>城际交通（代表性日期样例数据）</h5>
+<div class="md-table-wrap"><table><thead><tr><th>方向</th><th>班次</th><th>出发</th><th>到达</th><th>时长</th><th>价格参考</th><th>订票</th></tr></thead><tbody><tr><td>去程</td><td>JD5217 首都航空</td><td>大兴 07:25</td><td>乌鲁木齐天山 11:50</td><td>4h25m</td><td>¥1200/人</td><td><a href="https://a.feizhu.com/1kib55" target="_blank" rel="noopener noreferrer">订票</a></td></tr><tr><td>去程备选</td><td>CZ6906 南航</td><td>大兴 20:30</td><td>乌鲁木齐天山 次日01:05</td><td>4h35m</td><td>¥1250/人</td><td><a href="https://a.feizhu.com/2keWRK" target="_blank" rel="noopener noreferrer">订票</a></td></tr><tr><td>返程</td><td>CZ6915 南航</td><td>乌鲁木齐天山 12:30</td><td>大兴 16:15</td><td>3h45m</td><td>¥1280/人</td><td><a href="https://a.feizhu.com/0SmakP" target="_blank" rel="noopener noreferrer">订票</a></td></tr><tr><td>返程备选</td><td>JD5220 首都航空</td><td>乌鲁木齐天山 20:40</td><td>大兴 次日00:20</td><td>3h40m</td><td>¥1200/人</td><td><a href="https://a.feizhu.com/4e8y79" target="_blank" rel="noopener noreferrer">订票</a></td></tr></tbody></table></div>
+<blockquote><p>以上为代表性日期样例数据，实际价格以购票时为准。推荐去程选早班（JD5217），抵达后当天下午可游览市区；返程选午班（CZ6915），当天上午还可安排半日活动。</p></blockquote>
+<h5>市内及景区交通</h5>
+<ul><li><strong>机场→市区</strong>：乌鲁木齐天山机场距市区约30km，打车约40-60元/30分钟，无直达地铁</li><li><strong>市区→天山天池</strong>：景区距市区约110km，建议包车（4人约300-400元/天，含等候）或参加一日游团（约100-150元/人）；无直达公共交通</li><li><strong>市区内</strong>：地铁1、2号线覆盖大巴扎（二道桥站）、博物馆周边；打车起步价约8元，市区内景点间打车约15-30元</li><li><strong>景区间移动</strong>：天池景区内有区间车（含在门票内），建议全天游览；大巴扎、博物馆、红山公园均在市区，步行+地铁可串联</li></ul>
+<h4>核心体验</h4>
+<ol><li><strong>天山天池</strong>：海拔1910m高山湖泊，雪山倒影+云杉森林，情侣打卡首选，建议全天（Web-Rooter cited: wlmq.bendibao.com）</li><li><strong>新疆国际大巴扎</strong>：全国最大巴扎，丝绸之路观光塔+维吾尔族美食+手工艺品，夜晚氛围佳（FlyAI POI verified）</li><li><strong>新疆维吾尔自治区博物馆</strong>：楼兰美女、五星出东方织锦等国宝，免费讲解，深度了解西域历史（FlyAI POI verified）</li></ol>
+<h4>体验情报初筛</h4>
+<ul><li><strong>重点景点</strong>：天山天池（全天）、大巴扎（半天）、博物馆（半天）</li><li><strong>首推项目</strong>：天池湖边徒步、哈萨克民族风情园、大巴扎烤羊肉串+馕</li><li><strong>预计体验时长</strong>：天池6-8小时（含往返车程）；大巴扎2-3小时；博物馆2-3小时</li><li><strong>准备材料</strong>：身份证（安检必备）；防晒霜+墨镜+帽子（紫外线强）；冲锋衣（天池山区）；防滑鞋</li><li><strong>预约/排队风险</strong>：博物馆需提前预约（官方微信公众号），周一闭馆；天池建议提前网购门票；5月下旬非高峰，排队压力较小</li></ul>
+<h4>风险与注意</h4>
+<ul><li><strong>天气</strong>：昼夜温差大，天池山区气温低，必备保暖外套；偶有阵雨，备轻便雨具</li><li><strong>时差作息</strong>：新疆使用北京时间，实际作息晚约2小时，午餐约14:00，晚餐约20:00后，安排行程需预留弹性</li><li><strong>安检</strong>：新疆安检严格，随身携带身份证，机场/景区预留充足安检时间（建议提前1.5小时到机场）</li><li><strong>天池门票</strong>：2026年有优惠政策（官方页面暂无法访问，建议出发前查询官方公众号确认最新价格，历史参考约¥100-130/人）</li><li><strong>博物馆</strong>：周一闭馆，2026-05-27为周三，可正常参观；需提前预约</li><li><strong>饮食</strong>：以牛羊肉为主，分量大；如有清真饮食需求，全城均有保障</li></ul>
+        </div>
+        <details class="raw-markdown">
+          <summary>查看原始 Markdown</summary>
+          <pre><code># 新疆（乌鲁木齐）旅行简报
+
+## 一句话判断
+适合情侣短途深度体验：3天2夜以乌鲁木齐为基地，可覆盖天山天池自然风光 + 大巴扎民俗文化，节奏适中，无需长途转场。
+
+## 目的地概览
+- **城市定位**：新疆首府，丝绸之路核心节点，多民族文化交汇地
+- **适合人群**：情侣、文化爱好者、自然风光爱好者；3天2夜适合首次探访
+- **旅行强度**：中等，天山天池需步行约3-5公里，其余景点轻松
+
+## 最佳旅行时间
+- **推荐月份**：5-9月，5月下旬为旺季前夕，人流相对五一少，性价比高
+- **天气风险**：5月下旬乌鲁木齐市区白天约18-25°C（季节性估算），早晚约8-12°C；天山天池景区（海拔1910m）气温低5-8°C，需备冲锋衣/薄羽绒服
+- **2026-05-27 提醒**：五一假期已过，旅游旺季正式开启前，预计人流适中；天池5月已开放，但山顶可能仍有积雪，需穿防滑鞋
+
+## 怎么到达
+
+### 城际交通（代表性日期样例数据）
+| 方向 | 班次 | 出发 | 到达 | 时长 | 价格参考 | 订票 |
+| --- | --- | --- | --- | --- | --- | --- |
+| 去程 | JD5217 首都航空 | 大兴 07:25 | 乌鲁木齐天山 11:50 | 4h25m | ¥1200/人 | [订票](https://a.feizhu.com/1kib55) |
+| 去程备选 | CZ6906 南航 | 大兴 20:30 | 乌鲁木齐天山 次日01:05 | 4h35m | ¥1250/人 | [订票](https://a.feizhu.com/2keWRK) |
+| 返程 | CZ6915 南航 | 乌鲁木齐天山 12:30 | 大兴 16:15 | 3h45m | ¥1280/人 | [订票](https://a.feizhu.com/0SmakP) |
+| 返程备选 | JD5220 首都航空 | 乌鲁木齐天山 20:40 | 大兴 次日00:20 | 3h40m | ¥1200/人 | [订票](https://a.feizhu.com/4e8y79) |
+
+&gt; 以上为代表性日期样例数据，实际价格以购票时为准。推荐去程选早班（JD5217），抵达后当天下午可游览市区；返程选午班（CZ6915），当天上午还可安排半日活动。
+
+### 市内及景区交通
+- **机场→市区**：乌鲁木齐天山机场距市区约30km，打车约40-60元/30分钟，无直达地铁
+- **市区→天山天池**：景区距市区约110km，建议包车（4人约300-400元/天，含等候）或参加一日游团（约100-150元/人）；无直达公共交通
+- **市区内**：地铁1、2号线覆盖大巴扎（二道桥站）、博物馆周边；打车起步价约8元，市区内景点间打车约15-30元
+- **景区间移动**：天池景区内有区间车（含在门票内），建议全天游览；大巴扎、博物馆、红山公园均在市区，步行+地铁可串联
+
+## 核心体验
+1. **天山天池**：海拔1910m高山湖泊，雪山倒影+云杉森林，情侣打卡首选，建议全天（Web-Rooter cited: wlmq.bendibao.com）
+2. **新疆国际大巴扎**：全国最大巴扎，丝绸之路观光塔+维吾尔族美食+手工艺品，夜晚氛围佳（FlyAI POI verified）
+3. **新疆维吾尔自治区博物馆**：楼兰美女、五星出东方织锦等国宝，免费讲解，深度了解西域历史（FlyAI POI verified）
+
+## 体验情报初筛
+- **重点景点**：天山天池（全天）、大巴扎（半天）、博物馆（半天）
+- **首推项目**：天池湖边徒步、哈萨克民族风情园、大巴扎烤羊肉串+馕
+- **预计体验时长**：天池6-8小时（含往返车程）；大巴扎2-3小时；博物馆2-3小时
+- **准备材料**：身份证（安检必备）；防晒霜+墨镜+帽子（紫外线强）；冲锋衣（天池山区）；防滑鞋
+- **预约/排队风险**：博物馆需提前预约（官方微信公众号），周一闭馆；天池建议提前网购门票；5月下旬非高峰，排队压力较小
+
+## 风险与注意
+- **天气**：昼夜温差大，天池山区气温低，必备保暖外套；偶有阵雨，备轻便雨具
+- **时差作息**：新疆使用北京时间，实际作息晚约2小时，午餐约14:00，晚餐约20:00后，安排行程需预留弹性
+- **安检**：新疆安检严格，随身携带身份证，机场/景区预留充足安检时间（建议提前1.5小时到机场）
+- **天池门票**：2026年有优惠政策（官方页面暂无法访问，建议出发前查询官方公众号确认最新价格，历史参考约¥100-130/人）
+- **博物馆**：周一闭馆，2026-05-27为周三，可正常参观；需提前预约
+- **饮食**：以牛羊肉为主，分量大；如有清真饮食需求，全城均有保障</code></pre>
+        </details>
+      </details>
+      <details class="panel source-doc" id="doc-itinerary">
+        <summary class="source-doc-summary">
+          <span class="section-kicker">itinerary.md</span>
+          <strong>完整行程原文</strong>
+          <em>新疆（乌鲁木齐）3天2夜行程</em>
+        </summary>
+        <div class="markdown-body">
+          <h3>新疆（乌鲁木齐）3天2夜行程</h3>
+<h4>行程参数</h4>
+<ul><li>日期：2026-05-27 至 2026-05-29</li><li>出发地：北京</li><li>同行人：两对情侣，共4人</li><li>交通方式：飞机（城际）+ 包车/打车（景区）+ 地铁（市区）</li><li>预算：舒适型，约¥2500-3500/人（含机票）</li><li>节奏：中等，每天3-4个核心安排，留有弹性</li></ul>
+<h4>总体安排</h4>
+<div class="md-table-wrap"><table><thead><tr><th>天数</th><th>主题</th><th>区域</th><th>强度</th><th>核心体验</th><th>重点提醒</th></tr></thead><tbody><tr><td>Day 1</td><td>抵达·市区文化探索</td><td>乌鲁木齐市区</td><td>轻松</td><td>博物馆+红山公园+大巴扎夜市</td><td>博物馆需提前预约；注意时差作息</td></tr><tr><td>Day 2</td><td>天山天池全天游</td><td>阜康市天山天池</td><td>中等</td><td>环湖徒步+雪山倒影+哈萨克风情</td><td>早出发错峰；备冲锋衣；自带干粮</td></tr><tr><td>Day 3</td><td>大巴扎深度+返程</td><td>乌鲁木齐市区</td><td>轻松</td><td>大巴扎购物+领馆巷美食+返京</td><td>午班机12:30，上午留半天</td></tr></tbody></table></div>
+<h4>每日行程</h4>
+<h5>Day 1 · 抵达·市区文化探索</h5>
+<div class="md-table-wrap"><table><thead><tr><th>时间</th><th>安排</th><th>交通</th><th>费用</th><th>备注</th></tr></thead><tbody><tr><td>07:25</td><td>北京大兴机场出发（JD5217首都航空）</td><td>飞机</td><td>¥1200/人（样例）</td><td><a href="https://a.feizhu.com/1kib55" target="_blank" rel="noopener noreferrer">订票</a></td></tr><tr><td>11:50</td><td>抵达乌鲁木齐天山机场</td><td>—</td><td>—</td><td>提前1.5小时到机场安检</td></tr><tr><td>12:30</td><td>机场→酒店（八音和酒店大巴扎店）入住</td><td>打车约40分钟</td><td>约¥60/车</td><td>机场无直达地铁</td></tr><tr><td>14:00</td><td>新疆维吾尔自治区博物馆（楼兰美女+五星出东方）</td><td>打车约15分钟</td><td>免费（需预约）</td><td>10:00-18:00，18:00停止入馆；禁带打火机和水瓶</td></tr><tr><td>16:30</td><td>红山公园登高，俯瞰乌鲁木齐城市全景</td><td>打车约10分钟</td><td>约¥10/人</td><td>傍晚光线好，适合拍照</td></tr><tr><td>18:30</td><td>新疆国际大巴扎（丝绸之路观光塔+夜市氛围）</td><td>步行/打车约15分钟</td><td>入园免费，观光塔另收费</td><td>地铁二道桥站可达</td></tr><tr><td>20:00</td><td>领馆巷/大巴扎周边晚餐（烤羊肉串+馕+手抓饭）</td><td>步行</td><td>约¥80-120/人</td><td>新疆作息晚，20:00后才是正式晚餐时间</td></tr><tr><td>21:30</td><td>返回酒店休息</td><td>步行/打车</td><td>—</td><td>—</td></tr></tbody></table></div>
+<p>今日餐食：午餐酒店附近简餐（约¥30-50/人）；晚餐领馆巷/大巴扎周边新疆特色（约¥80-120/人）<br>休息与补给：入住后先休息1小时调整时差；博物馆内有饮水处；大巴扎周边便利店补给<br>核心体验/首推项目：楼兰美女古尸（博物馆镇馆之宝）；大巴扎夜晚氛围+烤肉<br>预算估算：机票¥1200+打车约¥100+博物馆免费+红山¥10+餐饮约¥150 = 约¥1460/人（含机票）<br>预约提醒：博物馆需提前通过官方微信公众号预约（周一闭馆，2026-05-27为周三可正常参观）<br>雨天/疲劳备用：博物馆为室内，雨天不受影响；疲劳可跳过红山公园，直接大巴扎</p>
+<h5>Day 2 · 天山天池全天游</h5>
+<div class="md-table-wrap"><table><thead><tr><th>时间</th><th>安排</th><th>交通</th><th>费用</th><th>备注</th></tr></thead><tbody><tr><td>07:30</td><td>酒店出发，前往天山天池</td><td>包车（4人约¥350/天含等候）</td><td>¥350/车</td><td>建议8:30前到游客中心错峰</td></tr><tr><td>09:00</td><td>抵达天池游客中心，购票乘区间车</td><td>区间车（单程40-50分钟）</td><td>门票约¥100-130/人（需复核）；区间车约¥90/人往返</td><td>2026年有优惠政策，出发前查官方公众号确认</td></tr><tr><td>10:00</td><td>天池湖边抵达，开始环湖轻徒步</td><td>步行</td><td>—</td><td>湖边栈道顺时针漫步，全程平缓约1-2小时</td></tr><tr><td>11:30</td><td>西王母祖庙参观+湖边拍照</td><td>步行</td><td>含景区票</td><td>最佳情侣拍照点：庙前+博格达峰背景</td></tr><tr><td>13:00</td><td>景区内午餐（自备干粮为主）</td><td>—</td><td>自备约¥30/人</td><td>景区餐饮贵且选择少，强烈建议自备</td></tr><tr><td>14:00</td><td>东小天池/悬泉瑶虹瀑布（体力好可选）</td><td>步行约30分钟</td><td>含景区票</td><td>路程稍远，体力不足可跳过</td></tr><tr><td>15:30</td><td>乘区间车返回游客中心</td><td>区间车</td><td>含往返票</td><td>15:00后游客减少，错峰返程</td></tr><tr><td>16:30</td><td>包车返回乌鲁木齐市区</td><td>包车</td><td>含在包车费内</td><td>约1.5小时车程</td></tr><tr><td>18:30</td><td>日月星光集装箱小镇/粮校后街晚餐</td><td>打车约15分钟</td><td>约¥60-100/人</td><td>烟火气十足，价格实惠</td></tr><tr><td>20:30</td><td>返回酒店休息</td><td>打车</td><td>约¥20</td><td>—</td></tr></tbody></table></div>
+<p>今日餐食：早餐酒店（约¥30/人）；午餐自备干粮（约¥30/人）；晚餐集装箱小镇/粮校后街（约¥60-100/人）<br>休息与补给：景区游客中心有卫生间（旺季排队，提前解决）；山区信号弱，提前下载离线地图；备好保暖衣物<br>核心体验/首推项目：天池环湖徒步+博格达峰雪山倒影；西王母祖庙情侣打卡；傍晚湖面倒影（游客散去后最美）<br>预算估算：包车¥350/4人=¥88+门票约¥130+区间车¥90+餐饮约¥160 = 约¥468/人<br>预约提醒：天池建议提前网购门票（节省排队时间）；包车建议提前一天预订<br>雨天/疲劳备用：天池雨天云雾缭绕别有风味，备雨具；疲劳可缩短徒步，只游湖边主景区</p>
+<h5>Day 3 · 大巴扎深度体验+返程</h5>
+<div class="md-table-wrap"><table><thead><tr><th>时间</th><th>安排</th><th>交通</th><th>费用</th><th>备注</th></tr></thead><tbody><tr><td>08:30</td><td>酒店早餐+退房</td><td>—</td><td>含酒店</td><td>行李寄存酒店</td></tr><tr><td>09:30</td><td>新疆国际大巴扎深度游（丝绸之路观光塔+特产购物）</td><td>步行（酒店步行可达）</td><td>入园免费</td><td>避开玉石高价陷阱；干果/香料货比三家</td></tr><tr><td>11:00</td><td>领馆巷午餐（鸽子汤+地道南疆美食）</td><td>步行约5分钟</td><td>约¥60-80/人</td><td>比大巴扎内部更地道</td></tr><tr><td>10:30</td><td>取行李，打车前往机场</td><td>打车约40分钟</td><td>约¥60/车</td><td>提前1.5小时到机场，11:00前到达</td></tr><tr><td>12:30</td><td>乌鲁木齐天山机场出发（CZ6915南航）</td><td>飞机</td><td>¥1280/人（样例）</td><td><a href="https://a.feizhu.com/0SmakP" target="_blank" rel="noopener noreferrer">订票</a></td></tr><tr><td>16:15</td><td>抵达北京大兴机场，行程结束</td><td>—</td><td>—</td><td>—</td></tr></tbody></table></div>
+<p>今日餐食：早餐酒店；午餐领馆巷（约¥60-80/人）；机上或北京晚餐<br>休息与补给：退房后行李寄存；机场安检预留充足时间<br>核心体验/首推项目：大巴扎特产购物（干果、香料、手工艺品）；领馆巷地道午餐<br>预算估算：大巴扎购物约¥100-300（个人）+午餐¥70+打车¥60/4人=¥15+机票¥1280 = 约¥1465/人（含机票）<br>预约提醒：无需预约；确认机票时间，提前check-in<br>雨天/疲劳备用：大巴扎室内外均有，小雨不影响；疲劳可缩短购物时间直接前往机场</p>
+<h4>预算汇总</h4>
+<div class="md-table-wrap"><table><thead><tr><th>项目</th><th>经济</th><th>舒适</th><th>备注</th></tr></thead><tbody><tr><td>机票（往返/人）</td><td>¥2400</td><td>¥2480</td><td>代表性日期样例数据，以购票时为准</td></tr><tr><td>住宿（2晚/人，2人间）</td><td>¥333</td><td>¥400</td><td>八音和酒店¥333/晚，2人分摊</td></tr><tr><td>天山天池（门票+区间车）</td><td>¥190</td><td>¥220</td><td>门票需复核2026年优惠政策</td></tr><tr><td>包车（天池全天/4人分摊）</td><td>¥88</td><td>¥100</td><td>约¥350-400/车</td></tr><tr><td>市区打车</td><td>¥80</td><td>¥120</td><td>3天市区交通</td></tr><tr><td>餐饮</td><td>¥400</td><td>¥600</td><td>3天含早中晚</td></tr><tr><td>购物/杂费</td><td>¥100</td><td>¥300</td><td>特产、纪念品</td></tr><tr><td><strong>合计/人</strong></td><td><strong>约¥3591</strong></td><td><strong>约¥4220</strong></td><td>含往返机票</td></tr></tbody></table></div>
+<h4>交通与住宿参考</h4>
+<h5>城际交通</h5>
+<div class="md-table-wrap"><table><thead><tr><th>方向</th><th>班次/车次</th><th>出发</th><th>到达</th><th>时长</th><th>价格参考</th><th>订票/查询</th></tr></thead><tbody><tr><td>去程（推荐）</td><td>JD5217 首都航空</td><td>大兴 07:25</td><td>乌鲁木齐天山 11:50</td><td>4h25m</td><td>¥1200/人</td><td><a href="https://a.feizhu.com/1kib55" target="_blank" rel="noopener noreferrer">订票</a></td></tr><tr><td>去程备选</td><td>CZ6906 南航</td><td>大兴 20:30</td><td>乌鲁木齐天山 次日01:05</td><td>4h35m</td><td>¥1250/人</td><td><a href="https://a.feizhu.com/2keWRK" target="_blank" rel="noopener noreferrer">订票</a></td></tr><tr><td>返程（推荐）</td><td>CZ6915 南航</td><td>乌鲁木齐天山 12:30</td><td>大兴 16:15</td><td>3h45m</td><td>¥1280/人</td><td><a href="https://a.feizhu.com/0SmakP" target="_blank" rel="noopener noreferrer">订票</a></td></tr><tr><td>返程备选</td><td>JD5220 首都航空</td><td>乌鲁木齐天山 20:40</td><td>大兴 次日00:20</td><td>3h40m</td><td>¥1200/人</td><td><a href="https://a.feizhu.com/4e8y79" target="_blank" rel="noopener noreferrer">订票</a></td></tr></tbody></table></div>
+<blockquote><p>以上为代表性日期样例数据，实际价格以购票时为准。</p></blockquote>
+<h5>市内交通</h5>
+<ul><li>机场/车站接驳：乌鲁木齐天山机场→市区打车约40分钟/¥60，无直达地铁</li><li>每日跨区移动：Day 2天池包车约¥350/天（4人）；市区内打车起步¥8，景点间约¥15-30</li><li>打车/地铁/包车/自驾取舍：市区游览优先地铁（1/2号线覆盖大巴扎、博物馆周边）+打车；天池必须包车或参团，不建议自驾（山路陡，停车难）</li></ul>
+<h5>住宿区域与候选</h5>
+<div class="md-table-wrap"><table><thead><tr><th>档次</th><th>酒店</th><th>位置/区域</th><th>价格/晚</th><th>适合</th><th>取舍</th><th>订票/查询</th></tr></thead><tbody><tr><td>高档型（推荐）</td><td>乌鲁木齐八音和酒店（大巴扎店）</td><td>近大巴扎，文化路</td><td>¥333</td><td>情侣首选，步行大巴扎</td><td>位置最优，性价比高</td><td><a href="https://a.feizhu.com/0t0Xhn" target="_blank" rel="noopener noreferrer">查询</a></td></tr><tr><td>高档型</td><td>建国铂萃会展中心店</td><td>近博物馆，水磨沟区</td><td>¥385</td><td>文化游为主</td><td>距大巴扎稍远，需打车</td><td><a href="https://a.feizhu.com/3cW2I5" target="_blank" rel="noopener noreferrer">查询</a></td></tr><tr><td>高档型</td><td>伊力特酒店（南站万达店）</td><td>近乌鲁木齐南站</td><td>¥376</td><td>高铁出行者</td><td>无高铁需求时位置一般</td><td><a href="https://a.feizhu.com/10GshS" target="_blank" rel="noopener noreferrer">查询</a></td></tr><tr><td>豪华型</td><td>富力万达文华酒店</td><td>近乌鲁木齐站</td><td>¥788</td><td>追求品质住宿</td><td>价格偏高，位置偏西，降权</td><td><a href="https://a.feizhu.com/0xXExB" target="_blank" rel="noopener noreferrer">查询</a></td></tr></tbody></table></div>
+<h4>出行前检查</h4>
+<ul><li>预约：新疆博物馆（官方微信公众号提前预约）；天池门票（建议提前网购）；包车（提前一天预订）</li><li>证件：身份证（安检必备，全程随身携带）</li><li>装备：冲锋衣/薄羽绒服（天池山区）；防晒霜+墨镜+帽子；防滑鞋；自备干粮和水（天池）；轻便雨具</li><li>APP：高德地图（离线下载乌鲁木齐+阜康地图）；飞猪/携程（订票）；新疆博物馆官方公众号（预约）</li></ul>
+        </div>
+        <details class="raw-markdown">
+          <summary>查看原始 Markdown</summary>
+          <pre><code># 新疆（乌鲁木齐）3天2夜行程
+
+## 行程参数
+- 日期：2026-05-27 至 2026-05-29
+- 出发地：北京
+- 同行人：两对情侣，共4人
+- 交通方式：飞机（城际）+ 包车/打车（景区）+ 地铁（市区）
+- 预算：舒适型，约¥2500-3500/人（含机票）
+- 节奏：中等，每天3-4个核心安排，留有弹性
+
+## 总体安排
+| 天数 | 主题 | 区域 | 强度 | 核心体验 | 重点提醒 |
+| --- | --- | --- | --- | --- | --- |
+| Day 1 | 抵达·市区文化探索 | 乌鲁木齐市区 | 轻松 | 博物馆+红山公园+大巴扎夜市 | 博物馆需提前预约；注意时差作息 |
+| Day 2 | 天山天池全天游 | 阜康市天山天池 | 中等 | 环湖徒步+雪山倒影+哈萨克风情 | 早出发错峰；备冲锋衣；自带干粮 |
+| Day 3 | 大巴扎深度+返程 | 乌鲁木齐市区 | 轻松 | 大巴扎购物+领馆巷美食+返京 | 午班机12:30，上午留半天 |
+
+## 每日行程
+
+### Day 1 · 抵达·市区文化探索
+| 时间 | 安排 | 交通 | 费用 | 备注 |
+| --- | --- | --- | --- | --- |
+| 07:25 | 北京大兴机场出发（JD5217首都航空） | 飞机 | ¥1200/人（样例） | [订票](https://a.feizhu.com/1kib55) |
+| 11:50 | 抵达乌鲁木齐天山机场 | — | — | 提前1.5小时到机场安检 |
+| 12:30 | 机场→酒店（八音和酒店大巴扎店）入住 | 打车约40分钟 | 约¥60/车 | 机场无直达地铁 |
+| 14:00 | 新疆维吾尔自治区博物馆（楼兰美女+五星出东方） | 打车约15分钟 | 免费（需预约） | 10:00-18:00，18:00停止入馆；禁带打火机和水瓶 |
+| 16:30 | 红山公园登高，俯瞰乌鲁木齐城市全景 | 打车约10分钟 | 约¥10/人 | 傍晚光线好，适合拍照 |
+| 18:30 | 新疆国际大巴扎（丝绸之路观光塔+夜市氛围） | 步行/打车约15分钟 | 入园免费，观光塔另收费 | 地铁二道桥站可达 |
+| 20:00 | 领馆巷/大巴扎周边晚餐（烤羊肉串+馕+手抓饭） | 步行 | 约¥80-120/人 | 新疆作息晚，20:00后才是正式晚餐时间 |
+| 21:30 | 返回酒店休息 | 步行/打车 | — | — |
+
+今日餐食：午餐酒店附近简餐（约¥30-50/人）；晚餐领馆巷/大巴扎周边新疆特色（约¥80-120/人）
+休息与补给：入住后先休息1小时调整时差；博物馆内有饮水处；大巴扎周边便利店补给
+核心体验/首推项目：楼兰美女古尸（博物馆镇馆之宝）；大巴扎夜晚氛围+烤肉
+预算估算：机票¥1200+打车约¥100+博物馆免费+红山¥10+餐饮约¥150 = 约¥1460/人（含机票）
+预约提醒：博物馆需提前通过官方微信公众号预约（周一闭馆，2026-05-27为周三可正常参观）
+雨天/疲劳备用：博物馆为室内，雨天不受影响；疲劳可跳过红山公园，直接大巴扎
+
+### Day 2 · 天山天池全天游
+| 时间 | 安排 | 交通 | 费用 | 备注 |
+| --- | --- | --- | --- | --- |
+| 07:30 | 酒店出发，前往天山天池 | 包车（4人约¥350/天含等候） | ¥350/车 | 建议8:30前到游客中心错峰 |
+| 09:00 | 抵达天池游客中心，购票乘区间车 | 区间车（单程40-50分钟） | 门票约¥100-130/人（需复核）；区间车约¥90/人往返 | 2026年有优惠政策，出发前查官方公众号确认 |
+| 10:00 | 天池湖边抵达，开始环湖轻徒步 | 步行 | — | 湖边栈道顺时针漫步，全程平缓约1-2小时 |
+| 11:30 | 西王母祖庙参观+湖边拍照 | 步行 | 含景区票 | 最佳情侣拍照点：庙前+博格达峰背景 |
+| 13:00 | 景区内午餐（自备干粮为主） | — | 自备约¥30/人 | 景区餐饮贵且选择少，强烈建议自备 |
+| 14:00 | 东小天池/悬泉瑶虹瀑布（体力好可选） | 步行约30分钟 | 含景区票 | 路程稍远，体力不足可跳过 |
+| 15:30 | 乘区间车返回游客中心 | 区间车 | 含往返票 | 15:00后游客减少，错峰返程 |
+| 16:30 | 包车返回乌鲁木齐市区 | 包车 | 含在包车费内 | 约1.5小时车程 |
+| 18:30 | 日月星光集装箱小镇/粮校后街晚餐 | 打车约15分钟 | 约¥60-100/人 | 烟火气十足，价格实惠 |
+| 20:30 | 返回酒店休息 | 打车 | 约¥20 | — |
+
+今日餐食：早餐酒店（约¥30/人）；午餐自备干粮（约¥30/人）；晚餐集装箱小镇/粮校后街（约¥60-100/人）
+休息与补给：景区游客中心有卫生间（旺季排队，提前解决）；山区信号弱，提前下载离线地图；备好保暖衣物
+核心体验/首推项目：天池环湖徒步+博格达峰雪山倒影；西王母祖庙情侣打卡；傍晚湖面倒影（游客散去后最美）
+预算估算：包车¥350/4人=¥88+门票约¥130+区间车¥90+餐饮约¥160 = 约¥468/人
+预约提醒：天池建议提前网购门票（节省排队时间）；包车建议提前一天预订
+雨天/疲劳备用：天池雨天云雾缭绕别有风味，备雨具；疲劳可缩短徒步，只游湖边主景区
+
+### Day 3 · 大巴扎深度体验+返程
+| 时间 | 安排 | 交通 | 费用 | 备注 |
+| --- | --- | --- | --- | --- |
+| 08:30 | 酒店早餐+退房 | — | 含酒店 | 行李寄存酒店 |
+| 09:30 | 新疆国际大巴扎深度游（丝绸之路观光塔+特产购物） | 步行（酒店步行可达） | 入园免费 | 避开玉石高价陷阱；干果/香料货比三家 |
+| 11:00 | 领馆巷午餐（鸽子汤+地道南疆美食） | 步行约5分钟 | 约¥60-80/人 | 比大巴扎内部更地道 |
+| 10:30 | 取行李，打车前往机场 | 打车约40分钟 | 约¥60/车 | 提前1.5小时到机场，11:00前到达 |
+| 12:30 | 乌鲁木齐天山机场出发（CZ6915南航） | 飞机 | ¥1280/人（样例） | [订票](https://a.feizhu.com/0SmakP) |
+| 16:15 | 抵达北京大兴机场，行程结束 | — | — | — |
+
+今日餐食：早餐酒店；午餐领馆巷（约¥60-80/人）；机上或北京晚餐
+休息与补给：退房后行李寄存；机场安检预留充足时间
+核心体验/首推项目：大巴扎特产购物（干果、香料、手工艺品）；领馆巷地道午餐
+预算估算：大巴扎购物约¥100-300（个人）+午餐¥70+打车¥60/4人=¥15+机票¥1280 = 约¥1465/人（含机票）
+预约提醒：无需预约；确认机票时间，提前check-in
+雨天/疲劳备用：大巴扎室内外均有，小雨不影响；疲劳可缩短购物时间直接前往机场
+
+## 预算汇总
+| 项目 | 经济 | 舒适 | 备注 |
+| --- | --- | --- | --- |
+| 机票（往返/人） | ¥2400 | ¥2480 | 代表性日期样例数据，以购票时为准 |
+| 住宿（2晚/人，2人间） | ¥333 | ¥400 | 八音和酒店¥333/晚，2人分摊 |
+| 天山天池（门票+区间车） | ¥190 | ¥220 | 门票需复核2026年优惠政策 |
+| 包车（天池全天/4人分摊） | ¥88 | ¥100 | 约¥350-400/车 |
+| 市区打车 | ¥80 | ¥120 | 3天市区交通 |
+| 餐饮 | ¥400 | ¥600 | 3天含早中晚 |
+| 购物/杂费 | ¥100 | ¥300 | 特产、纪念品 |
+| **合计/人** | **约¥3591** | **约¥4220** | 含往返机票 |
+
+## 交通与住宿参考
+
+### 城际交通
+| 方向 | 班次/车次 | 出发 | 到达 | 时长 | 价格参考 | 订票/查询 |
+| --- | --- | --- | --- | --- | --- | --- |
+| 去程（推荐） | JD5217 首都航空 | 大兴 07:25 | 乌鲁木齐天山 11:50 | 4h25m | ¥1200/人 | [订票](https://a.feizhu.com/1kib55) |
+| 去程备选 | CZ6906 南航 | 大兴 20:30 | 乌鲁木齐天山 次日01:05 | 4h35m | ¥1250/人 | [订票](https://a.feizhu.com/2keWRK) |
+| 返程（推荐） | CZ6915 南航 | 乌鲁木齐天山 12:30 | 大兴 16:15 | 3h45m | ¥1280/人 | [订票](https://a.feizhu.com/0SmakP) |
+| 返程备选 | JD5220 首都航空 | 乌鲁木齐天山 20:40 | 大兴 次日00:20 | 3h40m | ¥1200/人 | [订票](https://a.feizhu.com/4e8y79) |
+
+&gt; 以上为代表性日期样例数据，实际价格以购票时为准。
+
+### 市内交通
+- 机场/车站接驳：乌鲁木齐天山机场→市区打车约40分钟/¥60，无直达地铁
+- 每日跨区移动：Day 2天池包车约¥350/天（4人）；市区内打车起步¥8，景点间约¥15-30
+- 打车/地铁/包车/自驾取舍：市区游览优先地铁（1/2号线覆盖大巴扎、博物馆周边）+打车；天池必须包车或参团，不建议自驾（山路陡，停车难）
+
+### 住宿区域与候选
+| 档次 | 酒店 | 位置/区域 | 价格/晚 | 适合 | 取舍 | 订票/查询 |
+| --- | --- | --- | --- | --- | --- | --- |
+| 高档型（推荐） | 乌鲁木齐八音和酒店（大巴扎店） | 近大巴扎，文化路 | ¥333 | 情侣首选，步行大巴扎 | 位置最优，性价比高 | [查询](https://a.feizhu.com/0t0Xhn) |
+| 高档型 | 建国铂萃会展中心店 | 近博物馆，水磨沟区 | ¥385 | 文化游为主 | 距大巴扎稍远，需打车 | [查询](https://a.feizhu.com/3cW2I5) |
+| 高档型 | 伊力特酒店（南站万达店） | 近乌鲁木齐南站 | ¥376 | 高铁出行者 | 无高铁需求时位置一般 | [查询](https://a.feizhu.com/10GshS) |
+| 豪华型 | 富力万达文华酒店 | 近乌鲁木齐站 | ¥788 | 追求品质住宿 | 价格偏高，位置偏西，降权 | [查询](https://a.feizhu.com/0xXExB) |
+
+## 出行前检查
+- 预约：新疆博物馆（官方微信公众号提前预约）；天池门票（建议提前网购）；包车（提前一天预订）
+- 证件：身份证（安检必备，全程随身携带）
+- 装备：冲锋衣/薄羽绒服（天池山区）；防晒霜+墨镜+帽子；防滑鞋；自备干粮和水（天池）；轻便雨具
+- APP：高德地图（离线下载乌鲁木齐+阜康地图）；飞猪/携程（订票）；新疆博物馆官方公众号（预约）</code></pre>
+        </details>
+      </details>
+      <details class="panel source-doc" id="doc-reputation">
+        <summary class="source-doc-summary">
+          <span class="section-kicker">reputation.md</span>
+          <strong>完整口碑与避雷原文</strong>
+          <em>新疆（乌鲁木齐）口碑与避雷研究</em>
+        </summary>
+        <div class="markdown-body">
+          <h3>新疆（乌鲁木齐）口碑与避雷研究</h3>
+<h4>总体结论</h4>
+<div class="md-table-wrap"><table><thead><tr><th>对象</th><th>等级</th><th>适合谁</th><th>主要风险</th><th>可信度</th></tr></thead><tbody><tr><td>天山天池</td><td>必去</td><td>情侣、自然爱好者</td><td>区间车排队、山区气温低、景区内餐饮贵</td><td>多源一致</td></tr><tr><td>新疆国际大巴扎</td><td>必去</td><td>所有游客</td><td>玉石购物陷阱、商品标价虚高</td><td>多源一致</td></tr><tr><td>新疆维吾尔自治区博物馆</td><td>值得</td><td>文化历史爱好者</td><td>需提前预约、周一闭馆</td><td>Web-Rooter cited</td></tr><tr><td>领馆巷/粮校后街夜市</td><td>值得</td><td>美食爱好者</td><td>无明显风险</td><td>FlyAI semantic reference</td></tr><tr><td>红山公园</td><td>可选</td><td>傍晚散步打卡</td><td>游览时间短，可与市区景点组合</td><td>FlyAI semantic reference</td></tr></tbody></table></div>
+<h4>逐项分析</h4>
+<h5>天山天池</h5>
+<ul><li><strong>推荐理由</strong>：海拔1910m高山湖泊，博格达峰雪山倒影+云杉森林，情侣打卡首选，景色公认壮丽</li><li><strong>首推体验</strong>：环湖轻徒步（湖边栈道顺时针漫步，1-2小时）；西王母祖庙打卡；傍晚游客散去后湖面倒影最美</li><li><strong>建议时长</strong>：全天，含往返车程约6-8小时（市区出发）</li><li><strong>常见差评</strong>：景区大门距湖边约35km，必须乘区间车（单程40-50分钟）；景区内餐饮价格高且选择少；购物街引导感强</li><li><strong>避雷点</strong>：不要轻信路边&quot;抄近道&quot;黑车；景区内购物理性消费；旺季上午10:00-12:00为入园高峰，排队可超1小时</li><li><strong>适合</strong>：情侣、自然爱好者、摄影爱好者</li><li><strong>不适合</strong>：行动不便者（需步行）；对长途区间车不耐烦者</li><li><strong>准备材料</strong>：冲锋衣/薄羽绒服（山区气温低5-10°C）；防晒霜+墨镜；防滑鞋；自备干粮和水；提前下载离线地图（山区信号弱）</li><li><strong>预约/排队/价格提醒</strong>：2026年有门票优惠政策（官方页面暂不可访问，搜索结果显示春节/冬季期间曾免票，5月是否优惠需出发前查询官方公众号确认）；建议早上8:30前到达游客中心错峰；区间车往返约90元/人（含在套票或单独购买，视政策而定）</li><li><strong>来源信号</strong>：FlyAI semantic reference（天池攻略）；Web-Rooter cited（wlmq.bendibao.com 五一攻略标题）；多源一致</li></ul>
+<h5>新疆国际大巴扎</h5>
+<ul><li><strong>推荐理由</strong>：全国最大巴扎，维吾尔族文化最集中地，丝绸之路观光塔+美食+手工艺品，夜晚氛围佳，地铁二道桥站直达</li><li><strong>首推体验</strong>：登丝绸之路观光塔俯瞰；边逛边吃烤包子/手抓饭/烤全羊；傍晚夜市氛围</li><li><strong>建议时长</strong>：2-3小时（含周边领馆巷可延长至半天）</li><li><strong>常见差评</strong>：玉石摊位是最大购物陷阱，几百元商品标价上万；商品价格差异大，需货比三家</li><li><strong>避雷点</strong>：完全避开高价玉石；干果/香料等特产多问几家再买；警惕过度推销</li><li><strong>适合</strong>：所有游客，尤其是首次来新疆</li><li><strong>不适合</strong>：对人流密集环境不适应者（旺季较拥挤）</li><li><strong>准备材料</strong>：无特殊要求，带好身份证（安检）</li><li><strong>预约/排队/价格提醒</strong>：免费入园（观光塔单独收费）；无需预约；旺季人流较多但无明显排队瓶颈</li><li><strong>来源信号</strong>：FlyAI POI verified；FlyAI semantic reference（避坑指南）；Web-Rooter cited（mbd.baidu.com 避坑指南标题）；多源一致</li></ul>
+<h5>新疆维吾尔自治区博物馆</h5>
+<ul><li><strong>推荐理由</strong>：楼兰美女古尸、五星出东方汉代织锦等国宝级文物，免费参观，专业讲解，深度了解西域历史</li><li><strong>首推体验</strong>：干尸馆（楼兰美女）；五星出东方织锦；多民族民俗风情展</li><li><strong>建议时长</strong>：2-3小时</li><li><strong>常见差评</strong>：安检严格（禁止打火机和水瓶）；周一闭馆；部分展厅可能轮换关闭</li><li><strong>避雷点</strong>：周一不要安排；出发前确认预约；安检前处理好禁带物品</li><li><strong>适合</strong>：文化历史爱好者；对新疆历史感兴趣的情侣</li><li><strong>不适合</strong>：对博物馆不感兴趣者（可替换为红山公园）</li><li><strong>准备材料</strong>：身份证（预约+安检）；不带打火机和水瓶</li><li><strong>预约/排队/价格提醒</strong>：免费；需通过官方微信公众号提前预约；五一假期（5月1-5日）开放时间10:00-18:30（18:00停止入馆），5月27日为普通工作日，开放时间参考同期，建议出发前确认</li><li><strong>来源信号</strong>：FlyAI POI verified；Web-Rooter cited（wlmq.bendibao.com 五一开放安排，Official verified）</li></ul>
+<h5>领馆巷 / 粮校后街 / 日月星光集装箱小镇（美食夜市）</h5>
+<ul><li><strong>推荐理由</strong>：大巴扎周边步行可达，地道南疆口味（鸽子汤等），比大巴扎内部更具生活气息，价格实惠</li><li><strong>首推体验</strong>：领馆巷鸽子汤；粮校后街深夜小吃；日月星光集装箱小镇烟火气</li><li><strong>建议时长</strong>：1-2小时（晚餐+夜逛）</li><li><strong>避雷点</strong>：无明显风险，注意食品卫生</li><li><strong>适合</strong>：所有游客，尤其是想吃地道新疆美食者</li><li><strong>来源信号</strong>：FlyAI semantic reference（单源参考）</li></ul>
+<h4>酒店区域与候选</h4>
+<ul><li><strong>区域判断</strong>：推荐住大巴扎/天山区周边（二道桥-文化路一带），步行可达大巴扎，地铁方便，打车去博物馆约15分钟；次选市中心/友好商圈，交通便利但距大巴扎稍远</li><li><strong>推荐档次/类型</strong>：高档型（¥300-500/晚）性价比最佳；4人2对情侣建议订2间大床房或2间标准间</li><li><strong>适合</strong>：希望步行游览大巴扎+夜市的情侣</li><li><strong>不适合</strong>：豪华型（¥700+）性价比低，乌鲁木齐高端酒店服务与一线城市有差距</li><li><strong>FlyAI 库存/价格信号</strong>：代表性日期样例数据，2026-05-27至05-29</li><li><strong>Quark 经验信号</strong>：大巴扎附近酒店区域成熟，交通便利，携程/去哪儿均有丰富选择（Web-Rooter cited: m.ctrip.com, touch.go.qunar.com）</li><li><strong>降权或排除原因</strong>：富力万达文华（¥788/晚）价格偏高且位置偏西，距大巴扎较远；机场亚朵（¥416/晚）位置偏北，不适合市区游览</li></ul>
+<h5>候选与取舍（FlyAI 代表性样例数据）</h5>
+<div class="md-table-wrap"><table><thead><tr><th>档次</th><th>酒店</th><th>位置/区域</th><th>价格/晚</th><th>适合</th><th>取舍</th><th>订票/查询</th></tr></thead><tbody><tr><td>高档型</td><td>乌鲁木齐八音和酒店（大巴扎店）</td><td>近大巴扎，文化路</td><td>¥333</td><td>情侣首选，步行大巴扎</td><td>位置最优，性价比高</td><td><a href="https://a.feizhu.com/0t0Xhn" target="_blank" rel="noopener noreferrer">查询</a></td></tr><tr><td>高档型</td><td>建国铂萃会展中心店</td><td>近博物馆，水磨沟区</td><td>¥385</td><td>文化游为主</td><td>距大巴扎稍远，需打车</td><td><a href="https://a.feizhu.com/3cW2I5" target="_blank" rel="noopener noreferrer">查询</a></td></tr><tr><td>高档型</td><td>伊力特酒店（南站万达店）</td><td>近乌鲁木齐南站</td><td>¥376</td><td>高铁出行者</td><td>无高铁需求时位置一般</td><td><a href="https://a.feizhu.com/10GshS" target="_blank" rel="noopener noreferrer">查询</a></td></tr><tr><td>豪华型</td><td>富力万达文华酒店</td><td>近乌鲁木齐站</td><td>¥788</td><td>追求品质住宿</td><td>价格偏高，位置偏西，降权</td><td><a href="https://a.feizhu.com/0xXExB" target="_blank" rel="noopener noreferrer">查询</a></td></tr></tbody></table></div>
+<p><strong>推荐</strong>：优先选择<strong>八音和酒店（大巴扎店）</strong>，位置最优，步行即达大巴扎和夜市，性价比高。</p>
+<h4>复核记录</h4>
+<ul><li>Research conducted: 2026-05-10</li><li>Key evidence:</li><li>天山天池攻略：FlyAI ai-search（情侣游玩详细攻略，语义参考）</li><li>大巴扎避坑：Web-Rooter cited（mbd.baidu.com 避坑指南标题确认）；FlyAI ai-search（玉石陷阱、周边夜市）</li><li>博物馆开放：Web-Rooter cited（wlmq.bendibao.com 五一开放安排，10:00-18:30，Official verified）</li><li>酒店区域：Web-Rooter cited（m.ctrip.com, touch.go.qunar.com 大巴扎周边酒店）；FlyAI search-hotel（代表性样例数据）</li><li>天池门票：2026年有优惠政策（腾讯新闻标题确认），春节/冬季曾免票，5月政策需出发前查询官方公众号（需复核）</li></ul>
+        </div>
+        <details class="raw-markdown">
+          <summary>查看原始 Markdown</summary>
+          <pre><code># 新疆（乌鲁木齐）口碑与避雷研究
+
+## 总体结论
+| 对象 | 等级 | 适合谁 | 主要风险 | 可信度 |
+| --- | --- | --- | --- | --- |
+| 天山天池 | 必去 | 情侣、自然爱好者 | 区间车排队、山区气温低、景区内餐饮贵 | 多源一致 |
+| 新疆国际大巴扎 | 必去 | 所有游客 | 玉石购物陷阱、商品标价虚高 | 多源一致 |
+| 新疆维吾尔自治区博物馆 | 值得 | 文化历史爱好者 | 需提前预约、周一闭馆 | Web-Rooter cited |
+| 领馆巷/粮校后街夜市 | 值得 | 美食爱好者 | 无明显风险 | FlyAI semantic reference |
+| 红山公园 | 可选 | 傍晚散步打卡 | 游览时间短，可与市区景点组合 | FlyAI semantic reference |
+
+## 逐项分析
+
+### 天山天池
+- **推荐理由**：海拔1910m高山湖泊，博格达峰雪山倒影+云杉森林，情侣打卡首选，景色公认壮丽
+- **首推体验**：环湖轻徒步（湖边栈道顺时针漫步，1-2小时）；西王母祖庙打卡；傍晚游客散去后湖面倒影最美
+- **建议时长**：全天，含往返车程约6-8小时（市区出发）
+- **常见差评**：景区大门距湖边约35km，必须乘区间车（单程40-50分钟）；景区内餐饮价格高且选择少；购物街引导感强
+- **避雷点**：不要轻信路边&quot;抄近道&quot;黑车；景区内购物理性消费；旺季上午10:00-12:00为入园高峰，排队可超1小时
+- **适合**：情侣、自然爱好者、摄影爱好者
+- **不适合**：行动不便者（需步行）；对长途区间车不耐烦者
+- **准备材料**：冲锋衣/薄羽绒服（山区气温低5-10°C）；防晒霜+墨镜；防滑鞋；自备干粮和水；提前下载离线地图（山区信号弱）
+- **预约/排队/价格提醒**：2026年有门票优惠政策（官方页面暂不可访问，搜索结果显示春节/冬季期间曾免票，5月是否优惠需出发前查询官方公众号确认）；建议早上8:30前到达游客中心错峰；区间车往返约90元/人（含在套票或单独购买，视政策而定）
+- **来源信号**：FlyAI semantic reference（天池攻略）；Web-Rooter cited（wlmq.bendibao.com 五一攻略标题）；多源一致
+
+### 新疆国际大巴扎
+- **推荐理由**：全国最大巴扎，维吾尔族文化最集中地，丝绸之路观光塔+美食+手工艺品，夜晚氛围佳，地铁二道桥站直达
+- **首推体验**：登丝绸之路观光塔俯瞰；边逛边吃烤包子/手抓饭/烤全羊；傍晚夜市氛围
+- **建议时长**：2-3小时（含周边领馆巷可延长至半天）
+- **常见差评**：玉石摊位是最大购物陷阱，几百元商品标价上万；商品价格差异大，需货比三家
+- **避雷点**：完全避开高价玉石；干果/香料等特产多问几家再买；警惕过度推销
+- **适合**：所有游客，尤其是首次来新疆
+- **不适合**：对人流密集环境不适应者（旺季较拥挤）
+- **准备材料**：无特殊要求，带好身份证（安检）
+- **预约/排队/价格提醒**：免费入园（观光塔单独收费）；无需预约；旺季人流较多但无明显排队瓶颈
+- **来源信号**：FlyAI POI verified；FlyAI semantic reference（避坑指南）；Web-Rooter cited（mbd.baidu.com 避坑指南标题）；多源一致
+
+### 新疆维吾尔自治区博物馆
+- **推荐理由**：楼兰美女古尸、五星出东方汉代织锦等国宝级文物，免费参观，专业讲解，深度了解西域历史
+- **首推体验**：干尸馆（楼兰美女）；五星出东方织锦；多民族民俗风情展
+- **建议时长**：2-3小时
+- **常见差评**：安检严格（禁止打火机和水瓶）；周一闭馆；部分展厅可能轮换关闭
+- **避雷点**：周一不要安排；出发前确认预约；安检前处理好禁带物品
+- **适合**：文化历史爱好者；对新疆历史感兴趣的情侣
+- **不适合**：对博物馆不感兴趣者（可替换为红山公园）
+- **准备材料**：身份证（预约+安检）；不带打火机和水瓶
+- **预约/排队/价格提醒**：免费；需通过官方微信公众号提前预约；五一假期（5月1-5日）开放时间10:00-18:30（18:00停止入馆），5月27日为普通工作日，开放时间参考同期，建议出发前确认
+- **来源信号**：FlyAI POI verified；Web-Rooter cited（wlmq.bendibao.com 五一开放安排，Official verified）
+
+### 领馆巷 / 粮校后街 / 日月星光集装箱小镇（美食夜市）
+- **推荐理由**：大巴扎周边步行可达，地道南疆口味（鸽子汤等），比大巴扎内部更具生活气息，价格实惠
+- **首推体验**：领馆巷鸽子汤；粮校后街深夜小吃；日月星光集装箱小镇烟火气
+- **建议时长**：1-2小时（晚餐+夜逛）
+- **避雷点**：无明显风险，注意食品卫生
+- **适合**：所有游客，尤其是想吃地道新疆美食者
+- **来源信号**：FlyAI semantic reference（单源参考）
+
+## 酒店区域与候选
+
+- **区域判断**：推荐住大巴扎/天山区周边（二道桥-文化路一带），步行可达大巴扎，地铁方便，打车去博物馆约15分钟；次选市中心/友好商圈，交通便利但距大巴扎稍远
+- **推荐档次/类型**：高档型（¥300-500/晚）性价比最佳；4人2对情侣建议订2间大床房或2间标准间
+- **适合**：希望步行游览大巴扎+夜市的情侣
+- **不适合**：豪华型（¥700+）性价比低，乌鲁木齐高端酒店服务与一线城市有差距
+- **FlyAI 库存/价格信号**：代表性日期样例数据，2026-05-27至05-29
+- **Quark 经验信号**：大巴扎附近酒店区域成熟，交通便利，携程/去哪儿均有丰富选择（Web-Rooter cited: m.ctrip.com, touch.go.qunar.com）
+- **降权或排除原因**：富力万达文华（¥788/晚）价格偏高且位置偏西，距大巴扎较远；机场亚朵（¥416/晚）位置偏北，不适合市区游览
+
+### 候选与取舍（FlyAI 代表性样例数据）
+| 档次 | 酒店 | 位置/区域 | 价格/晚 | 适合 | 取舍 | 订票/查询 |
+| --- | --- | --- | --- | --- | --- | --- |
+| 高档型 | 乌鲁木齐八音和酒店（大巴扎店） | 近大巴扎，文化路 | ¥333 | 情侣首选，步行大巴扎 | 位置最优，性价比高 | [查询](https://a.feizhu.com/0t0Xhn) |
+| 高档型 | 建国铂萃会展中心店 | 近博物馆，水磨沟区 | ¥385 | 文化游为主 | 距大巴扎稍远，需打车 | [查询](https://a.feizhu.com/3cW2I5) |
+| 高档型 | 伊力特酒店（南站万达店） | 近乌鲁木齐南站 | ¥376 | 高铁出行者 | 无高铁需求时位置一般 | [查询](https://a.feizhu.com/10GshS) |
+| 豪华型 | 富力万达文华酒店 | 近乌鲁木齐站 | ¥788 | 追求品质住宿 | 价格偏高，位置偏西，降权 | [查询](https://a.feizhu.com/0xXExB) |
+
+**推荐**：优先选择**八音和酒店（大巴扎店）**，位置最优，步行即达大巴扎和夜市，性价比高。
+
+## 复核记录
+- Research conducted: 2026-05-10
+- Key evidence:
+  - 天山天池攻略：FlyAI ai-search（情侣游玩详细攻略，语义参考）
+  - 大巴扎避坑：Web-Rooter cited（mbd.baidu.com 避坑指南标题确认）；FlyAI ai-search（玉石陷阱、周边夜市）
+  - 博物馆开放：Web-Rooter cited（wlmq.bendibao.com 五一开放安排，10:00-18:30，Official verified）
+  - 酒店区域：Web-Rooter cited（m.ctrip.com, touch.go.qunar.com 大巴扎周边酒店）；FlyAI search-hotel（代表性样例数据）
+  - 天池门票：2026年有优惠政策（腾讯新闻标题确认），春节/冬季曾免票，5月政策需出发前查询官方公众号（需复核）</code></pre>
+        </details>
+      </details>
+  </main>
+<div class="drawer-backdrop" id="drawerBackdrop"></div>
+<aside class="drawer" id="atlasDrawer" aria-label="地点详情">
+    <div class="drawer-head"><h2 id="drawerTitle">地点详情</h2><button class="drawer-close" id="drawerClose" type="button" aria-label="关闭">×</button></div>
+    <div class="drawer-body" id="drawerBody"></div>
+  </aside>
+  </div>
+  <script>window.__ROAMMATE_ATLAS__ = {"trip":{"destination":"乌鲁木齐","dateRange":"2026-05-27 至 2026-05-29","duration":"3天","travelers":"两对情侣，共4人","origin":"北京","generatedAt":"2026-05-10"},"days":[{"day":1,"theme":"抵达·市区文化探索","area":"乌鲁木齐市区","intensity":"轻松","highlights":["楼兰美女古尸（博物馆镇馆之宝）","大巴扎夜晚氛围+烤肉"],"meals":"午餐酒店附近简餐（约¥30-50/人）；晚餐领馆巷/大巴扎周边新疆特色（约¥80-120/人）","rest":"入住后先休息1小时调整时差；博物馆内有饮水处；大巴扎周边便利店补给","budget":"机票¥1200+打车约¥100+博物馆免费+红山¥10+餐饮约¥150 = 约¥1460/人（含机票）","reservations":"博物馆需提前通过官方微信公众号预约（周一闭馆，2026-05-27为周三可正常参观）","backup":"博物馆为室内，雨天不受影响；疲劳可跳过红山公园，直接大巴扎","reminders":["博物馆需提前预约","注意时差作息"],"activities":[{"time":"07:25","title":"北京大兴机场出发（JD5217首都航空）","poiName":"北京大兴机场出发（JD5217首都航空）","transport":"飞机","cost":"¥1200/人（样例）","notes":"订票","duration":"","source":"itinerary-structured.json:23","tags":[]},{"time":"11:50","title":"抵达乌鲁木齐天山机场","poiName":"抵达乌鲁木齐天山机场","transport":"—","cost":"—","notes":"提前1.5小时到机场安检","duration":"","source":"itinerary-structured.json:24","tags":[]},{"time":"12:30","title":"机场→酒店（八音和酒店大巴扎店）入住","poiName":"机场→酒店（八音和酒店大巴扎店）入住","transport":"打车约40分钟","cost":"约¥60/车","notes":"机场无直达地铁","duration":"","source":"itinerary-structured.json:25","tags":[]},{"time":"14:00","title":"新疆维吾尔自治区博物馆（楼兰美女+五星出东方）","poiName":"新疆维吾尔自治区博物馆","transport":"打车约15分钟","cost":"免费（需预约）","notes":"10:00-18:00，18:00停止入馆；禁带打火机和水瓶","duration":"","source":"itinerary-structured.json:26","tags":[]},{"time":"16:30","title":"红山公园登高，俯瞰乌鲁木齐城市全景","poiName":"红山公园登高，俯瞰乌鲁木齐城市全景","transport":"打车约10分钟","cost":"约¥10/人","notes":"傍晚光线好，适合拍照","duration":"","source":"itinerary-structured.json:27","tags":[]},{"time":"18:30","title":"新疆国际大巴扎（丝绸之路观光塔+夜市氛围）","poiName":"新疆国际大巴扎","transport":"步行/打车约15分钟","cost":"入园免费，观光塔另收费","notes":"地铁二道桥站可达","duration":"","source":"itinerary-structured.json:28","tags":[]},{"time":"20:00","title":"领馆巷/大巴扎周边晚餐（烤羊肉串+馕+手抓饭）","poiName":"领馆巷/大巴扎周边晚餐（烤羊肉串+馕+手抓饭）","transport":"步行","cost":"约¥80-120/人","notes":"新疆作息晚，20:00后才是正式晚餐时间","duration":"","source":"itinerary-structured.json:29","tags":[]},{"time":"21:30","title":"返回酒店休息","poiName":"返回酒店休息","transport":"步行/打车","cost":"—","notes":"—","duration":"","source":"itinerary-structured.json:30","tags":[]}]},{"day":2,"theme":"天山天池全天游","area":"阜康市天山天池","intensity":"中等","highlights":["天池环湖徒步+博格达峰雪山倒影","西王母祖庙情侣打卡","傍晚湖面倒影（游客散去后最美）"],"meals":"早餐酒店（约¥30/人）；午餐自备干粮（约¥30/人）；晚餐集装箱小镇/粮校后街（约¥60-100/人）","rest":"景区游客中心有卫生间（旺季排队，提前解决）；山区信号弱，提前下载离线地图；备好保暖衣物","budget":"包车¥350/4人=¥88+门票约¥130+区间车¥90+餐饮约¥160 = 约¥468/人","reservations":"天池建议提前网购门票（节省排队时间）；包车建议提前一天预订","backup":"天池雨天云雾缭绕别有风味，备雨具；疲劳可缩短徒步，只游湖边主景区","reminders":["早出发错峰","备冲锋衣","自带干粮"],"activities":[{"time":"07:30","title":"酒店出发，前往天山天池","poiName":"酒店出发，前往天山天池","transport":"包车（4人约¥350/天含等候）","cost":"¥350/车","notes":"建议8:30前到游客中心错峰","duration":"","source":"itinerary-structured.json:42","tags":[]},{"time":"09:00","title":"抵达天池游客中心，购票乘区间车","poiName":"抵达天池游客中心，购票乘区间车","transport":"区间车（单程40-50分钟）","cost":"门票约¥100-130/人（需复核）；区间车约¥90/人往返","notes":"2026年有优惠政策，出发前查官方公众号确认","duration":"","source":"itinerary-structured.json:43","tags":[]},{"time":"10:00","title":"天池湖边抵达，开始环湖轻徒步","poiName":"天池湖边抵达，开始环湖轻徒步","transport":"步行","cost":"—","notes":"湖边栈道顺时针漫步，全程平缓约1-2小时","duration":"","source":"itinerary-structured.json:44","tags":[]},{"time":"11:30","title":"西王母祖庙参观+湖边拍照","poiName":"西王母祖庙","transport":"步行","cost":"含景区票","notes":"最佳情侣拍照点：庙前+博格达峰背景","duration":"","source":"itinerary-structured.json:45","tags":[]},{"time":"13:00","title":"景区内午餐（自备干粮为主）","poiName":"景区内午餐（自备干粮为主）","transport":"—","cost":"自备约¥30/人","notes":"景区餐饮贵且选择少，强烈建议自备","duration":"","source":"itinerary-structured.json:46","tags":[]},{"time":"14:00","title":"东小天池/悬泉瑶虹瀑布（体力好可选）","poiName":"东小天池/悬泉瑶虹瀑布","transport":"步行约30分钟","cost":"含景区票","notes":"路程稍远，体力不足可跳过","duration":"","source":"itinerary-structured.json:47","tags":[]},{"time":"15:30","title":"乘区间车返回游客中心","poiName":"乘区间车返回游客中心","transport":"区间车","cost":"含往返票","notes":"15:00后游客减少，错峰返程","duration":"","source":"itinerary-structured.json:48","tags":[]},{"time":"16:30","title":"包车返回乌鲁木齐市区","poiName":"包车返回乌鲁木齐市区","transport":"包车","cost":"含在包车费内","notes":"约1.5小时车程","duration":"","source":"itinerary-structured.json:49","tags":[]},{"time":"18:30","title":"日月星光集装箱小镇/粮校后街晚餐","poiName":"日月星光集装箱小镇/粮校后街晚餐","transport":"打车约15分钟","cost":"约¥60-100/人","notes":"烟火气十足，价格实惠","duration":"","source":"itinerary-structured.json:50","tags":[]},{"time":"20:30","title":"返回酒店休息","poiName":"返回酒店休息","transport":"打车","cost":"约¥20","notes":"—","duration":"","source":"itinerary-structured.json:51","tags":[]}]},{"day":3,"theme":"大巴扎深度体验+返程","area":"乌鲁木齐市区","intensity":"轻松","highlights":["大巴扎特产购物（干果、香料、手工艺品）","领馆巷地道午餐"],"meals":"早餐酒店；午餐领馆巷（约¥60-80/人）；机上或北京晚餐","rest":"退房后行李寄存；机场安检预留充足时间","budget":"大巴扎购物约¥100-300（个人）+午餐¥70+打车¥60/4人=¥15+机票¥1280 = 约¥1465/人（含机票）","reservations":"无需预约；确认机票时间，提前check-in","backup":"大巴扎室内外均有，小雨不影响；疲劳可缩短购物时间直接前往机场","reminders":["午班机12:30，上午留半天"],"activities":[{"time":"08:30","title":"酒店早餐+退房","poiName":"酒店早餐+退房","transport":"—","cost":"含酒店","notes":"行李寄存酒店","duration":"","source":"itinerary-structured.json:63","tags":[]},{"time":"09:30","title":"新疆国际大巴扎深度游（丝绸之路观光塔+特产购物）","poiName":"新疆国际大巴扎深度游","transport":"步行（酒店步行可达）","cost":"入园免费","notes":"避开玉石高价陷阱；干果/香料货比三家","duration":"","source":"itinerary-structured.json:64","tags":[]},{"time":"11:00","title":"领馆巷午餐（鸽子汤+地道南疆美食）","poiName":"领馆巷午餐（鸽子汤+地道南疆美食）","transport":"步行约5分钟","cost":"约¥60-80/人","notes":"比大巴扎内部更地道","duration":"","source":"itinerary-structured.json:65","tags":[]},{"time":"12:00","title":"取行李，打车前往机场","poiName":"取行李，打车前往机场","transport":"打车约40分钟","cost":"约¥60/车","notes":"提前1.5小时到机场","duration":"","source":"itinerary-structured.json:66","tags":[]},{"time":"12:30","title":"乌鲁木齐天山机场出发（CZ6915南航）","poiName":"乌鲁木齐天山机场出发（CZ6915南航）","transport":"飞机","cost":"¥1280/人（样例）","notes":"订票","duration":"","source":"itinerary-structured.json:67","tags":[]},{"time":"16:15","title":"抵达北京大兴机场，行程结束","poiName":"抵达北京大兴机场，行程结束","transport":"—","cost":"—","notes":"—","duration":"","source":"itinerary-structured.json:68","tags":[]}]}],"poiExperiences":[{"name":"天山天池","day":2,"rating":"必去","whyGo":["海拔1910m高山湖泊，博格达峰雪山倒影+云杉森林，情侣打卡首选，景色公认壮丽"],"recommendedDuration":"全天，含往返车程约6-8小时（市区出发）","mustDo":["环湖轻徒步（湖边栈道顺时针漫步，1-2小时）","西王母祖庙打卡","傍晚游客散去后湖面倒影最美"],"tips":"主要风险：区间车排队、山区气温低、景区内餐饮贵","queueAndReservation":["2026年有门票优惠政策（官方页面暂不可访问，搜索结果显示春节/冬季期间曾免票，5月是否优惠需出发前查询官方公众号确认）","建议早上8:30前到达游客中心错峰","区间车往返约90元/人（含在套票或单独购买，视政策而定）"],"preparation":["冲锋衣/薄羽绒服（山区气温低5-10°C）","防晒霜+墨镜","防滑鞋","自备干粮和水","提前下载离线地图（山区信号弱）"],"familyNotes":[],"avoid":["不要轻信路边\"抄近道\"黑车","景区内购物理性消费","旺季上午10:00-12:00为入园高峰，排队可超1小时"],"commonComplaints":["景区大门距湖边约35km，必须乘区间车（单程40-50分钟）","景区内餐饮价格高且选择少","购物街引导感强"],"suitable":"情侣、自然爱好者、摄影爱好者","notSuitable":"行动不便者（需步行）；对长途区间车不耐烦者","source":"FlyAI semantic reference（天池攻略）；Web-Rooter cited（wlmq.bendibao.com 五一攻略标题）；多源一致"},{"name":"新疆国际大巴扎","day":1,"rating":"必去","image":"http://store.is.autonavi.com/showpic/0fbaa36d8ce8de891efb62590c367603","whyGo":["全国最大巴扎，维吾尔族文化最集中地，丝绸之路观光塔+美食+手工艺品，夜晚氛围佳，地铁二道桥站直达"],"recommendedDuration":"2-3小时（含周边领馆巷可延长至半天）","mustDo":["登丝绸之路观光塔俯瞰","边逛边吃烤包子/手抓饭/烤全羊","傍晚夜市氛围"],"tips":"主要风险：玉石购物陷阱、商品标价虚高","queueAndReservation":["免费入园（观光塔单独收费）","无需预约","旺季人流较多但无明显排队瓶颈"],"preparation":["无特殊要求，带好身份证（安检）"],"familyNotes":[],"avoid":["完全避开高价玉石","干果/香料等特产多问几家再买","警惕过度推销"],"commonComplaints":["玉石摊位是最大购物陷阱，几百元商品标价上万","商品价格差异大，需货比三家"],"suitable":"所有游客，尤其是首次来新疆","notSuitable":"对人流密集环境不适应者（旺季较拥挤）","source":"FlyAI POI verified；FlyAI semantic reference（避坑指南）；Web-Rooter cited（mbd.baidu.com 避坑指南标题）；多源一致"},{"name":"新疆维吾尔自治区博物馆","day":1,"rating":"值得","whyGo":["楼兰美女古尸、五星出东方汉代织锦等国宝级文物，免费参观，专业讲解，深度了解西域历史"],"recommendedDuration":"2-3小时","mustDo":["干尸馆（楼兰美女）","五星出东方织锦","多民族民俗风情展"],"tips":"主要风险：需提前预约、周一闭馆","queueAndReservation":["免费","需通过官方微信公众号提前预约","五一假期（5月1-5日）开放时间10:00-18:30（18:00停止入馆），5月27日为普通工作日，开放时间参考同期，建议出发前确认"],"preparation":["身份证（预约+安检）","不带打火机和水瓶"],"familyNotes":[],"avoid":["周一不要安排","出发前确认预约","安检前处理好禁带物品"],"commonComplaints":["安检严格（禁止打火机和水瓶）","周一闭馆","部分展厅可能轮换关闭"],"suitable":"文化历史爱好者；对新疆历史感兴趣的情侣","notSuitable":"对博物馆不感兴趣者（可替换为红山公园）","source":"FlyAI POI verified；Web-Rooter cited（wlmq.bendibao.com 五一开放安排，Official verified）"}],"hotels":[{"name":"乌鲁木齐八音和酒店（大巴扎店）","tier":"高档型（推荐）","area":"近大巴扎，文化路","price":"¥333","fit":"情侣首选，步行大巴扎","tradeoffs":["位置最优，性价比高"],"booking_url":"https://a.feizhu.com/0t0Xhn","room_type_note":"按上游已接受酒店候选展示；房型以订票/查询链接实时页面为准。","source":"itinerary-structured.json accepted hotel candidate","longitude":87.618908,"latitude":43.795741,"location":[87.618908,43.795741],"coordinate_source":"amap_place_text","image":"https://store.is.autonavi.com/showpic/37e82e96ff9ff0e770123f517f38caed","priceReference":"¥333","roomType":"按上游已接受酒店候选展示；房型以订票/查询链接实时页面为准。","bookingUrl":"https://a.feizhu.com/0t0Xhn","url":"https://a.feizhu.com/0t0Xhn"},{"name":"建国铂萃会展中心店","tier":"高档型","area":"近博物馆，水磨沟区","price":"¥385","fit":"文化游为主","tradeoffs":["距大巴扎稍远，需打车"],"booking_url":"https://a.feizhu.com/3cW2I5","room_type_note":"按上游已接受酒店候选展示；房型以订票/查询链接实时页面为准。","source":"itinerary-structured.json accepted hotel candidate","longitude":87.641965,"latitude":43.864792,"location":[87.641965,43.864792],"coordinate_source":"amap_place_text","image":"https://store.is.autonavi.com/showpic/61a35d17978ed9f2060ff2bd493f605c","priceReference":"¥385","roomType":"按上游已接受酒店候选展示；房型以订票/查询链接实时页面为准。","bookingUrl":"https://a.feizhu.com/3cW2I5","url":"https://a.feizhu.com/3cW2I5"},{"tier":"高档型","name":"伊力特酒店（南站万达店）","area":"近乌鲁木齐南站","priceReference":"¥376","roomType":"上游未返回具体房型，需点击链接确认","bookingUrl":"https://a.feizhu.com/10GshS","fit":"高铁出行者","tradeoffs":["无高铁需求时位置一般"],"source":"itinerary-structured.json accepted hotel candidate","price":"¥376","url":"https://a.feizhu.com/10GshS"},{"name":"富力万达文华酒店","tier":"豪华型","area":"近乌鲁木齐站","price":"¥788","fit":"追求品质住宿","tradeoffs":["价格偏高，位置偏西，降权"],"booking_url":"https://a.feizhu.com/0xXExB","room_type_note":"按上游已接受酒店候选展示；房型以订票/查询链接实时页面为准。","source":"itinerary-structured.json accepted hotel candidate","longitude":87.518105,"latitude":43.839063,"location":[87.518105,43.839063],"coordinate_source":"amap_place_text","image":"https://store.is.autonavi.com/showpic/0ebe5b278aaa2bb6648112737a4fda4c","priceReference":"¥788","roomType":"按上游已接受酒店候选展示；房型以订票/查询链接实时页面为准。","bookingUrl":"https://a.feizhu.com/0xXExB","url":"https://a.feizhu.com/0xXExB"}],"transport":[{"type":"城际交通","route":"去程（推荐） · JD5217 首都航空 · 大兴 07:25 → 乌鲁木齐天山 11:50","duration":"4h25m","cost":"¥1200/人","source":"itinerary-structured.json 交通表","url":"https://a.feizhu.com/1kib55"},{"type":"城际交通","route":"去程备选 · CZ6906 南航 · 大兴 20:30 → 乌鲁木齐天山 次日01:05","duration":"4h35m","cost":"¥1250/人","source":"itinerary-structured.json 交通表","url":"https://a.feizhu.com/2keWRK"},{"type":"城际交通","route":"返程（推荐） · CZ6915 南航 · 乌鲁木齐天山 12:30 → 大兴 16:15","duration":"3h45m","cost":"¥1280/人","source":"itinerary-structured.json 交通表","url":"https://a.feizhu.com/0SmakP"},{"type":"城际交通","route":"返程备选 · JD5220 首都航空 · 乌鲁木齐天山 20:40 → 大兴 次日00:20","duration":"3h40m","cost":"¥1200/人","source":"itinerary-structured.json 交通表","url":"https://a.feizhu.com/4e8y79"}],"map":{"schemaVersion":"1.1","pois":[{"id":"poi-1","name":"乌鲁木齐天山国际机场","originalName":"北京大兴机场","address":"机场街道和地窝堡乡交界处","location":[87.470988,43.899281],"day":1,"order":1,"category":"transport","marker":"交","confidence":"verified","source":"amap_place_text","image":"https://aos-comment.amap.com/B03DF0668Z/comment/20260211-26fff398650d87b88899d3ce-6NMF56c4Pj47u4QHZP0AHe.jpg"},{"id":"poi-2","name":"乌鲁木齐天山机场海关","originalName":"乌鲁木齐天山机场","address":"健康环路","location":[87.473827,43.897295],"day":1,"order":2,"category":"transport","marker":"交","confidence":"verified","source":"amap_place_text"},{"id":"poi-4","name":"八音和酒店","originalName":"酒店（八音和酒店大巴扎店）入住","address":"文化路71号","location":[87.618908,43.795741],"day":1,"order":4,"category":"hotel","marker":"住","confidence":"verified","source":"amap_place_text","image":"https://store.is.autonavi.com/showpic/37e82e96ff9ff0e770123f517f38caed"},{"id":"poi-5","name":"新疆维吾尔自治区建筑科学研究院","originalName":"新疆维吾尔自治区博物馆（楼兰美女+五星出东方）","address":"红山路768号","location":[87.629915,43.810569],"day":1,"order":5,"category":"attraction","marker":"景","confidence":"verified","source":"amap_place_text"},{"id":"poi-6","name":"红山公园","originalName":"红山公园登高","address":"红山路北一巷40号","location":[87.604925,43.805515],"day":1,"order":6,"category":"city","marker":"街","confidence":"verified","source":"amap_place_text","image":"http://store.is.autonavi.com/showpic/d6780a28eb0a58ceb88f4866eb256e4c"},{"id":"poi-7","name":"新疆国际大巴扎","originalName":"新疆国际大巴扎（丝绸之路观光塔+夜市氛围）","address":"解放南路518号","location":[87.619022,43.779871],"day":1,"order":7,"category":"attraction","marker":"景","confidence":"verified","source":"amap_place_text","image":"http://store.is.autonavi.com/showpic/0fbaa36d8ce8de891efb62590c367603"},{"id":"poi-8","name":"领馆巷","originalName":"领馆巷/大巴扎周边","address":"天山区","location":[87.612329,43.776505],"day":1,"order":8,"category":"city","marker":"街","confidence":"verified","source":"amap_place_text","image":"https://aos-comment.amap.com/B0FFGQHNB9/comment/ffe15e6a1e8074d2a70d61e138b97d60_2048_2048_80.jpg"},{"id":"poi-9","name":"天池大厦","originalName":"天池游客中心","address":"天池路与龙泉街南巷交叉口西40米","location":[87.614637,43.781614],"day":2,"order":9,"category":"attraction","marker":"景","confidence":"verified","source":"amap_place_text"},{"id":"poi-10","name":"那克西王手工地毯销售厅","originalName":"西王母祖庙","address":"新民西街95号","location":[87.60953,43.810137],"day":2,"order":10,"category":"attraction","marker":"景","confidence":"verified","source":"amap_place_text","image":"http://store.is.autonavi.com/showpic/a7b55f2f19f3fc94f768f0e08ad22da1"},{"id":"poi-11","name":"龙王瀑布","originalName":"东小天池/悬泉瑶虹瀑布（体力好可选）","address":"水西沟镇庙尔沟村","location":[87.437456,43.43717],"day":2,"order":11,"category":"attraction","marker":"景","confidence":"verified","source":"amap_place_text","image":"http://store.is.autonavi.com/showpic/192d172689e2b5743416763e9969ad68"},{"id":"poi-12","name":"日月星光集装箱小镇","originalName":"日月星光集装箱小镇/粮校后街","address":"碱泉三街","location":[87.643902,43.80561],"day":2,"order":12,"category":"city","marker":"街","confidence":"verified","source":"amap_place_text","image":"https://aos-comment.amap.com/B0IAHH4016/comment/content_media_external_images_media_100000793_1737118154709_51109055.jpg"},{"id":"poi-15","name":"八音和酒店","originalName":"乌鲁木齐八音和酒店（大巴扎店）","address":"文化路71号","location":[87.618908,43.795741],"day":"","order":15,"category":"hotel","marker":"住","confidence":"verified","source":"amap_place_text","image":"https://store.is.autonavi.com/showpic/37e82e96ff9ff0e770123f517f38caed"},{"id":"poi-16","name":"建国铂萃酒店(乌鲁木齐会展中心店)","originalName":"建国铂萃会展中心店","address":"龙盛街龙翔路269号","location":[87.641965,43.864792],"day":"","order":16,"category":"hotel","marker":"住","confidence":"verified","source":"amap_place_text","image":"https://store.is.autonavi.com/showpic/61a35d17978ed9f2060ff2bd493f605c"},{"id":"poi-17","name":"富力万达文华酒店","originalName":"富力万达文华酒店","address":"经济技术开发区玄武湖路567号","location":[87.518105,43.839063],"day":"","order":17,"category":"hotel","marker":"住","confidence":"verified","source":"amap_place_text","image":"https://store.is.autonavi.com/showpic/0ebe5b278aaa2bb6648112737a4fda4c"}],"hotels":[{"id":"hotel-1","name":"乌鲁木齐八音和酒店（大巴扎店）","location":[87.618908,43.795741],"day":"","order":1,"category":"hotel","marker":"住","confidence":"itinerary-structured.json accepted hotel candidate","source":"itinerary-structured.json accepted hotel candidate","price":"¥333","url":"https://a.feizhu.com/0t0Xhn","image":"https://store.is.autonavi.com/showpic/37e82e96ff9ff0e770123f517f38caed"},{"id":"hotel-2","name":"建国铂萃会展中心店","location":[87.641965,43.864792],"day":"","order":2,"category":"hotel","marker":"住","confidence":"itinerary-structured.json accepted hotel candidate","source":"itinerary-structured.json accepted hotel candidate","price":"¥385","url":"https://a.feizhu.com/3cW2I5","image":"https://store.is.autonavi.com/showpic/61a35d17978ed9f2060ff2bd493f605c"},{"id":"hotel-3","name":"伊力特酒店（南站万达店）","location":null,"day":"","order":3,"category":"hotel","marker":"住","confidence":"itinerary-structured.json accepted hotel candidate","source":"itinerary-structured.json accepted hotel candidate","price":"¥376","url":"https://a.feizhu.com/10GshS"},{"id":"hotel-4","name":"富力万达文华酒店","location":[87.518105,43.839063],"day":"","order":4,"category":"hotel","marker":"住","confidence":"itinerary-structured.json accepted hotel candidate","source":"itinerary-structured.json accepted hotel candidate","price":"¥788","url":"https://a.feizhu.com/0xXExB","image":"https://store.is.autonavi.com/showpic/0ebe5b278aaa2bb6648112737a4fda4c"}],"routes":[{"day":1,"from":"","to":"北京大兴机场出发（JD5217首都航空）","mode":"飞机","duration":"订票","cost":"¥1200/人（样例）","source":"itinerary.md"},{"day":1,"from":"机场","to":"酒店（八音和酒店大巴扎店）入住","mode":"打车约40分钟","duration":"机场无直达地铁","cost":"约¥60/车","source":"itinerary.md"},{"day":1,"from":"","to":"返回酒店休息","mode":"步行/打车","duration":"—","cost":"—","source":"itinerary.md"},{"day":2,"from":"","to":"酒店出发，前往天山天池","mode":"包车（4人约¥350/天含等候）","duration":"建议8:30前到游客中心错峰","cost":"¥350/车","source":"itinerary.md"},{"day":2,"from":"","to":"包车返回乌鲁木齐市区","mode":"包车","duration":"约1.5小时车程","cost":"含在包车费内","source":"itinerary.md"},{"day":2,"from":"","to":"返回酒店休息","mode":"打车","duration":"—","cost":"约¥20","source":"itinerary.md"},{"day":3,"from":"","to":"取行李，打车前往机场","mode":"打车约40分钟","duration":"提前1.5小时到机场","cost":"约¥60/车","source":"itinerary.md"},{"day":3,"from":"","to":"乌鲁木齐天山机场出发（CZ6915南航）","mode":"飞机","duration":"订票","cost":"¥1280/人（样例）","source":"itinerary.md"}],"generatedAt":"2026-05-11"},"food":[{"name":"领馆巷/大巴扎周边晚餐","price":"¥80-120/人","dishes":[],"note":"烤羊肉串+馕+手抓饭","source":"itinerary.md"},{"name":"午餐酒店附近简餐","area":"酒店附近","price":"¥30-50/人）","dishes":[],"note":"约¥30-50/人","source":"itinerary.md"},{"name":"景区内午餐","area":"景区内","price":"¥30/人","dishes":[],"note":"自备干粮为主","source":"itinerary.md"},{"name":"日月星光集装箱小镇/粮校后街晚餐","price":"¥60-100/人","dishes":[],"note":"带小朋友点不辣或微辣菜品。","source":"itinerary.md"},{"name":"早餐酒店","price":"¥30/人）","dishes":[],"note":"约¥30/人","source":"itinerary.md"},{"name":"领馆巷午餐","price":"¥60-80/人","dishes":[],"note":"鸽子汤+地道南疆美食","source":"itinerary.md"}],"budget":{"rows":[{"item":"机票（往返/人）","amount":"¥2480","note":"代表性日期样例数据，以购票时为准"},{"item":"住宿（2晚/人，2人间）","amount":"¥400","note":"八音和酒店¥333/晚，2人分摊"},{"item":"天山天池（门票+区间车）","amount":"¥220","note":"门票需复核2026年优惠政策"},{"item":"包车（天池全天/4人分摊）","amount":"¥100","note":"约¥350-400/车"},{"item":"市区打车","amount":"¥120","note":"3天市区交通"},{"item":"餐饮","amount":"¥600","note":"3天含早中晚"},{"item":"购物/杂费","amount":"¥300","note":"特产、纪念品"}],"total":"约¥4220（含往返机票）"},"amapKey":"fbb979dc813d025582af9ec422d33750"};</script>
+  <script>
+    const data = window.__ROAMMATE_ATLAS__;
+    const $ = (selector, root = document) => root.querySelector(selector);
+    const $$ = (selector, root = document) => [...root.querySelectorAll(selector)];
+    const esc = (value) => String(value ?? '').replace(/[&<>"']/g, (ch) => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[ch]));
+    const byName = new Map();
+    [...data.map.pois, ...data.map.hotels].forEach((item) => {
+      if (item.name) byName.set(item.name, item);
+      if (item.originalName) byName.set(item.originalName, item);
+    });
+    const experiences = new Map(data.poiExperiences.map((item) => [item.name, item]));
+    let map = null;
+    const markers = new Map();
+    const markerEntries = [];
+    let routeLine = null;
+
+    function matchExperience(target) {
+      const names = [];
+      if (typeof target === 'object' && target) {
+        names.push(target.name, target.originalName);
+      } else if (target) {
+        names.push(target);
+      }
+      const expanded = [];
+      for (const name of names.filter(Boolean)) {
+        const mapped = byName.get(name);
+        expanded.push(name, mapped?.name, mapped?.originalName);
+      }
+      const aliases = [...new Set(expanded.filter(Boolean))];
+      for (const alias of aliases) {
+        if (experiences.has(alias)) return experiences.get(alias);
+      }
+      return [...experiences.values()].find((item) => aliases.some((alias) => alias.includes(item.name) || item.name.includes(alias))) || null;
+    }
+
+    function markerClass(item) {
+      return 'atlas-marker ' + esc(item.category || 'attraction');
+    }
+
+    function initMap() {
+      const allPoints = [...data.map.pois, ...data.map.hotels].filter((item) => Array.isArray(item.location));
+      if (window.AMap && data.amapKey && allPoints.length) {
+        map = new AMap.Map('atlasMap', { zoom: 12, center: allPoints[0].location, mapStyle: 'amap://styles/fresh' });
+        const path = data.map.pois.filter((item) => Array.isArray(item.location)).map((item) => item.location);
+        if (path.length > 1) {
+          routeLine = new AMap.Polyline({ path, strokeColor: '#1d766f', strokeWeight: 6, strokeOpacity: .82, lineJoin: 'round' });
+          routeLine.setMap(map);
+        }
+        for (const item of allPoints) {
+          const marker = new AMap.Marker({
+            position: item.location,
+            title: item.name,
+            content: '<button class="' + markerClass(item) + '" type="button">' + esc(item.marker || '点') + '</button>',
+            anchor: 'center',
+          });
+          marker.setMap(map);
+          marker.on('click', () => openDrawer(item.name));
+          markers.set(item.name, marker);
+          markerEntries.push({ item, marker });
+        }
+        map.setFitView(null, false, [70, 70, 70, 70]);
+      } else {
+        renderFallbackMap(allPoints);
+      }
+    }
+
+    function renderFallbackMap(points) {
+      const canvas = $('#atlasMap');
+      const usable = points.length ? points : data.map.pois;
+      canvas.innerHTML = '<div class="fallback-map"><div class="fallback-route-line"></div></div>';
+      const fallback = $('.fallback-map', canvas);
+      usable.slice(0, 12).forEach((item, index) => {
+        const left = 10 + (index % 6) * 16;
+        const top = 28 + Math.floor(index / 6) * 32 + (index % 2) * 7;
+        const node = document.createElement('button');
+        node.className = 'fallback-node';
+        node.type = 'button';
+        node.style.left = left + '%';
+        node.style.top = top + '%';
+        node.innerHTML = '<i>' + esc(item.marker || '点') + '</i><span>' + esc(item.name) + '</span>';
+        node.addEventListener('click', () => openDrawer(item.name));
+        fallback.appendChild(node);
+      });
+    }
+
+    function focusPoi(name) {
+      if (!name) return;
+      const item = byName.get(name) || [...byName.values()].find((candidate) => name.includes(candidate.name) || candidate.name.includes(name));
+      $$('.activity-card').forEach((card) => card.classList.toggle('active', card.dataset.focusPoi === name));
+      if (item && map && Array.isArray(item.location)) {
+        map.setZoomAndCenter(14, item.location, true, 500);
+        const marker = markers.get(item.name);
+        if (marker?.setAnimation) {
+          marker.setAnimation('AMAP_ANIMATION_BOUNCE');
+          window.setTimeout(() => marker.setAnimation(null), 900);
+        }
+      }
+      openDrawer(item?.name || name);
+    }
+
+    function field(label, value) {
+      if (!value || (Array.isArray(value) && !value.length)) return '';
+      const text = Array.isArray(value) ? '<ul>' + value.map((item) => '<li>' + esc(item) + '</li>').join('') + '</ul>' : esc(value);
+      return '<div class="drawer-field"><strong>' + esc(label) + '</strong>' + text + '</div>';
+    }
+
+    function openDrawer(name) {
+      const item = byName.get(name) || [...byName.values()].find((candidate) => name.includes(candidate.name) || candidate.name.includes(name)) || { name };
+      const exp = matchExperience(item);
+      const drawer = $('#atlasDrawer');
+      $('#drawerTitle').textContent = item.name || name;
+      $('#drawerBody').innerHTML = [
+        item.image ? '<img src="' + esc(item.image) + '" alt="' + esc(item.name) + '">' : '',
+        field('类型', [item.day ? 'Day ' + item.day : '', item.category, item.confidence].filter(Boolean).join(' · ')),
+        field('地址', item.address),
+        field('价格/链接', item.price ? item.price : ''),
+        item.url ? '<div class="drawer-field"><strong>跳转</strong><a href="' + esc(item.url) + '" target="_blank" rel="noopener noreferrer">飞猪查看</a></div>' : '',
+        exp ? field('口碑等级', exp.rating) : '',
+        exp ? field('推荐理由', exp.whyGo) : '',
+        exp ? field('核心判断', exp.tips) : '',
+        exp ? field('建议时长', exp.recommendedDuration) : '',
+        exp ? field('必玩/必看', exp.mustDo) : '',
+        exp ? field('排队与预约', exp.queueAndReservation) : '',
+        exp ? field('亲子提醒', exp.familyNotes) : '',
+        exp ? field('准备材料', exp.preparation) : '',
+        exp ? field('常见差评', exp.commonComplaints) : '',
+        exp ? field('避雷', exp.avoid) : '',
+        exp ? field('适合', exp.suitable) : '',
+        exp ? field('不适合', exp.notSuitable) : '',
+        field('来源', exp?.source || item.source),
+      ].filter(Boolean).join('');
+      drawer.classList.add('open');
+      $('#drawerBackdrop')?.classList.add('open');
+    }
+
+    function closeDrawer() {
+      $('#atlasDrawer')?.classList.remove('open');
+      $('#drawerBackdrop')?.classList.remove('open');
+    }
+
+    function setDay(day) {
+      $$('.day-tabs button').forEach((button) => button.classList.toggle('active', button.dataset.dayTab === day));
+      $$('.day-card').forEach((card) => card.classList.toggle('is-dimmed', day !== 'all' && card.dataset.dayCard !== day));
+      $$('.route-pill').forEach((pill) => pill.style.display = day === 'all' || !pill.dataset.routeDay || pill.dataset.routeDay === day ? '' : 'none');
+      if (map) {
+        const activePois = day === 'all'
+          ? data.map.pois.filter((item) => Array.isArray(item.location))
+          : data.map.pois.filter((item) => String(item.day) === String(day) && Array.isArray(item.location));
+        const visiblePoints = [...activePois, ...data.map.hotels.filter((item) => Array.isArray(item.location))];
+        markerEntries.forEach(({ item, marker }) => {
+          const visible = day === 'all' || String(item.day) === String(day) || item.category === 'hotel';
+          marker.setMap(visible ? map : null);
+        });
+        if (routeLine) {
+          if (activePois.length > 1) {
+            routeLine.setPath(activePois.map((item) => item.location));
+            routeLine.setMap(map);
+          } else {
+            routeLine.setMap(null);
+          }
+        }
+        const activeMarkers = visiblePoints.map((item) => markers.get(item.name)).filter(Boolean);
+        if (activeMarkers.length) map.setFitView(activeMarkers, false, [90, 90, 90, 90]);
+      }
+    }
+
+    $$('.day-tabs button').forEach((button) => button.addEventListener('click', () => setDay(button.dataset.dayTab)));
+    $$('[data-focus-poi]').forEach((button) => button.addEventListener('click', () => focusPoi(button.dataset.focusPoi)));
+    $$('[data-focus-hotel]').forEach((card) => card.addEventListener('click', () => focusPoi(card.dataset.focusHotel)));
+    $$('.mode-nav a, .doc-jump a').forEach((link) => link.addEventListener('click', closeDrawer));
+    $('#drawerClose')?.addEventListener('click', closeDrawer);
+    $('#drawerBackdrop')?.addEventListener('click', closeDrawer);
+    document.addEventListener('keydown', (event) => {
+      if (event.key === 'Escape') closeDrawer();
+    });
+    initMap();
+  </script>
+</body>
+</html>

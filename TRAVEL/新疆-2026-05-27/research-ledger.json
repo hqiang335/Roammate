@@ -1,0 +1,266 @@
+{
+  "schema_version": "1.0",
+  "artifact_type": "research-ledger",
+  "trip": {
+    "destination": "新疆（乌鲁木齐）",
+    "date_range": "2026-05-27 至 2026-05-29",
+    "duration": "3天2夜",
+    "origin": "北京",
+    "travelers": "两对情侣，共4人",
+    "assumptions": ["出行日期明确，无需代表性日期推断"]
+  },
+  "generated_at": "2026-05-10",
+  "tool_runs": [
+    {
+      "id": "run_flyai_flight_bjs_urq_20260510",
+      "tool": "flyai search-flight",
+      "query": "北京→乌鲁木齐 2026-05-27",
+      "status": "success",
+      "ran_at": "2026-05-10",
+      "summary": "保留4个航班：JD5217(07:25,¥1200)、CZ6906(20:30,¥1250)、MU6109(20:55,¥1390)、3U3121(20:55,¥1350)",
+      "source_label": "FlyAI booking reference"
+    },
+    {
+      "id": "run_flyai_flight_urq_bjs_20260510",
+      "tool": "flyai search-flight",
+      "query": "乌鲁木齐→北京 2026-05-29",
+      "status": "success",
+      "ran_at": "2026-05-10",
+      "summary": "保留4个航班：CZ6915(12:30,¥1280)、JD5220(20:40,¥1200)、3U3122(16:00,¥1255)、HU7246(20:00,¥1280)",
+      "source_label": "FlyAI booking reference"
+    },
+    {
+      "id": "run_flyai_hotel_urq_20260510",
+      "tool": "flyai search-hotel",
+      "query": "乌鲁木齐 2026-05-27至05-29 4-5星",
+      "status": "success",
+      "ran_at": "2026-05-10",
+      "summary": "保留6家酒店候选，推荐八音和酒店（大巴扎店）¥333",
+      "source_label": "FlyAI booking reference"
+    },
+    {
+      "id": "run_flyai_poi_urq_20260510",
+      "tool": "flyai search-poi",
+      "query": "乌鲁木齐/阜康 天山天池、大巴扎、博物馆",
+      "status": "success",
+      "ran_at": "2026-05-10",
+      "summary": "获取天山天池(88.129005,43.881317)、大巴扎(87.617977,43.780006)、博物馆(87.584248,43.819548)坐标",
+      "source_label": "FlyAI booking reference"
+    },
+    {
+      "id": "run_flyai_aisearch_xinjiang_20260510",
+      "tool": "flyai ai-search",
+      "query": "新疆情侣3天2夜5月乌鲁木齐天山核心景点推荐路线注意事项预约",
+      "status": "success",
+      "ran_at": "2026-05-10",
+      "summary": "获取天池区间车攻略、大巴扎避坑、博物馆预约、气候穿衣建议",
+      "source_label": "FlyAI semantic reference"
+    },
+    {
+      "id": "run_wr_quark_tianchi_20260510",
+      "tool": "Web-Rooter Quark",
+      "query": "天山天池2026门票优惠政策、游客口碑",
+      "status": "success",
+      "ran_at": "2026-05-10",
+      "summary": "确认2026年有门票优惠政策（腾讯新闻标题），春节/冬季曾免票，5月政策需出发前查询官方公众号",
+      "source_label": "Web-Rooter cited",
+      "source_urls": [
+        "https://news.qq.com/rain/a/20260401A032Q700",
+        "http://sdxw.iqilu.com/w/article/YS0yMS0xNzExNzI3MQ.html",
+        "https://post.smzdm.com/p/an5rqqk3"
+      ]
+    },
+    {
+      "id": "run_wr_quark_museum_20260510",
+      "tool": "Web-Rooter Quark",
+      "query": "新疆博物馆2026五一开放安排",
+      "status": "success",
+      "ran_at": "2026-05-10",
+      "summary": "五一假期10:00-18:30正常开放（wlmq.bendibao.com官方公告）",
+      "source_label": "Official verified",
+      "source_urls": [
+        "http://wlmq.bendibao.com/xiuxian/2026429/67890.shtm",
+        "https://news.qq.com/rain/a/20260430A08RUQ00"
+      ]
+    }
+  ],
+  "facts": [
+    {
+      "id": "fact_flight_out_jd5217_20260510",
+      "subject": "北京→乌鲁木齐去程航班",
+      "category": "transport",
+      "value": "JD5217首都航空，大兴07:25→乌鲁木齐天山11:50，4h25m，¥1200/人（代表性日期样例数据）",
+      "source_type": "FlyAI booking reference",
+      "source_run_id": "run_flyai_flight_bjs_urq_20260510",
+      "booking_url": "https://a.feizhu.com/1kib55",
+      "confidence": "high",
+      "freshness": "2026-05-10",
+      "used_by": ["destination-brief.md", "itinerary.md"],
+      "status": "accepted"
+    },
+    {
+      "id": "fact_flight_out_cz6906_20260510",
+      "subject": "北京→乌鲁木齐去程备选航班",
+      "category": "transport",
+      "value": "CZ6906南航，大兴20:30→乌鲁木齐天山次日01:05，4h35m，¥1250/人（代表性日期样例数据）",
+      "source_type": "FlyAI booking reference",
+      "source_run_id": "run_flyai_flight_bjs_urq_20260510",
+      "booking_url": "https://a.feizhu.com/2keWRK",
+      "confidence": "high",
+      "freshness": "2026-05-10",
+      "used_by": ["destination-brief.md", "itinerary.md"],
+      "status": "accepted"
+    },
+    {
+      "id": "fact_flight_ret_cz6915_20260510",
+      "subject": "乌鲁木齐→北京返程航班",
+      "category": "transport",
+      "value": "CZ6915南航，乌鲁木齐天山12:30→大兴16:15，3h45m，¥1280/人（代表性日期样例数据）",
+      "source_type": "FlyAI booking reference",
+      "source_run_id": "run_flyai_flight_urq_bjs_20260510",
+      "booking_url": "https://a.feizhu.com/0SmakP",
+      "confidence": "high",
+      "freshness": "2026-05-10",
+      "used_by": ["destination-brief.md", "itinerary.md"],
+      "status": "accepted"
+    },
+    {
+      "id": "fact_flight_ret_jd5220_20260510",
+      "subject": "乌鲁木齐→北京返程备选航班",
+      "category": "transport",
+      "value": "JD5220首都航空，乌鲁木齐天山20:40→大兴次日00:20，3h40m，¥1200/人（代表性日期样例数据）",
+      "source_type": "FlyAI booking reference",
+      "source_run_id": "run_flyai_flight_urq_bjs_20260510",
+      "booking_url": "https://a.feizhu.com/4e8y79",
+      "confidence": "high",
+      "freshness": "2026-05-10",
+      "used_by": ["destination-brief.md", "itinerary.md"],
+      "status": "accepted"
+    },
+    {
+      "id": "fact_poi_tianchi_20260510",
+      "subject": "天山天池",
+      "category": "experience_duration",
+      "value": "海拔1910m高山湖泊，距乌鲁木齐约110km，坐标(88.129005,43.881317)；建议全天游览6-8小时（含往返车程）；区间车单程40-50分钟；旺季上午10-12点排队超1小时，建议8:30前到达",
+      "source_type": "FlyAI semantic reference",
+      "source_run_id": "run_flyai_aisearch_xinjiang_20260510",
+      "confidence": "high",
+      "freshness": "2026-05-10",
+      "used_by": ["destination-brief.md", "reputation.md", "itinerary.md"],
+      "status": "accepted"
+    },
+    {
+      "id": "fact_poi_bazaar_20260510",
+      "subject": "新疆国际大巴扎",
+      "category": "must_do",
+      "value": "全国最大巴扎，坐标(87.617977,43.780006)，地铁二道桥站；玉石是最大购物陷阱，建议以体验文化和美食为主；周边领馆巷/粮校后街夜市更地道",
+      "source_type": "FlyAI semantic reference",
+      "source_run_id": "run_flyai_aisearch_xinjiang_20260510",
+      "confidence": "high",
+      "freshness": "2026-05-10",
+      "used_by": ["destination-brief.md", "reputation.md", "itinerary.md"],
+      "status": "accepted"
+    },
+    {
+      "id": "fact_poi_museum_20260510",
+      "subject": "新疆维吾尔自治区博物馆",
+      "category": "reservation",
+      "value": "坐标(87.584248,43.819548)，免费，需官方微信公众号预约，周一闭馆；五一假期10:00-18:30正常开放（18:00停止入馆）；禁带打火机和水瓶",
+      "source_type": "Official verified",
+      "source_run_id": "run_wr_quark_museum_20260510",
+      "source_url": "http://wlmq.bendibao.com/xiuxian/2026429/67890.shtm",
+      "confidence": "high",
+      "freshness": "2026-05-10",
+      "used_by": ["destination-brief.md", "reputation.md", "itinerary.md"],
+      "status": "accepted"
+    },
+    {
+      "id": "fact_ticket_tianchi_20260510",
+      "subject": "天山天池门票政策2026",
+      "category": "ticket_reference",
+      "value": "2026年有门票优惠政策（腾讯新闻标题确认），春节/冬季曾免票，5月是否优惠需出发前查询官方公众号；历史参考约¥100-130/人；区间车往返约¥90/人",
+      "source_type": "Web-Rooter cited",
+      "source_run_id": "run_wr_quark_tianchi_20260510",
+      "source_url": "https://news.qq.com/rain/a/20260401A032Q700",
+      "confidence": "low",
+      "freshness": "2026-05-10",
+      "used_by": ["destination-brief.md", "reputation.md", "itinerary.md"],
+      "status": "accepted"
+    },
+    {
+      "id": "fact_weather_urq_may_20260510",
+      "subject": "乌鲁木齐5月下旬气候",
+      "category": "weather",
+      "value": "市区白天18-25°C，早晚8-12°C；天山天池景区低5-8°C；昼夜温差大，紫外线强，偶有阵雨",
+      "source_type": "Estimated",
+      "confidence": "medium",
+      "freshness": "2026-05-10",
+      "used_by": ["destination-brief.md", "itinerary.md"],
+      "status": "accepted"
+    },
+    {
+      "id": "fact_hotel_bayinhe_20260510",
+      "subject": "乌鲁木齐八音和酒店（大巴扎店）",
+      "category": "hotel_candidate",
+      "value": "高档型，近大巴扎文化路，¥333/晚（代表性日期样例数据），情侣首选，步行可达大巴扎",
+      "source_type": "FlyAI booking reference",
+      "source_run_id": "run_flyai_hotel_urq_20260510",
+      "booking_url": "https://a.feizhu.com/0t0Xhn",
+      "confidence": "medium",
+      "freshness": "2026-05-10",
+      "used_by": ["reputation.md", "itinerary.md"],
+      "status": "accepted"
+    },
+    {
+      "id": "fact_hotel_jianguo_20260510",
+      "subject": "建国铂萃乌鲁木齐会展中心店",
+      "category": "hotel_candidate",
+      "value": "高档型，近博物馆水磨沟区，¥385/晚（代表性日期样例数据），距大巴扎稍远需打车",
+      "source_type": "FlyAI booking reference",
+      "source_run_id": "run_flyai_hotel_urq_20260510",
+      "booking_url": "https://a.feizhu.com/3cW2I5",
+      "confidence": "medium",
+      "freshness": "2026-05-10",
+      "used_by": ["reputation.md", "itinerary.md"],
+      "status": "accepted"
+    },
+    {
+      "id": "fact_hotel_yilite_20260510",
+      "subject": "伊力特酒店（南站万达店）",
+      "category": "hotel_candidate",
+      "value": "高档型，近乌鲁木齐南站，¥376/晚（代表性日期样例数据），无高铁需求时位置一般",
+      "source_type": "FlyAI booking reference",
+      "source_run_id": "run_flyai_hotel_urq_20260510",
+      "booking_url": "https://a.feizhu.com/10GshS",
+      "confidence": "medium",
+      "freshness": "2026-05-10",
+      "used_by": ["reputation.md", "itinerary.md"],
+      "status": "accepted"
+    },
+    {
+      "id": "fact_hotel_wanda_20260510",
+      "subject": "乌鲁木齐富力万达文华酒店",
+      "category": "hotel_candidate",
+      "value": "豪华型，近乌鲁木齐站，¥788/晚（代表性日期样例数据），价格偏高位置偏西，降权",
+      "source_type": "FlyAI booking reference",
+      "source_run_id": "run_flyai_hotel_urq_20260510",
+      "booking_url": "https://a.feizhu.com/0xXExB",
+      "confidence": "medium",
+      "freshness": "2026-05-10",
+      "used_by": ["reputation.md", "itinerary.md"],
+      "status": "accepted"
+    },
+    {
+      "id": "fact_local_tips_20260510",
+      "subject": "乌鲁木齐实用信息",
+      "category": "preparation",
+      "value": "新疆使用北京时间，实际作息晚约2小时；安检严格需随身携带身份证；天池→市区约110km建议包车约¥350-400/4人/天",
+      "source_type": "FlyAI semantic reference",
+      "source_run_id": "run_flyai_aisearch_xinjiang_20260510",
+      "confidence": "high",
+      "freshness": "2026-05-10",
+      "used_by": ["destination-brief.md", "itinerary.md"],
+      "status": "accepted"
+    }
+  ]
+}

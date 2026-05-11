@@ -1,0 +1,714 @@
+{
+  "schema_version": "1.1",
+  "artifact_type": "map-data",
+  "destination": "乌鲁木齐",
+  "city": "乌鲁木齐",
+  "locations": [
+    "北京大兴机场",
+    "乌鲁木齐天山机场",
+    "机场",
+    "酒店（八音和酒店大巴扎店）入住",
+    "新疆维吾尔自治区博物馆（楼兰美女+五星出东方）",
+    "红山公园登高",
+    "新疆国际大巴扎（丝绸之路观光塔+夜市氛围）",
+    "领馆巷/大巴扎周边",
+    "天池游客中心",
+    "西王母祖庙",
+    "东小天池/悬泉瑶虹瀑布（体力好可选）",
+    "日月星光集装箱小镇/粮校后街",
+    "新疆国际大巴扎深度游（丝绸之路观光塔+特产购物）",
+    "领馆巷",
+    "乌鲁木齐八音和酒店（大巴扎店）",
+    "建国铂萃会展中心店",
+    "富力万达文华酒店"
+  ],
+  "pois": [
+    {
+      "name": "乌鲁木齐天山国际机场",
+      "original_name": "北京大兴机场",
+      "type": "交通设施服务;机场相关;飞机场",
+      "address": "机场街道和地窝堡乡交界处",
+      "location": [
+        87.470988,
+        43.899281
+      ],
+      "tel": "0991-96556",
+      "rating": "",
+      "image": "https://aos-comment.amap.com/B03DF0668Z/comment/20260211-26fff398650d87b88899d3ce-6NMF56c4Pj47u4QHZP0AHe.jpg",
+      "photos": [
+        {
+          "title": [],
+          "url": "https://aos-comment.amap.com/B03DF0668Z/comment/20260211-26fff398650d87b88899d3ce-6NMF56c4Pj47u4QHZP0AHe.jpg"
+        },
+        {
+          "title": [],
+          "url": "https://store.is.autonavi.com/showpic/c938c97db432b2d30000002367684601?type=pic"
+        },
+        {
+          "title": [],
+          "url": "https://store.is.autonavi.com/showpic/226738132de4a21ec647c70db161778a"
+        }
+      ],
+      "source": "amap_place_text",
+      "confidence": "verified",
+      "order": 1
+    },
+    {
+      "name": "乌鲁木齐天山机场海关",
+      "original_name": "乌鲁木齐天山机场",
+      "type": "政府机构及社会团体;政府机关;地市级政府及事业单位",
+      "address": "健康环路",
+      "location": [
+        87.473827,
+        43.897295
+      ],
+      "tel": "0991-3804322",
+      "rating": "",
+      "image": "",
+      "photos": [],
+      "source": "amap_place_text",
+      "confidence": "verified",
+      "order": 2
+    },
+    {
+      "name": "乌鲁木齐天山国际机场",
+      "original_name": "机场",
+      "type": "交通设施服务;机场相关;飞机场",
+      "address": "机场街道和地窝堡乡交界处",
+      "location": [
+        87.470988,
+        43.899281
+      ],
+      "tel": "0991-96556",
+      "rating": "",
+      "image": "https://aos-comment.amap.com/B03DF0668Z/comment/20260211-26fff398650d87b88899d3ce-6NMF56c4Pj47u4QHZP0AHe.jpg",
+      "photos": [
+        {
+          "title": [],
+          "url": "https://aos-comment.amap.com/B03DF0668Z/comment/20260211-26fff398650d87b88899d3ce-6NMF56c4Pj47u4QHZP0AHe.jpg"
+        },
+        {
+          "title": [],
+          "url": "https://store.is.autonavi.com/showpic/c938c97db432b2d30000002367684601?type=pic"
+        },
+        {
+          "title": [],
+          "url": "https://store.is.autonavi.com/showpic/226738132de4a21ec647c70db161778a"
+        }
+      ],
+      "source": "amap_place_text",
+      "confidence": "verified",
+      "order": 3
+    },
+    {
+      "name": "八音和酒店",
+      "original_name": "酒店（八音和酒店大巴扎店）入住",
+      "type": "住宿服务;宾馆酒店;四星级宾馆",
+      "address": "文化路71号",
+      "location": [
+        87.618908,
+        43.795741
+      ],
+      "tel": "0991-2811888",
+      "rating": "4.6",
+      "image": "https://store.is.autonavi.com/showpic/37e82e96ff9ff0e770123f517f38caed",
+      "photos": [
+        {
+          "provider": [],
+          "title": [],
+          "url": "https://store.is.autonavi.com/showpic/37e82e96ff9ff0e770123f517f38caed"
+        },
+        {
+          "provider": [],
+          "title": "酒店外观",
+          "url": "https://store.is.autonavi.com/showpic/6cc2770b3505d03dece47adf8a93baf7"
+        },
+        {
+          "provider": [],
+          "title": "豪华大床房",
+          "url": "https://store.is.autonavi.com/showpic/ea77463fbe87907bef4861fcfdc4471e"
+        }
+      ],
+      "source": "amap_place_text",
+      "confidence": "verified",
+      "order": 4
+    },
+    {
+      "name": "新疆维吾尔自治区建筑科学研究院",
+      "original_name": "新疆维吾尔自治区博物馆（楼兰美女+五星出东方）",
+      "type": "科教文化服务;科教文化场所;科教文化场所",
+      "address": "红山路768号",
+      "location": [
+        87.629915,
+        43.810569
+      ],
+      "tel": "",
+      "rating": "",
+      "image": "",
+      "photos": [],
+      "source": "amap_place_text",
+      "confidence": "verified",
+      "order": 5
+    },
+    {
+      "name": "红山公园",
+      "original_name": "红山公园登高",
+      "type": "风景名胜;公园广场;公园",
+      "address": "红山路北一巷40号",
+      "location": [
+        87.604925,
+        43.805515
+      ],
+      "tel": "0991-8855671;0991-8868656;12301",
+      "rating": "4.7",
+      "image": "http://store.is.autonavi.com/showpic/d6780a28eb0a58ceb88f4866eb256e4c",
+      "photos": [
+        {
+          "provider": [],
+          "title": [],
+          "url": "http://store.is.autonavi.com/showpic/d6780a28eb0a58ceb88f4866eb256e4c"
+        },
+        {
+          "provider": [],
+          "title": [],
+          "url": "https://aos-comment.amap.com/B03DF066YE/comment/2A8DAC34_D066_4564_967A_55C3D7D92B90_L0_001_1500_200_1773019196992_19911404.jpg"
+        },
+        {
+          "provider": [],
+          "title": [],
+          "url": "https://store.is.autonavi.com/showpic/e886970a180fc1440000001921094435?type=pic"
+        }
+      ],
+      "source": "amap_place_text",
+      "confidence": "verified",
+      "order": 6
+    },
+    {
+      "name": "新疆国际大巴扎",
+      "original_name": "新疆国际大巴扎（丝绸之路观光塔+夜市氛围）",
+      "type": "风景名胜;风景名胜;国家级景点|购物服务;服装鞋帽皮具店;服装鞋帽皮具店",
+      "address": "解放南路518号",
+      "location": [
+        87.619022,
+        43.779871
+      ],
+      "tel": "0991-8555480",
+      "rating": "4.8",
+      "image": "http://store.is.autonavi.com/showpic/0fbaa36d8ce8de891efb62590c367603",
+      "photos": [
+        {
+          "provider": [],
+          "title": [],
+          "url": "http://store.is.autonavi.com/showpic/0fbaa36d8ce8de891efb62590c367603"
+        },
+        {
+          "provider": [],
+          "title": [],
+          "url": "http://store.is.autonavi.com/showpic/4bc1665549a3b69ba0551208004eda2f"
+        },
+        {
+          "provider": [],
+          "title": [],
+          "url": "http://store.is.autonavi.com/showpic/0905c734d9ccbe77b55d599daa4a24f8"
+        }
+      ],
+      "source": "amap_place_text",
+      "confidence": "verified",
+      "order": 7
+    },
+    {
+      "name": "领馆巷",
+      "original_name": "领馆巷/大巴扎周边",
+      "type": "地名地址信息;交通地名;道路名",
+      "address": "天山区",
+      "location": [
+        87.612329,
+        43.776505
+      ],
+      "tel": "",
+      "rating": "",
+      "image": "https://aos-comment.amap.com/B0FFGQHNB9/comment/ffe15e6a1e8074d2a70d61e138b97d60_2048_2048_80.jpg",
+      "photos": [
+        {
+          "title": [],
+          "url": "https://aos-comment.amap.com/B0FFGQHNB9/comment/ffe15e6a1e8074d2a70d61e138b97d60_2048_2048_80.jpg"
+        },
+        {
+          "title": [],
+          "url": "http://store.is.autonavi.com/showpic/48f2182dfbe441cd8e6aae1de105cf8f"
+        },
+        {
+          "title": [],
+          "url": "https://store.is.autonavi.com/showpic/2b7ae7bc5aabf00a08475ef5cb3a7e98"
+        }
+      ],
+      "source": "amap_place_text",
+      "confidence": "verified",
+      "order": 8
+    },
+    {
+      "name": "天池大厦",
+      "original_name": "天池游客中心",
+      "type": "商务住宅;楼宇;商务写字楼",
+      "address": "天池路与龙泉街南巷交叉口西40米",
+      "location": [
+        87.614637,
+        43.781614
+      ],
+      "tel": "",
+      "rating": "",
+      "image": "",
+      "photos": [],
+      "source": "amap_place_text",
+      "confidence": "verified",
+      "order": 9
+    },
+    {
+      "name": "那克西王手工地毯销售厅",
+      "original_name": "西王母祖庙",
+      "type": "购物服务;家居建材市场;布艺市场",
+      "address": "新民西街95号",
+      "location": [
+        87.60953,
+        43.810137
+      ],
+      "tel": "13909915766;18709915999",
+      "rating": "4.1",
+      "image": "http://store.is.autonavi.com/showpic/a7b55f2f19f3fc94f768f0e08ad22da1",
+      "photos": [
+        {
+          "title": [],
+          "url": "http://store.is.autonavi.com/showpic/a7b55f2f19f3fc94f768f0e08ad22da1"
+        },
+        {
+          "title": [],
+          "url": "http://store.is.autonavi.com/showpic/64b92f0f1932bfcfed0bcca34bfc65e0"
+        },
+        {
+          "title": [],
+          "url": "http://store.is.autonavi.com/showpic/725adeb8a7561bcce5ed75f5536a021a"
+        }
+      ],
+      "source": "amap_place_text",
+      "confidence": "verified",
+      "order": 10
+    },
+    {
+      "name": "龙王瀑布",
+      "original_name": "东小天池/悬泉瑶虹瀑布（体力好可选）",
+      "type": "风景名胜;风景名胜;风景名胜",
+      "address": "水西沟镇庙尔沟村",
+      "location": [
+        87.437456,
+        43.43717
+      ],
+      "tel": "13659978642;19309910358",
+      "rating": "4.2",
+      "image": "http://store.is.autonavi.com/showpic/192d172689e2b5743416763e9969ad68",
+      "photos": [
+        {
+          "provider": [],
+          "title": [],
+          "url": "http://store.is.autonavi.com/showpic/192d172689e2b5743416763e9969ad68"
+        },
+        {
+          "provider": [],
+          "title": [],
+          "url": "http://store.is.autonavi.com/showpic/4558f1004404f81d676acc89abe0fb8b"
+        },
+        {
+          "provider": [],
+          "title": [],
+          "url": "https://aos-comment.amap.com/B0FFHN5KIP/comment/ffa11a0014959bd75b7098cddfea3e8a_2048_2048_80.jpg"
+        }
+      ],
+      "source": "amap_place_text",
+      "confidence": "verified",
+      "order": 11
+    },
+    {
+      "name": "日月星光集装箱小镇",
+      "original_name": "日月星光集装箱小镇/粮校后街",
+      "type": "购物服务;特色商业街;特色商业街|购物服务;综合市场;综合市场",
+      "address": "碱泉三街",
+      "location": [
+        87.643902,
+        43.80561
+      ],
+      "tel": "",
+      "rating": "4.4",
+      "image": "https://aos-comment.amap.com/B0IAHH4016/comment/content_media_external_images_media_100000793_1737118154709_51109055.jpg",
+      "photos": [
+        {
+          "title": [],
+          "url": "https://aos-comment.amap.com/B0IAHH4016/comment/content_media_external_images_media_100000793_1737118154709_51109055.jpg"
+        },
+        {
+          "title": [],
+          "url": "https://store.is.autonavi.com/showpic/6e218edc267c85530000001531066609?type=pic"
+        },
+        {
+          "title": [],
+          "url": "https://aos-comment.amap.com/B0IU35FS8G/comment/content_media_external_file_100004591_1757067461980_54319397.jpg"
+        }
+      ],
+      "source": "amap_place_text",
+      "confidence": "verified",
+      "order": 12
+    },
+    {
+      "name": "新疆国际大巴扎",
+      "original_name": "新疆国际大巴扎深度游（丝绸之路观光塔+特产购物）",
+      "type": "风景名胜;风景名胜;国家级景点|购物服务;服装鞋帽皮具店;服装鞋帽皮具店",
+      "address": "解放南路518号",
+      "location": [
+        87.619022,
+        43.779871
+      ],
+      "tel": "0991-8555480",
+      "rating": "4.8",
+      "image": "http://store.is.autonavi.com/showpic/0fbaa36d8ce8de891efb62590c367603",
+      "photos": [
+        {
+          "provider": [],
+          "title": [],
+          "url": "http://store.is.autonavi.com/showpic/0fbaa36d8ce8de891efb62590c367603"
+        },
+        {
+          "provider": [],
+          "title": [],
+          "url": "http://store.is.autonavi.com/showpic/4bc1665549a3b69ba0551208004eda2f"
+        },
+        {
+          "provider": [],
+          "title": [],
+          "url": "http://store.is.autonavi.com/showpic/0905c734d9ccbe77b55d599daa4a24f8"
+        }
+      ],
+      "source": "amap_place_text",
+      "confidence": "verified",
+      "order": 13
+    },
+    {
+      "name": "领馆巷",
+      "original_name": "领馆巷",
+      "type": "地名地址信息;交通地名;道路名",
+      "address": "天山区",
+      "location": [
+        87.612329,
+        43.776505
+      ],
+      "tel": "",
+      "rating": "",
+      "image": "https://aos-comment.amap.com/B0FFGQHNB9/comment/ffe15e6a1e8074d2a70d61e138b97d60_2048_2048_80.jpg",
+      "photos": [
+        {
+          "title": [],
+          "url": "https://aos-comment.amap.com/B0FFGQHNB9/comment/ffe15e6a1e8074d2a70d61e138b97d60_2048_2048_80.jpg"
+        },
+        {
+          "title": [],
+          "url": "http://store.is.autonavi.com/showpic/48f2182dfbe441cd8e6aae1de105cf8f"
+        },
+        {
+          "title": [],
+          "url": "https://store.is.autonavi.com/showpic/2b7ae7bc5aabf00a08475ef5cb3a7e98"
+        }
+      ],
+      "source": "amap_place_text",
+      "confidence": "verified",
+      "order": 14
+    },
+    {
+      "name": "八音和酒店",
+      "original_name": "乌鲁木齐八音和酒店（大巴扎店）",
+      "type": "住宿服务;宾馆酒店;四星级宾馆",
+      "address": "文化路71号",
+      "location": [
+        87.618908,
+        43.795741
+      ],
+      "tel": "0991-2811888",
+      "rating": "4.6",
+      "image": "https://store.is.autonavi.com/showpic/37e82e96ff9ff0e770123f517f38caed",
+      "photos": [
+        {
+          "provider": [],
+          "title": [],
+          "url": "https://store.is.autonavi.com/showpic/37e82e96ff9ff0e770123f517f38caed"
+        },
+        {
+          "provider": [],
+          "title": "酒店外观",
+          "url": "https://store.is.autonavi.com/showpic/6cc2770b3505d03dece47adf8a93baf7"
+        },
+        {
+          "provider": [],
+          "title": "豪华大床房",
+          "url": "https://store.is.autonavi.com/showpic/ea77463fbe87907bef4861fcfdc4471e"
+        }
+      ],
+      "source": "amap_place_text",
+      "confidence": "verified",
+      "order": 15
+    },
+    {
+      "name": "建国铂萃酒店(乌鲁木齐会展中心店)",
+      "original_name": "建国铂萃会展中心店",
+      "type": "住宿服务;宾馆酒店;宾馆酒店",
+      "address": "龙盛街龙翔路269号",
+      "location": [
+        87.641965,
+        43.864792
+      ],
+      "tel": "0991-3527888;0991-3527888,9",
+      "rating": "4.7",
+      "image": "https://store.is.autonavi.com/showpic/61a35d17978ed9f2060ff2bd493f605c",
+      "photos": [
+        {
+          "provider": [],
+          "title": "Logo",
+          "url": "https://store.is.autonavi.com/showpic/61a35d17978ed9f2060ff2bd493f605c"
+        },
+        {
+          "provider": [],
+          "title": "萃雅商务大床房",
+          "url": "https://store.is.autonavi.com/showpic/ce466f0bc510cb490fb81f84ccc69166"
+        },
+        {
+          "provider": [],
+          "title": "萃庭行政大床房",
+          "url": "https://store.is.autonavi.com/showpic/ab82e1c91377e27a73f7c9f517f94028"
+        }
+      ],
+      "source": "amap_place_text",
+      "confidence": "verified",
+      "order": 16
+    },
+    {
+      "name": "富力万达文华酒店",
+      "original_name": "富力万达文华酒店",
+      "type": "住宿服务;宾馆酒店;五星级宾馆",
+      "address": "经济技术开发区玄武湖路567号",
+      "location": [
+        87.518105,
+        43.839063
+      ],
+      "tel": "0991-3181111;18690973443",
+      "rating": "4.7",
+      "image": "https://store.is.autonavi.com/showpic/0ebe5b278aaa2bb6648112737a4fda4c",
+      "photos": [
+        {
+          "provider": [],
+          "title": "Logo",
+          "url": "https://store.is.autonavi.com/showpic/0ebe5b278aaa2bb6648112737a4fda4c"
+        },
+        {
+          "provider": [],
+          "title": [],
+          "url": "https://aos-comment.amap.com/B0FFH00KWD/comment/content_media_external_file_100004484_1768050772405_29663846.jpg"
+        },
+        {
+          "provider": [],
+          "title": "行政豪华大床房",
+          "url": "https://store.is.autonavi.com/showpic/78b8d886450b2f8fa89c9cbcaa108395"
+        }
+      ],
+      "source": "amap_place_text",
+      "confidence": "verified",
+      "order": 17
+    }
+  ],
+  "routes": [
+    {
+      "mode": "walking",
+      "distance_m": 1008,
+      "duration_min": 13,
+      "source": "amap_direction_walking",
+      "from": "乌鲁木齐天山国际机场",
+      "to": "乌鲁木齐天山机场海关"
+    },
+    {
+      "mode": "walking",
+      "distance_m": 1008,
+      "duration_min": 13,
+      "source": "amap_direction_walking",
+      "from": "乌鲁木齐天山机场海关",
+      "to": "乌鲁木齐天山国际机场"
+    },
+    {
+      "mode": "driving",
+      "distance_m": 18529,
+      "duration_min": 23,
+      "source": "amap_direction_driving",
+      "from": "乌鲁木齐天山国际机场",
+      "to": "八音和酒店"
+    },
+    {
+      "mode": "walking",
+      "distance_m": 2478,
+      "duration_min": 33,
+      "source": "amap_direction_walking",
+      "from": "八音和酒店",
+      "to": "新疆维吾尔自治区建筑科学研究院"
+    },
+    {
+      "mode": "walking",
+      "distance_m": 2260,
+      "duration_min": 30,
+      "source": "amap_direction_walking",
+      "from": "新疆维吾尔自治区建筑科学研究院",
+      "to": "红山公园"
+    },
+    {
+      "mode": "driving",
+      "distance_m": 11931,
+      "duration_min": 16,
+      "source": "amap_direction_driving",
+      "from": "红山公园",
+      "to": "新疆国际大巴扎"
+    },
+    {
+      "mode": "walking",
+      "distance_m": 855,
+      "duration_min": 11,
+      "source": "amap_direction_walking",
+      "from": "新疆国际大巴扎",
+      "to": "领馆巷"
+    },
+    {
+      "mode": "walking",
+      "distance_m": 875,
+      "duration_min": 12,
+      "source": "amap_direction_walking",
+      "from": "领馆巷",
+      "to": "天池大厦"
+    },
+    {
+      "mode": "driving",
+      "distance_m": 3528,
+      "duration_min": 9,
+      "source": "amap_direction_driving",
+      "from": "天池大厦",
+      "to": "那克西王手工地毯销售厅"
+    },
+    {
+      "mode": "driving",
+      "distance_m": 48206,
+      "duration_min": 46,
+      "source": "amap_direction_driving",
+      "from": "那克西王手工地毯销售厅",
+      "to": "龙王瀑布"
+    },
+    {
+      "mode": "driving",
+      "distance_m": 49311,
+      "duration_min": 47,
+      "source": "amap_direction_driving",
+      "from": "龙王瀑布",
+      "to": "日月星光集装箱小镇"
+    },
+    {
+      "mode": "driving",
+      "distance_m": 5514,
+      "duration_min": 11,
+      "source": "amap_direction_driving",
+      "from": "日月星光集装箱小镇",
+      "to": "新疆国际大巴扎"
+    },
+    {
+      "mode": "walking",
+      "distance_m": 855,
+      "duration_min": 11,
+      "source": "amap_direction_walking",
+      "from": "新疆国际大巴扎",
+      "to": "领馆巷"
+    },
+    {
+      "mode": "driving",
+      "distance_m": 3189,
+      "duration_min": 9,
+      "source": "amap_direction_driving",
+      "from": "领馆巷",
+      "to": "八音和酒店"
+    },
+    {
+      "mode": "driving",
+      "distance_m": 11892,
+      "duration_min": 17,
+      "source": "amap_direction_driving",
+      "from": "八音和酒店",
+      "to": "建国铂萃酒店(乌鲁木齐会展中心店)"
+    },
+    {
+      "mode": "driving",
+      "distance_m": 14087,
+      "duration_min": 20,
+      "source": "amap_direction_driving",
+      "from": "建国铂萃酒店(乌鲁木齐会展中心店)",
+      "to": "富力万达文华酒店"
+    }
+  ],
+  "hotels": [
+    {
+      "name": "乌鲁木齐八音和酒店（大巴扎店）",
+      "tier": "高档型（推荐）",
+      "area": "近大巴扎，文化路",
+      "price": "¥333",
+      "fit": "情侣首选，步行大巴扎",
+      "tradeoffs": "位置最优，性价比高",
+      "booking_url": "https://a.feizhu.com/0t0Xhn",
+      "room_type_note": "按上游已接受酒店候选展示；房型以订票/查询链接实时页面为准。",
+      "source": "itinerary-structured accepted hotel candidate",
+      "longitude": 87.618908,
+      "latitude": 43.795741,
+      "location": [
+        87.618908,
+        43.795741
+      ],
+      "coordinate_source": "amap_place_text",
+      "image": "https://store.is.autonavi.com/showpic/37e82e96ff9ff0e770123f517f38caed"
+    },
+    {
+      "name": "建国铂萃会展中心店",
+      "tier": "高档型",
+      "area": "近博物馆，水磨沟区",
+      "price": "¥385",
+      "fit": "文化游为主",
+      "tradeoffs": "距大巴扎稍远，需打车",
+      "booking_url": "https://a.feizhu.com/3cW2I5",
+      "room_type_note": "按上游已接受酒店候选展示；房型以订票/查询链接实时页面为准。",
+      "source": "itinerary-structured accepted hotel candidate",
+      "longitude": 87.641965,
+      "latitude": 43.864792,
+      "location": [
+        87.641965,
+        43.864792
+      ],
+      "coordinate_source": "amap_place_text",
+      "image": "https://store.is.autonavi.com/showpic/61a35d17978ed9f2060ff2bd493f605c"
+    },
+    {
+      "name": "富力万达文华酒店",
+      "tier": "豪华型",
+      "area": "近乌鲁木齐站",
+      "price": "¥788",
+      "fit": "追求品质住宿",
+      "tradeoffs": "价格偏高，位置偏西，降权",
+      "booking_url": "https://a.feizhu.com/0xXExB",
+      "room_type_note": "按上游已接受酒店候选展示；房型以订票/查询链接实时页面为准。",
+      "source": "itinerary-structured accepted hotel candidate",
+      "longitude": 87.518105,
+      "latitude": 43.839063,
+      "location": [
+        87.518105,
+        43.839063
+      ],
+      "coordinate_source": "amap_place_text",
+      "image": "https://store.is.autonavi.com/showpic/0ebe5b278aaa2bb6648112737a4fda4c"
+    }
+  ],
+  "check_in_date": "2026-05-27",
+  "check_out_date": "2026-05-29",
+  "generated_at": "2026-05-11"
+}
