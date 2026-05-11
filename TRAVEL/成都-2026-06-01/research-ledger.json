@@ -1,0 +1,294 @@
+{
+  "schema_version": "1.0",
+  "artifact_type": "research-ledger",
+  "trip": {
+    "destination": "成都",
+    "date_range": "2026-06-01 至 2026-06-04",
+    "duration": "4天3夜",
+    "origin": "广州",
+    "travelers": "一家三口，含7岁小朋友",
+    "assumptions": [
+      "出行日期2026-06-01至2026-06-04，返程选6月4日",
+      "航班、价格为代表性日期样例数据，实际以购票时为准",
+      "天气数据为季节性气候参考，非实时预报"
+    ]
+  },
+  "generated_at": "2026-05-10",
+  "tool_runs": [
+    {
+      "id": "run_flyai_flight_gz_cd_20260510",
+      "tool": "flyai search-flight",
+      "query": "广州→成都 2026-06-01",
+      "status": "sample",
+      "ran_at": "2026-05-10",
+      "summary": "保留4个航班：MU6141 06:40 ¥429、AQ1115 12:20 ¥409、CA4334 18:00 ¥430、CA4310 07:55 ¥480",
+      "source_label": "FlyAI booking reference"
+    },
+    {
+      "id": "run_flyai_flight_cd_gz_20260510",
+      "tool": "flyai search-flight",
+      "query": "成都→广州 2026-06-04",
+      "status": "sample",
+      "ran_at": "2026-05-10",
+      "summary": "保留4个航班：3U6701 08:00 ¥400、AQ1116 16:00 ¥409、3U8731 07:00 ¥450、CZ3476 21:00 ¥460",
+      "source_label": "FlyAI booking reference"
+    },
+    {
+      "id": "run_flyai_ai_family_20260510",
+      "tool": "flyai ai-search",
+      "query": "成都 亲子 7岁 4天3夜 核心景点 排队 预约 游玩时长 准备材料",
+      "status": "success",
+      "ran_at": "2026-05-10",
+      "summary": "熊猫基地3–4小时早去、自然博物馆2–3小时预约、都江堰4–5小时、宽窄巷子2小时",
+      "source_label": "FlyAI semantic reference"
+    },
+    {
+      "id": "run_wr_weather_20260510",
+      "tool": "Web-Rooter Quark",
+      "query": "成都 6月 天气 旅游 2026 亲子",
+      "status": "success",
+      "ran_at": "2026-05-10",
+      "summary": "6月气温22–30°C，湿热，午后阵雨；儿童节人流激增",
+      "source_label": "Web-Rooter cited",
+      "source_urls": ["https://m.dianping.com/ugcdetail/226496970", "https://www.sohu.com/a/1016295532_122131170"]
+    },
+    {
+      "id": "run_wr_panda_reservation_20260510",
+      "tool": "Web-Rooter Quark",
+      "query": "成都大熊猫基地 预约 排队 攻略 2025 2026",
+      "status": "success",
+      "ran_at": "2026-05-10",
+      "summary": "官网panda.org.cn预约，旺季提前3–5天，早场7:30入园",
+      "source_label": "Official verified",
+      "source_urls": ["https://www.panda.org.cn/cn/service/ticket", "https://m.panda.org.cn/cn/pandavalley/tickets"]
+    },
+    {
+      "id": "run_wr_hotel_area_20260510",
+      "tool": "Web-Rooter Quark",
+      "query": "成都 春熙路 天府广场 亲子酒店 住哪里 2025 2026",
+      "status": "success",
+      "ran_at": "2026-05-10",
+      "summary": "春熙路/锦江区亲子酒店口碑好，地铁便利，步行宽窄巷子",
+      "source_label": "Web-Rooter cited",
+      "source_urls": ["https://www.sohu.com/a/793972296_122001486", "https://mbd.baidu.com/newspage/data/dtlandingsuper?nid=dt_5924366555043600302"]
+    },
+    {
+      "id": "run_flyai_poi_panda_20260510",
+      "tool": "flyai search-poi",
+      "query": "成都大熊猫繁育研究基地",
+      "status": "success",
+      "ran_at": "2026-05-10",
+      "summary": "坐标 104.13791, 30.740925；成华区外北熊猫大道1375号",
+      "source_label": "FlyAI booking reference"
+    },
+    {
+      "id": "run_flyai_poi_dujiangyan_20260510",
+      "tool": "flyai search-poi",
+      "query": "都江堰景区",
+      "status": "success",
+      "ran_at": "2026-05-10",
+      "summary": "坐标 103.610529, 31.003363；都江堰市公园路",
+      "source_label": "FlyAI booking reference"
+    },
+    {
+      "id": "run_flyai_poi_kuanzhai_20260510",
+      "tool": "flyai search-poi",
+      "query": "宽窄巷子",
+      "status": "success",
+      "ran_at": "2026-05-10",
+      "summary": "坐标 104.053307, 30.663869；青羊区少城街道",
+      "source_label": "FlyAI booking reference"
+    },
+    {
+      "id": "run_flyai_poi_museum_20260510",
+      "tool": "flyai search-poi",
+      "query": "成都自然博物馆",
+      "status": "success",
+      "ran_at": "2026-05-10",
+      "summary": "坐标 104.144295, 30.67821；成华区成华大道十里店路88号",
+      "source_label": "FlyAI booking reference"
+    },
+    {
+      "id": "run_flyai_hotel_central_20260510",
+      "tool": "flyai search-hotel",
+      "query": "成都 4–5星 2026-06-01至06-04",
+      "status": "sample",
+      "ran_at": "2026-05-10",
+      "summary": "核心区候选：voco九眼桥¥1194、西子礼白¥426、恩季S¥277、汉庭¥297",
+      "source_label": "FlyAI booking reference"
+    }
+  ],
+  "facts": [
+    {
+      "id": "fact_flight_outbound_20260510",
+      "subject": "广州→成都 去程航班",
+      "category": "transport",
+      "value": "推荐MU6141 白云06:40→天府09:05 ¥429；备选AQ1115 12:20 ¥409；CA4310 07:55 ¥480",
+      "source_type": "FlyAI booking reference",
+      "source_run_id": "run_flyai_flight_gz_cd_20260510",
+      "booking_url": "https://a.feizhu.com/1nbkbu",
+      "confidence": "high",
+      "freshness": "2026-05-10",
+      "used_by": ["destination-brief.md", "itinerary.md"],
+      "status": "accepted",
+      "sample_data": true
+    },
+    {
+      "id": "fact_flight_return_20260510",
+      "subject": "成都→广州 返程航班",
+      "category": "transport",
+      "value": "推荐3U6701 天府16:00→白云18:25 ¥400；备选AQ1116 16:00 ¥409；CZ3476 21:00 ¥460",
+      "source_type": "FlyAI booking reference",
+      "source_run_id": "run_flyai_flight_cd_gz_20260510",
+      "booking_url": "https://a.feizhu.com/0dlkvn",
+      "confidence": "high",
+      "freshness": "2026-05-10",
+      "used_by": ["destination-brief.md", "itinerary.md"],
+      "status": "accepted",
+      "sample_data": true
+    },
+    {
+      "id": "fact_weather_june_20260510",
+      "subject": "成都6月天气",
+      "category": "weather",
+      "value": "气温22–30°C，湿热，午后多阵雨；儿童节6月1日景区人流激增；端午节2026年5月28–30日",
+      "source_type": "Web-Rooter cited",
+      "source_run_id": "run_wr_weather_20260510",
+      "source_url": "https://m.dianping.com/ugcdetail/226496970",
+      "confidence": "medium",
+      "freshness": "2026-05-10",
+      "used_by": ["destination-brief.md", "itinerary.md"],
+      "status": "accepted"
+    },
+    {
+      "id": "fact_panda_base_reservation_20260510",
+      "subject": "成都大熊猫繁育研究基地 预约",
+      "category": "reservation",
+      "value": "官网panda.org.cn或公众号提前预约，旺季提前3–5天；早场7:30入园，熊猫最活跃；成人¥55，儿童1.2m以下免票",
+      "source_type": "Official verified",
+      "source_run_id": "run_wr_panda_reservation_20260510",
+      "source_url": "https://www.panda.org.cn/cn/service/ticket",
+      "confidence": "high",
+      "freshness": "2026-05-10",
+      "used_by": ["destination-brief.md", "reputation.md", "itinerary.md"],
+      "status": "accepted"
+    },
+    {
+      "id": "fact_panda_base_duration_20260510",
+      "subject": "成都大熊猫繁育研究基地 游览时长",
+      "category": "experience_duration",
+      "value": "建议早7:30入园，游览3–4小时；幼年熊猫区→博物馆→小熊猫区；乘观光车¥10省体力",
+      "source_type": "FlyAI semantic reference",
+      "source_run_id": "run_flyai_ai_family_20260510",
+      "confidence": "medium_high",
+      "freshness": "2026-05-10",
+      "used_by": ["reputation.md", "itinerary.md"],
+      "status": "accepted"
+    },
+    {
+      "id": "fact_natural_museum_reservation_20260510",
+      "subject": "成都自然博物馆 预约",
+      "category": "reservation",
+      "value": "公众号[成都自然博物馆]提前2–3天预约；周一闭馆；免费；游览2–3小时",
+      "source_type": "FlyAI semantic reference",
+      "source_run_id": "run_flyai_ai_family_20260510",
+      "confidence": "medium",
+      "freshness": "2026-05-10",
+      "used_by": ["reputation.md", "itinerary.md"],
+      "status": "accepted"
+    },
+    {
+      "id": "fact_dujiangyan_transport_20260510",
+      "subject": "成都→都江堰 交通",
+      "category": "transport",
+      "value": "地铁2号线→犀浦站换乘成灌城际铁路约50分钟¥15–20/人；12306提前购票",
+      "source_type": "FlyAI semantic reference",
+      "source_run_id": "run_flyai_ai_family_20260510",
+      "confidence": "medium_high",
+      "freshness": "2026-05-10",
+      "used_by": ["destination-brief.md", "itinerary.md"],
+      "status": "accepted"
+    },
+    {
+      "id": "fact_dujiangyan_duration_20260510",
+      "subject": "都江堰景区 游览时长",
+      "category": "experience_duration",
+      "value": "游览4–5小时；鱼嘴→飞沙堰→宝瓶口→安澜索桥→伏龙观；成人¥80，儿童1.2m以下免票；讲解器¥20",
+      "source_type": "FlyAI semantic reference",
+      "source_run_id": "run_flyai_ai_family_20260510",
+      "confidence": "medium_high",
+      "freshness": "2026-05-10",
+      "used_by": ["reputation.md", "itinerary.md"],
+      "status": "accepted"
+    },
+    {
+      "id": "fact_hotel_area_strategy_20260510",
+      "subject": "成都住宿区域策略",
+      "category": "hotel_area_strategy",
+      "value": "亲子家庭首选春熙路/锦江区，地铁便利，步行宽窄巷子，打车熊猫基地约¥30–40；避开天府新区和新都区",
+      "source_type": "Web-Rooter cited",
+      "source_run_id": "run_wr_hotel_area_20260510",
+      "source_url": "https://www.sohu.com/a/793972296_122001486",
+      "confidence": "medium",
+      "freshness": "2026-05-10",
+      "used_by": ["reputation.md", "itinerary.md"],
+      "status": "accepted"
+    },
+    {
+      "id": "fact_hotel_voco_20260510",
+      "subject": "成都九眼桥voco酒店",
+      "category": "hotel_candidate",
+      "value": "近春熙路步行街（锦江区）；高档型；¥1194/晚（代表性样例）；位置极佳，旺季价格高",
+      "source_type": "FlyAI booking reference",
+      "source_run_id": "run_flyai_hotel_central_20260510",
+      "booking_url": "https://a.feizhu.com/2BRNCn",
+      "confidence": "high",
+      "freshness": "2026-05-10",
+      "used_by": ["reputation.md", "itinerary.md"],
+      "status": "accepted",
+      "sample_data": true
+    },
+    {
+      "id": "fact_hotel_xizi_20260510",
+      "subject": "西子礼白酒店（天府熊猫塔建设路店）",
+      "category": "hotel_candidate",
+      "value": "近建设路（成华区）；高档型；¥426/晚（代表性样例）；近自然博物馆和熊猫基地，距宽窄巷子需打车",
+      "source_type": "FlyAI booking reference",
+      "source_run_id": "run_flyai_hotel_central_20260510",
+      "booking_url": "https://a.feizhu.com/0cd7Px",
+      "confidence": "high",
+      "freshness": "2026-05-10",
+      "used_by": ["reputation.md", "itinerary.md"],
+      "status": "accepted",
+      "sample_data": true
+    },
+    {
+      "id": "fact_hotel_enji_20260510",
+      "subject": "恩季S·VIBRANT设计师酒店（春熙路太古里店）",
+      "category": "hotel_candidate",
+      "value": "近春熙路步行街（锦江区）；中档型；¥277/晚（代表性样例）；位置极佳，性价比高",
+      "source_type": "FlyAI booking reference",
+      "source_run_id": "run_flyai_hotel_central_20260510",
+      "booking_url": "https://a.feizhu.com/2S9eyq",
+      "confidence": "high",
+      "freshness": "2026-05-10",
+      "used_by": ["reputation.md", "itinerary.md"],
+      "status": "accepted",
+      "sample_data": true
+    },
+    {
+      "id": "fact_hotel_hanting_20260510",
+      "subject": "汉庭酒店（太古里春熙路步行街店）",
+      "category": "hotel_candidate",
+      "value": "近春熙路步行街（锦江区）；中档型；¥297/晚（代表性样例）；连锁品质稳定，位置好",
+      "source_type": "FlyAI booking reference",
+      "source_run_id": "run_flyai_hotel_central_20260510",
+      "booking_url": "https://a.feizhu.com/3k3cF7",
+      "confidence": "high",
+      "freshness": "2026-05-10",
+      "used_by": ["reputation.md", "itinerary.md"],
+      "status": "accepted",
+      "sample_data": true
+    }
+  ]
+}

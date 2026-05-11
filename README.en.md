@@ -8,9 +8,10 @@ The project is designed for Claude Code, Codex, and StudyClawHub-style agent/ski
 
 ## Online Demo
 
-After GitHub Pages is enabled for this repository, the demo can be opened directly in a desktop or mobile browser:
+After GitHub Pages is enabled for this repository, the demo can be opened directly in a desktop or mobile browser. The current demo is the Chengdu package stored at `TRAVEL/成都-2026-06-01/guidebook.html`:
 
-- [Xinjiang 2026-05-27 Travel Atlas](https://hqiang335.github.io/Roammate/TRAVEL/%E6%96%B0%E7%96%86-2026-05-27/guidebook.html)
+- [Chengdu 2026-06-01 Travel Atlas](https://hqiang335.github.io/Roammate/TRAVEL/%E6%88%90%E9%83%BD-2026-06-01/guidebook.html)
+- [Local source file](TRAVEL/成都-2026-06-01/guidebook.html)
 
 If the links return 404, enable GitHub Pages for the repository and wait for the Pages deployment to finish.
 
@@ -26,9 +27,11 @@ Roammate turns a natural-language trip request into a complete travel package:
 
 1. `destination-brief` creates a destination overview, best-season notes, transport gateways, traveler fit, cautions, and source-backed assumptions.
 2. `local-reputation-research` studies attraction, restaurant, hotel-area, and tourist-trap reputation using public web evidence and structured travel data.
-3. `itinerary-planner` builds a detailed multi-day itinerary with timeline, transport, meals, budget, booking reminders, backup plans, and feasibility checks.
-4. `map-route-builder` normalizes POIs, geocodes places, builds routes, and collects hotel references into `map-data.json`.
-5. `guidebook-maker` merges all trip artifacts into a dashboard-style `guidebook.html` with map, daily plan, POI dossiers, hotels, food, budget, checklist, and source notes.
+3. `itinerary-planner` builds the authoritative `itinerary.md`, then runs the lossless extractor that creates `itinerary-structured.json`.
+4. `map-route-builder` consumes `itinerary-structured.json` where available, normalizes accepted POIs/hotels, geocodes places, builds routes, and writes `map-data.json`.
+5. `guidebook-maker` generates `guidebook-data.json` and the dashboard-style `guidebook.html` from the Markdown reports, `itinerary-structured.json`, and `map-data.json`.
+
+The main `roammate-travel-concierge` skill is a lightweight serial router. It does not spawn subagents, preload every child skill, hand-write final guidebook files, or report completion before `validate:trip` passes.
 
 ## Project Structure
 
@@ -49,7 +52,7 @@ Roammate/
 │       ├── destination-brief.md
 │       ├── reputation.md
 │       ├── itinerary.md
-│       ├── itinerary-data.json
+│       ├── itinerary-structured.json
 │       ├── map-data.json
 │       ├── guidebook-data.json
 │       └── guidebook.html
@@ -97,7 +100,7 @@ AMAP_SECURITY_JS_CODE=your_amap_security_js_code_here
 FLYAI_API_KEY=your_flyai_api_key_here
 WEB_ROOTER_HOME=/absolute/path/to/web-rooter
 WEB_ROOTER_NO_RICH=1
-WEB_ROOTER_MAX_OUTPUT_CHARS=12000
+WEB_ROOTER_MAX_OUTPUT_CHARS=8000
 ```
 
 The scripts look for configuration in this order:
@@ -128,14 +131,22 @@ cd /path/to/Roammate
 npm run doctor:webrooter
 ```
 
-The project intentionally avoids login-only scraping, account operations, booking, payment, posting, liking, or commenting. It also avoids Xiaohongshu-specific tooling.
+Inside this project, use the npm wrapper instead of bare `wr` commands. Stages run `npm run doctor:webrooter` once before the first Web-Rooter call, then use compact Quark searches such as:
+
+```bash
+WEB_ROOTER_NO_RICH=1 WEB_ROOTER_MAX_OUTPUT_CHARS=8000 \
+npm run --silent wr -- web "{query}" --engine=quark --no-crawl --num-results=3 --command-timeout-sec=60 \
+  | npm run --silent wr:compact
+```
+
+The project intentionally avoids login-only scraping, account operations, booking, payment, posting, liking, or commenting. It also avoids Xiaohongshu-specific tooling. Web-Rooter is a sparse public-evidence layer; broad `deep` or `do` runs are reserved for conflicts or explicit user requests.
 
 ## Usage
 
 Open this repository in Claude Code or Codex, then start with the main routing skill:
 
 ```text
-/roammate-travel-concierge Plan a 4-day family trip to Xinjiang from May 27, 2026. Include transport, hotels, routes, attractions, food, budget, and an interactive guidebook.
+/roammate-travel-concierge Plan a relaxed 4-day, 3-night Chengdu family trip from Guangzhou starting June 1, 2026, for two adults and a 7-year-old child. Use round-trip flights and generate the full travel package plus guidebook.
 ```
 
 If slash commands are not available, provide the same request in natural language and ask Roammate to run the complete five-step workflow.
@@ -146,30 +157,49 @@ The final artifacts will be written under:
 TRAVEL/{destination}-{date}/
 ```
 
+For example, the current demo package uses:
+
+```text
+TRAVEL/成都-2026-06-01/
+```
+
+Required full-package files:
+
+```text
+research-ledger.json
+destination-brief.md
+reputation.md
+itinerary.md
+itinerary-structured.json
+map-data.json
+guidebook-data.json
+guidebook.html
+```
+
 Validate a generated trip package:
 
 ```bash
-npm run validate:trip -- TRAVEL/新疆-2026-05-27
+npm run validate:trip -- TRAVEL/成都-2026-06-01
 ```
 
 Rebuild a guidebook from existing data:
 
 ```bash
 node .claude/skills/guidebook-maker/scripts/build-guidebook-data.mjs \
-  TRAVEL/新疆-2026-05-27
+  TRAVEL/成都-2026-06-01
 
 node .claude/skills/guidebook-maker/scripts/build-guidebook.mjs \
-  TRAVEL/新疆-2026-05-27/guidebook-data.json \
-  TRAVEL/新疆-2026-05-27/guidebook.html
+  TRAVEL/成都-2026-06-01/guidebook-data.json \
+  TRAVEL/成都-2026-06-01/guidebook.html
 ```
 
 ## Validation Scripts
 
 ```bash
-npm run validate:ledger -- TRAVEL/新疆-2026-05-27/research-ledger.json
-npm run validate:map -- TRAVEL/新疆-2026-05-27/map-data.json
-npm run validate:guidebook -- TRAVEL/新疆-2026-05-27/guidebook-data.json TRAVEL/新疆-2026-05-27/guidebook.html
-npm run validate:trip -- TRAVEL/新疆-2026-05-27
+npm run validate:ledger -- TRAVEL/成都-2026-06-01/research-ledger.json
+npm run validate:map -- TRAVEL/成都-2026-06-01/map-data.json
+npm run validate:guidebook -- TRAVEL/成都-2026-06-01/guidebook-data.json TRAVEL/成都-2026-06-01/guidebook.html
+npm run validate:trip -- TRAVEL/成都-2026-06-01
 ```
 
 `validate:trip` is the main final check. It validates the generated trip directory and runs guidebook browser QA when Playwright is available.
@@ -224,6 +254,7 @@ Other skill paths:
 - Generated travel materials are for planning and demonstration only.
 - The project does not book, pay, log in, or act on behalf of the user.
 - If external APIs are unavailable, Roammate should degrade gracefully and mark data as estimated or pending verification.
+- New runs should not create or depend on `itinerary-data.json`; `itinerary-structured.json` is the script-generated lossless index of `itinerary.md`.
 
 ## Acknowledgements
 
