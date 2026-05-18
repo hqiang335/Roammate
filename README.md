@@ -1,4 +1,4 @@
-# Roammate Travel Guideboook
+# Roammate Travel Guidebook
 
 [简体中文](README.zh-CN.md) | English
 
